@@ -30,7 +30,7 @@ function GlobeCanvas() {
 
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
-    camera.position.z = 2.35;
+    camera.position.z = 2.55;
 
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
@@ -132,12 +132,12 @@ function GlobeCanvas() {
       const curve = new THREE.QuadraticBezierCurve3(start, mid, end);
       const line = new THREE.Line(
         new THREE.BufferGeometry().setFromPoints(curve.getPoints(80)),
-        new THREE.LineBasicMaterial({ color: 0xe8744a, transparent: true, opacity: 0 })
+        new THREE.LineBasicMaterial({ color: 0xff6b35, transparent: true, opacity: 0 })
       );
       globeGroup.add(line);
       const dot = new THREE.Mesh(
-        new THREE.SphereGeometry(0.012, 8, 8),
-        new THREE.MeshBasicMaterial({ color: 0xe8744a, transparent: true, opacity: 0 })
+        new THREE.SphereGeometry(0.018, 8, 8),
+        new THREE.MeshBasicMaterial({ color: 0xff6b35, transparent: true, opacity: 0 })
       );
       globeGroup.add(dot);
       return { line, dot, curve, phase: i / arcDefs.length, speed: 0.0018 + Math.random() * 0.0014 };
@@ -184,7 +184,7 @@ function GlobeCanvas() {
     const animate = () => {
       animId = requestAnimationFrame(animate);
       if (!dragging) {
-        globeGroup.rotation.y += 0.001;
+        globeGroup.rotation.y += 0.003;
         vx *= 0.92; vy *= 0.92;
       } else {
         globeGroup.rotation.y += vy;
@@ -194,9 +194,9 @@ function GlobeCanvas() {
         arc.phase = (arc.phase + arc.speed) % 1;
         const t = arc.phase;
         const env = t < 0.12 ? t / 0.12 : t > 0.88 ? (1 - t) / 0.12 : 1.0;
-        arc.line.material.opacity = env * 0.35;
+        arc.line.material.opacity = env * 0.75;
         arc.dot.position.copy(arc.curve.getPoint(t));
-        arc.dot.material.opacity = env * 0.7;
+        arc.dot.material.opacity = env * 1.0;
       });
       renderer.render(scene, camera);
     };

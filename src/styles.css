@@ -186,10 +186,11 @@ img { max-width: 100%; display: block; }
 /* ===================== HERO (Wakeo-style: globe LEFT, content RIGHT) ===================== */
 .hero {
   position: relative;
-  height: 100vh;
-  min-height: 600px;
+  min-height: 100vh;
   overflow: hidden;
   background: var(--gradient-hero);
+  padding-top: 110px;
+  padding-bottom: 60px;
 }
 
 .hero-glow {
@@ -212,28 +213,27 @@ img { max-width: 100%; display: block; }
   position: relative;
   z-index: 2;
   width: 100%;
-  height: 100%;
-  /* Content sits on right, overlapping the globe */
+  min-height: calc(100vh - 160px);
 }
 
-/* Globe — absolute positioned, large, bleeds off left/top edges like Wakeo */
+/* Globe — absolute positioned, bleeds off left edge like Wakeo */
 .hero-globe-wrap {
   position: absolute;
   top: 0;
   left: -5%;
-  width: 60%;
-  height: 100%;
+  width: 68%;
+  height: 120%;
   z-index: 1;
   pointer-events: none;
 }
 
 #globeContainer {
   position: absolute;
-  top: 50%;
+  top: 0;
   left: 50%;
-  width: 130%;
-  height: 150%;
-  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+  transform: translateX(-50%);
   cursor: grab;
   pointer-events: all;
 }
@@ -245,14 +245,13 @@ img { max-width: 100%; display: block; }
   position: relative;
   z-index: 3;
   text-align: left;
-  max-width: 520px;
-  margin-left: auto;
-  margin-right: 5%;
-  padding-top: 80px; /* clear the fixed header */
-  height: 100%;
+  max-width: 680px;
+  margin-left: 43%;
+  margin-right: 2%;
   display: flex;
   flex-direction: column;
   justify-content: center;
+  min-height: calc(100vh - 160px);
 }
 
 .hero-badge {
@@ -266,7 +265,7 @@ img { max-width: 100%; display: block; }
   border-radius: var(--radius-pill);
   font-size: 0.85rem;
   font-weight: 500;
-  margin-bottom: 20px;
+  margin-bottom: 12px;
   animation: fadeInUp 0.8s ease;
 }
 
@@ -284,7 +283,7 @@ img { max-width: 100%; display: block; }
   font-weight: 800;
   color: #fff;
   line-height: 1.18;
-  margin-bottom: 18px;
+  margin-bottom: 12px;
   letter-spacing: -0.02em;
   animation: fadeInUp 0.8s ease 0.1s both;
 }
@@ -295,7 +294,7 @@ img { max-width: 100%; display: block; }
   font-size: 0.95rem;
   color: rgba(255,255,255,0.72);
   max-width: 500px;
-  margin: 0 0 28px;
+  margin: 0 0 16px;
   line-height: 1.7;
   animation: fadeInUp 0.8s ease 0.2s both;
 }
@@ -305,7 +304,7 @@ img { max-width: 100%; display: block; }
   gap: 16px;
   justify-content: flex-start;
   flex-wrap: wrap;
-  margin-bottom: 32px;
+  margin-bottom: 20px;
   animation: fadeInUp 0.8s ease 0.3s both;
 }
 
@@ -1110,14 +1109,15 @@ img { max-width: 100%; display: block; }
   /* Globe becomes background covering full hero */
   .hero-globe-wrap {
     position: absolute;
-    top: 0; left: -10%;
-    width: 80%;
-    height: 100%;
+    top: 50%; left: 0;
+    transform: translateY(-50%);
+    width: 100%;
+    height: 60%;
     opacity: 0.4;
   }
   #globeContainer {
     top: 50%; left: 50%;
-    width: 140%; height: 140%;
+    width: 100%; height: 100%;
     transform: translate(-50%, -50%);
   }
   .hero-content {
