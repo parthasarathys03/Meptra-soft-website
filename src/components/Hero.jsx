@@ -30,8 +30,8 @@ function GlobeCanvas() {
 
     // ── Scene setup ──────────────────────────────────────────────
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(42, 1, 0.1, 100);
-    camera.position.z = 2.55;
+    const camera = new THREE.PerspectiveCamera(38, 1, 0.1, 100);
+    camera.position.z = 3.0;
 
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
@@ -60,17 +60,20 @@ function GlobeCanvas() {
     const globeGroup = new THREE.Group();
     scene.add(globeGroup);
 
+    // Dark inner sphere — subtle, blends with hero gradient
     globeGroup.add(new THREE.Mesh(
       new THREE.SphereGeometry(0.99, 64, 64),
-      new THREE.MeshBasicMaterial({ color: 0x040e1a, transparent: true, opacity: 0.92 })
+      new THREE.MeshBasicMaterial({ color: 0x0a2e2e, transparent: true, opacity: 0.45 })
     ));
+    // Wireframe grid — very subtle
     globeGroup.add(new THREE.Mesh(
-      new THREE.SphereGeometry(1.0, 28, 14),
-      new THREE.MeshBasicMaterial({ color: 0x0ea5e9, transparent: true, opacity: 0.035, wireframe: true })
+      new THREE.SphereGeometry(1.0, 36, 18),
+      new THREE.MeshBasicMaterial({ color: 0x0ea5e9, transparent: true, opacity: 0.04, wireframe: true })
     ));
+    // Outer atmosphere glow — soft teal halo
     globeGroup.add(new THREE.Mesh(
-      new THREE.SphereGeometry(1.14, 64, 64),
-      new THREE.MeshBasicMaterial({ color: 0x00b4ae, transparent: true, opacity: 0.055, side: THREE.BackSide })
+      new THREE.SphereGeometry(1.08, 64, 64),
+      new THREE.MeshBasicMaterial({ color: 0x00b4ae, transparent: true, opacity: 0.07, side: THREE.BackSide })
     ));
 
     function ll2v(lat, lng, r) {
@@ -100,7 +103,7 @@ function GlobeCanvas() {
         const geo = new THREE.BufferGeometry();
         geo.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
         globeGroup.add(new THREE.Points(geo,
-          new THREE.PointsMaterial({ color: 0x00d4aa, size: 0.008, transparent: true, opacity: 0.85, sizeAttenuation: true })
+          new THREE.PointsMaterial({ color: 0x00d4aa, size: 0.006, transparent: true, opacity: 0.7, sizeAttenuation: true })
         ));
       })
       .catch(() => {
@@ -132,7 +135,7 @@ function GlobeCanvas() {
     const arcMeshes = arcDefs.map((d, i) => {
       const start = ll2v(d[0], d[1], 1.01);
       const end   = ll2v(d[2], d[3], 1.01);
-      const mid   = start.clone().add(end).normalize().multiplyScalar(1.52);
+      const mid   = start.clone().add(end).normalize().multiplyScalar(1.42);
       const curve = new THREE.QuadraticBezierCurve3(start, mid, end);
       const line  = new THREE.Line(
         new THREE.BufferGeometry().setFromPoints(curve.getPoints(80)),
@@ -140,7 +143,7 @@ function GlobeCanvas() {
       );
       globeGroup.add(line);
       const dot = new THREE.Mesh(
-        new THREE.SphereGeometry(0.013, 8, 8),
+        new THREE.SphereGeometry(0.01, 8, 8),
         new THREE.MeshBasicMaterial({ color: 0x55ffdd, transparent: true, opacity: 0 })
       );
       globeGroup.add(dot);
@@ -156,14 +159,14 @@ function GlobeCanvas() {
         seen.add(key);
         const p = ll2v(lat, lng, 1.015);
         const core = new THREE.Mesh(
-          new THREE.SphereGeometry(0.016, 12, 12),
-          new THREE.MeshBasicMaterial({ color: 0x55ffdd, transparent: true, opacity: 0.95 })
+          new THREE.SphereGeometry(0.012, 12, 12),
+          new THREE.MeshBasicMaterial({ color: 0x55ffdd, transparent: true, opacity: 0.9 })
         );
         core.position.copy(p);
         globeGroup.add(core);
         const halo = new THREE.Mesh(
-          new THREE.SphereGeometry(0.034, 12, 12),
-          new THREE.MeshBasicMaterial({ color: 0x00d4aa, transparent: true, opacity: 0.22 })
+          new THREE.SphereGeometry(0.026, 12, 12),
+          new THREE.MeshBasicMaterial({ color: 0x00d4aa, transparent: true, opacity: 0.18 })
         );
         halo.position.copy(p);
         globeGroup.add(halo);
@@ -191,7 +194,7 @@ function GlobeCanvas() {
     const animate = () => {
       animId = requestAnimationFrame(animate);
       if (!dragging) {
-        globeGroup.rotation.y += 0.0018;
+        globeGroup.rotation.y += 0.0012;
         vx *= 0.92; vy *= 0.92;
       } else {
         globeGroup.rotation.y += vy;
