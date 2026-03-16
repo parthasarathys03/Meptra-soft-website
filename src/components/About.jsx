@@ -1,4 +1,6 @@
 import { useEffect, useRef } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCircleCheck, faUsers, faLayerGroup } from '@fortawesome/free-solid-svg-icons';
 
 export default function About() {
   const sectionRef = useRef(null);
@@ -30,19 +32,19 @@ export default function About() {
             <div className="about-values">
               <div className="value">
                 <div className="value-icon">
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                  <FontAwesomeIcon icon={faCircleCheck} />
                 </div>
                 <span>AI-First Approach</span>
               </div>
               <div className="value">
                 <div className="value-icon">
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+                  <FontAwesomeIcon icon={faUsers} />
                 </div>
                 <span>Engineer-Led Culture</span>
               </div>
               <div className="value">
                 <div className="value-icon">
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+                  <FontAwesomeIcon icon={faLayerGroup} />
                 </div>
                 <span>Production-Grade Quality</span>
               </div>

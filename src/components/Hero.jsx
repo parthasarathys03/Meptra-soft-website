@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import * as topojson from 'topojson-client';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
 
 function useCounter(target, shouldStart) {
   const [count, setCount] = useState(0);
@@ -55,17 +57,17 @@ function GlobeCanvas() {
     const globeGroup = new THREE.Group();
     scene.add(globeGroup);
 
-    // Inner sphere — almost invisible, just slightly darker than bg
+    // Inner sphere
     globeGroup.add(new THREE.Mesh(
       new THREE.SphereGeometry(0.99, 64, 64),
       new THREE.MeshBasicMaterial({ color: 0x0a3d3d, transparent: true, opacity: 0.15 })
     ));
-    // Wireframe — white, subtle like Wakeo
+    // Wireframe
     globeGroup.add(new THREE.Mesh(
       new THREE.SphereGeometry(1.0, 40, 20),
-      new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.06, wireframe: true })
+      new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.004, wireframe: true })
     ));
-    // Atmosphere — very faint glow
+    // Atmosphere
     globeGroup.add(new THREE.Mesh(
       new THREE.SphereGeometry(1.04, 64, 64),
       new THREE.MeshBasicMaterial({ color: 0x55e8c8, transparent: true, opacity: 0.04, side: THREE.BackSide })
@@ -81,6 +83,21 @@ function GlobeCanvas() {
       );
     }
 
+    // Instant dots
+    const instantPos = [];
+    for (let i = 0; i < 4000; i++) {
+      const phi = Math.acos(2 * Math.random() - 1);
+      const theta = Math.random() * Math.PI * 2;
+      instantPos.push(1.01 * Math.sin(phi) * Math.cos(theta), 1.01 * Math.cos(phi), 1.01 * Math.sin(phi) * Math.sin(theta));
+    }
+    const instantGeo = new THREE.BufferGeometry();
+    instantGeo.setAttribute('position', new THREE.Float32BufferAttribute(instantPos, 3));
+    const instantDots = new THREE.Points(instantGeo,
+      new THREE.PointsMaterial({ color: 0xc8ede6, size: 0.009, transparent: true, opacity: 0.75, sizeAttenuation: true })
+    );
+    globeGroup.add(instantDots);
+
+    // Replace with real country data when loaded
     fetch('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json')
       .then(r => r.json())
       .then(world => {
@@ -96,23 +113,12 @@ function GlobeCanvas() {
         });
         const geo = new THREE.BufferGeometry();
         geo.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+        globeGroup.remove(instantDots);
         globeGroup.add(new THREE.Points(geo,
-          new THREE.PointsMaterial({ color: 0xc8ede6, size: 0.006, transparent: true, opacity: 0.55, sizeAttenuation: true })
+          new THREE.PointsMaterial({ color: 0xc8ede6, size: 0.009, transparent: true, opacity: 0.75, sizeAttenuation: true })
         ));
       })
-      .catch(() => {
-        const pos = [];
-        for (let i = 0; i < 3000; i++) {
-          const phi = Math.acos(2 * Math.random() - 1);
-          const theta = Math.random() * Math.PI * 2;
-          pos.push(1.01 * Math.sin(phi) * Math.cos(theta), 1.01 * Math.cos(phi), 1.01 * Math.sin(phi) * Math.sin(theta));
-        }
-        const fg = new THREE.BufferGeometry();
-        fg.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
-        globeGroup.add(new THREE.Points(fg,
-          new THREE.PointsMaterial({ color: 0xc8ede6, size: 0.006, transparent: true, opacity: 0.45 })
-        ));
-      });
+      .catch(() => {});
 
     const arcDefs = [
       [37.77, -122.42, 51.51, -0.13],
@@ -125,22 +131,26 @@ function GlobeCanvas() {
       [51.51, -0.13, -23.55, -46.63],
     ];
 
+    const TRAIL_LEN = 20;
+    const ARC_PTS = 80;
     const arcMeshes = arcDefs.map((d, i) => {
       const start = ll2v(d[0], d[1], 1.01);
       const end = ll2v(d[2], d[3], 1.01);
-      const mid = start.clone().add(end).normalize().multiplyScalar(1.45);
+      const mid = start.clone().add(end).normalize().multiplyScalar(1.85);
       const curve = new THREE.QuadraticBezierCurve3(start, mid, end);
+      const lineGeo = new THREE.BufferGeometry().setFromPoints(curve.getPoints(ARC_PTS));
+      lineGeo.setDrawRange(0, 0);
       const line = new THREE.Line(
-        new THREE.BufferGeometry().setFromPoints(curve.getPoints(80)),
-        new THREE.LineBasicMaterial({ color: 0xff6b35, transparent: true, opacity: 0 })
+        lineGeo,
+        new THREE.LineBasicMaterial({ color: 0xff6b35, transparent: true, opacity: 0.55 })
       );
       globeGroup.add(line);
       const dot = new THREE.Mesh(
-        new THREE.SphereGeometry(0.018, 8, 8),
+        new THREE.SphereGeometry(0.010, 8, 8),
         new THREE.MeshBasicMaterial({ color: 0xff6b35, transparent: true, opacity: 0 })
       );
       globeGroup.add(dot);
-      return { line, dot, curve, phase: i / arcDefs.length, speed: 0.0018 + Math.random() * 0.0014 };
+      return { line, dot, curve, phase: i / arcDefs.length, speed: 0.003 + Math.random() * 0.002 };
     });
 
     const seen = new Set();
@@ -193,10 +203,13 @@ function GlobeCanvas() {
       arcMeshes.forEach(arc => {
         arc.phase = (arc.phase + arc.speed) % 1;
         const t = arc.phase;
-        const env = t < 0.12 ? t / 0.12 : t > 0.88 ? (1 - t) / 0.12 : 1.0;
-        arc.line.material.opacity = env * 0.75;
+        const head = Math.floor(t * ARC_PTS);
+        const tail = Math.max(0, head - TRAIL_LEN);
+        arc.line.geometry.setDrawRange(tail, head - tail);
         arc.dot.position.copy(arc.curve.getPoint(t));
+        const env = t < 0.05 ? t / 0.05 : t > 0.92 ? (1 - t) / 0.08 : 1.0;
         arc.dot.material.opacity = env * 1.0;
+        arc.line.material.opacity = env * 0.55;
       });
       renderer.render(scene, camera);
     };
@@ -246,7 +259,6 @@ export default function Hero() {
   return (
     <section className="hero" id="hero">
       <div className="hero-glow" />
-      {/* Wakeo layout: Globe LEFT, Content RIGHT */}
       <div className="hero-inner">
         <div className="hero-globe-wrap">
           <GlobeCanvas />
@@ -265,11 +277,11 @@ export default function Hero() {
           <div className="hero-buttons">
             <a href="#products" className="btn-primary" onClick={(e) => handleAnchorClick(e, '#products')}>
               <span>Explore Products</span>
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
+              <FontAwesomeIcon icon={faArrowRight} />
             </a>
             <a href="#internship" className="btn-secondary" onClick={(e) => handleAnchorClick(e, '#internship')}>
               <span>Join Internship</span>
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
+              <FontAwesomeIcon icon={faArrowRight} />
             </a>
           </div>
           <div className="hero-stats" ref={statsRef}>

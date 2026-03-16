@@ -1,8 +1,11 @@
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowRight, faGraduationCap, faHandshake, faRocket, faTrophy } from '@fortawesome/free-solid-svg-icons';
+
 const highlights = [
-  { icon: '🎓', title: 'Real-World Projects', sub: 'Work on live AI products' },
-  { icon: '🤝', title: 'Mentorship', sub: 'Guided by industry experts' },
-  { icon: '🚀', title: 'Placement Support', sub: 'Resume & interview prep' },
-  { icon: '🏆', title: 'Certification', sub: 'Industry-recognised credentials' },
+  { icon: <FontAwesomeIcon icon={faGraduationCap} />, title: 'Real-World Projects', sub: 'Work on live AI products' },
+  { icon: <FontAwesomeIcon icon={faHandshake} />, title: 'Mentorship', sub: 'Guided by industry experts' },
+  { icon: <FontAwesomeIcon icon={faRocket} />, title: 'Placement Support', sub: 'Resume & interview prep' },
+  { icon: <FontAwesomeIcon icon={faTrophy} />, title: 'Certification', sub: 'Industry-recognised credentials' },
 ];
 
 export default function Career() {
@@ -22,17 +25,17 @@ export default function Career() {
           <h2 className="section-title" style={{ color: '#fff' }}>
             Build Your Career with <span className="gradient-text">Meptrasoft AI</span>
           </h2>
-          <p className="section-sub" style={{ color: 'rgba(255,255,255,0.82)' }}>
+          <p className="section-sub" style={{ color: 'rgba(255,255,255,0.82)', maxWidth: '700px', margin: '0 auto' }}>
             Join a team of innovators building the future of AI. We offer internship programs, training, and full-time roles for passionate engineers, data scientists, and product builders.
           </p>
           <div className="career-cta-btns">
             <a href="#internship" className="btn-primary" onClick={(e) => handleAnchorClick(e, '#internship')}>
               <span>View Internships</span>
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              <FontAwesomeIcon icon={faArrowRight} />
             </a>
             <a href="#training" className="btn-secondary" style={{ background: 'rgba(255,255,255,0.15)', borderColor: 'rgba(255,255,255,0.4)', color: '#fff' }} onClick={(e) => handleAnchorClick(e, '#training')}>
               <span>Explore Training</span>
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              <FontAwesomeIcon icon={faArrowRight} />
             </a>
           </div>
           <div className="career-highlights">

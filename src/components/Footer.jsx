@@ -1,3 +1,6 @@
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faLinkedinIn, faXTwitter, faGithub } from '@fortawesome/free-brands-svg-icons';
+
 export default function Footer() {
   const handleAnchorClick = (e, href) => {
     if (!href.startsWith('#')) return;
@@ -36,9 +39,9 @@ export default function Footer() {
             <h4>Connect</h4>
             <ul>
               <li><a href="#contact" onClick={(e) => handleAnchorClick(e, '#contact')}>Contact Us</a></li>
-              <li><a href="#">LinkedIn</a></li>
-              <li><a href="#">Twitter</a></li>
-              <li><a href="#">GitHub</a></li>
+              <li><a href="#"><FontAwesomeIcon icon={faLinkedinIn} /> LinkedIn</a></li>
+              <li><a href="#"><FontAwesomeIcon icon={faXTwitter} /> Twitter</a></li>
+              <li><a href="#"><FontAwesomeIcon icon={faGithub} /> GitHub</a></li>
             </ul>
           </div>
         </div>

@@ -1,28 +1,30 @@
 import { useEffect, useRef } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faBrain, faMagnifyingGlassChart, faGears, faLayerGroup, faCloud } from '@fortawesome/free-solid-svg-icons';
 
 const programs = [
   {
-    icon: <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M12 2a4 4 0 014 4c0 1.1-.9 2-2 2h-4a2 2 0 01-2-2 4 4 0 014-4z"/><path d="M8 18a4 4 0 108 0"/><path d="M12 10v4"/></svg>,
+    icon: <FontAwesomeIcon icon={faBrain} />,
     title: 'Artificial Intelligence',
     desc: 'Deep learning, NLP, computer vision, and generative AI with hands-on projects.',
   },
   {
-    icon: <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>,
+    icon: <FontAwesomeIcon icon={faMagnifyingGlassChart} />,
     title: 'Data Science',
     desc: 'Statistical analysis, machine learning, visualization, and real-world data projects.',
   },
   {
-    icon: <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M4 6h16M4 12h16M4 18h10"/></svg>,
+    icon: <FontAwesomeIcon icon={faGears} />,
     title: 'Data Engineering',
     desc: 'Data pipelines, warehousing, Spark, Kafka, and cloud data platforms.',
   },
   {
-    icon: <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>,
+    icon: <FontAwesomeIcon icon={faLayerGroup} />,
     title: 'Full Stack Development',
     desc: 'React, Node.js, databases, APIs, and modern full-stack architecture.',
   },
   {
-    icon: <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M22 12c0 5.52-4.48 10-10 10S2 17.52 2 12 6.48 2 12 2"/><path d="M22 2L13 11"/><path d="M16 2h6v6"/></svg>,
+    icon: <FontAwesomeIcon icon={faCloud} />,
     title: 'Cloud Computing',
     desc: 'AWS, Azure, GCP, containerization, CI/CD, and cloud-native architecture.',
   },

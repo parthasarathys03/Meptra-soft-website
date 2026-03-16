@@ -1,4 +1,6 @@
 import { useEffect, useRef } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
 
 const internships = [
   { num: '01', title: 'Artificial Intelligence Engineering', desc: 'Work on production AI systems including NLP, computer vision, and deep learning models.' },
@@ -54,7 +56,7 @@ export default function Internship() {
         <div className="section-cta">
           <a href="#contact" className="btn-primary" onClick={(e) => handleAnchorClick(e, '#contact')}>
             <span>Join Internship</span>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            <FontAwesomeIcon icon={faArrowRight} />
           </a>
         </div>
       </div>
