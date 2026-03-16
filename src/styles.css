@@ -1116,6 +1116,480 @@ img { max-width: 100%; display: block; }
   color: rgba(255,255,255,0.6);
 }
 
+/* ===================== EXPANDED TRAINING ===================== */
+.training-card-expanded { text-align: left; }
+.training-card-expanded h3 { text-align: center; }
+.training-duration {
+  display: inline-block;
+  background: rgba(1,128,142,0.1);
+  color: var(--teal);
+  padding: 4px 14px;
+  border-radius: var(--radius-pill);
+  font-size: 0.78rem;
+  font-weight: 600;
+  margin: 0 auto 12px;
+  display: block;
+  text-align: center;
+  width: fit-content;
+}
+.training-topics {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 12px;
+  justify-content: center;
+}
+.training-topics li {
+  background: rgba(1,128,142,0.08);
+  color: var(--teal-dark);
+  padding: 4px 12px;
+  border-radius: var(--radius-pill);
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+.training-benefits {
+  margin-top: 48px;
+  text-align: center;
+}
+.training-benefits h3 {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin-bottom: 24px;
+}
+.benefits-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 16px;
+}
+.benefit-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--bg-light);
+  padding: 10px 20px;
+  border-radius: var(--radius-pill);
+  font-size: 0.88rem;
+  color: var(--text-body);
+}
+.benefit-check { color: var(--teal); }
+
+/* ===================== COURSES ===================== */
+.course-features {
+  display: flex;
+  justify-content: center;
+  gap: 32px;
+  margin-bottom: 40px;
+}
+.course-feature {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--teal);
+}
+.course-feature svg { font-size: 1.2rem; }
+.courses-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 20px;
+}
+.course-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 24px;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  transition: var(--transition);
+}
+.course-card:hover {
+  box-shadow: var(--card-shadow-hover);
+  transform: translateY(-3px);
+  border-color: var(--teal);
+}
+.course-icon {
+  width: 56px; height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, rgba(1,128,142,0.1), rgba(0,180,174,0.06));
+  border: 2px solid rgba(1,128,142,0.2);
+  border-radius: 14px;
+  color: var(--teal);
+  font-size: 1.4rem;
+  flex-shrink: 0;
+}
+.course-info h3 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin-bottom: 4px;
+}
+.course-duration {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.78rem;
+  color: var(--teal);
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+.course-info p {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+/* ===================== FINAL YEAR PROJECTS ===================== */
+.fyp-steps {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 24px;
+  margin-bottom: 40px;
+}
+.fyp-step {
+  text-align: center;
+  padding: 32px 20px;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  transition: var(--transition);
+  position: relative;
+}
+.fyp-step:hover {
+  box-shadow: var(--card-shadow-hover);
+  transform: translateY(-3px);
+  border-color: var(--teal);
+}
+.fyp-step-num {
+  position: absolute;
+  top: 12px;
+  left: 16px;
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: var(--teal);
+  opacity: 0.5;
+}
+.fyp-step-icon {
+  width: 64px; height: 64px;
+  margin: 0 auto 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, rgba(1,128,142,0.1), rgba(0,180,174,0.06));
+  border: 2px solid rgba(1,128,142,0.2);
+  border-radius: 50%;
+  color: var(--teal);
+  font-size: 1.5rem;
+}
+.fyp-step h3 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin-bottom: 8px;
+}
+.fyp-step p {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+.fyp-options {
+  text-align: center;
+  margin-bottom: 32px;
+}
+.fyp-options h3 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin-bottom: 20px;
+}
+.fyp-option-list {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+.fyp-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  background: var(--bg-light);
+  border-radius: var(--radius-pill);
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text-body);
+}
+.fyp-option svg { color: var(--teal); }
+
+/* ===================== INTERNSHIP TYPES ===================== */
+.internship-types {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-bottom: 48px;
+}
+.intern-type-card {
+  text-align: center;
+  padding: 36px 24px;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  position: relative;
+  transition: var(--transition);
+}
+.intern-type-card:hover {
+  box-shadow: var(--card-shadow-hover);
+  transform: translateY(-3px);
+  border-color: var(--teal);
+}
+.intern-badge {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: var(--teal);
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: var(--radius-pill);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.intern-type-icon {
+  width: 64px; height: 64px;
+  margin: 0 auto 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, rgba(1,128,142,0.1), rgba(0,180,174,0.06));
+  border: 2px solid rgba(1,128,142,0.2);
+  border-radius: 50%;
+  color: var(--teal);
+  font-size: 1.5rem;
+}
+.intern-type-card h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin-bottom: 8px;
+}
+.intern-type-card p {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+  margin-bottom: 12px;
+}
+.intern-highlights {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  justify-content: center;
+}
+.intern-highlights li {
+  background: rgba(1,128,142,0.08);
+  color: var(--teal-dark);
+  padding: 4px 12px;
+  border-radius: var(--radius-pill);
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+.intern-roles-title {
+  text-align: center;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin-bottom: 24px;
+}
+
+/* ===================== OPEN ROLES (CAREER) ===================== */
+.open-roles {
+  padding: 64px 0 0;
+}
+.open-roles-title {
+  text-align: center;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin-bottom: 32px;
+}
+.roles-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+}
+.role-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px 24px;
+  background: var(--bg-light);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  transition: var(--transition);
+}
+.role-card:hover {
+  box-shadow: var(--card-shadow);
+  border-color: var(--teal);
+}
+.role-icon {
+  width: 48px; height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, rgba(1,128,142,0.1), rgba(0,180,174,0.06));
+  border: 2px solid rgba(1,128,142,0.2);
+  border-radius: 50%;
+  color: var(--teal);
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+.role-card h4 {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin-bottom: 2px;
+}
+.role-card p {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+/* ===================== STUDENT SUCCESS ===================== */
+.student-success {
+  background: var(--gradient-hero);
+}
+.student-success .section-tag {
+  background: rgba(255,255,255,0.18);
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.3);
+}
+.student-success .section-title { color: #fff; }
+.student-success .section-sub { color: rgba(255,255,255,0.75); }
+.success-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 32px;
+  text-align: center;
+}
+.success-stat {
+  padding: 32px 16px;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: var(--radius-lg);
+}
+.success-num {
+  display: block;
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: #fff;
+  margin-bottom: 4px;
+}
+.success-label {
+  font-size: 0.85rem;
+  color: rgba(255,255,255,0.7);
+  font-weight: 500;
+}
+
+/* ===================== BOOK CONSULTATION ===================== */
+.booking-inner {
+  background: var(--gradient-hero);
+  border-radius: var(--radius-xl);
+  padding: 64px 48px;
+  text-align: center;
+}
+.booking-inner .section-tag {
+  background: rgba(255,255,255,0.18);
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.3);
+}
+.booking-inner .section-title { color: #fff; }
+.booking-content p {
+  color: rgba(255,255,255,0.8);
+  font-size: 1rem;
+  max-width: 600px;
+  margin: 0 auto 32px;
+  line-height: 1.7;
+}
+.booking-topics {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  flex-wrap: wrap;
+  margin-bottom: 36px;
+}
+.booking-topic {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: rgba(255,255,255,0.85);
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+.booking-topic svg { color: var(--teal-light); }
+.booking-actions {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.btn-whatsapp {
+  background: #25d366 !important;
+  border-color: #25d366 !important;
+  color: #fff !important;
+}
+.btn-whatsapp:hover {
+  background: #1da851 !important;
+  box-shadow: 0 4px 16px rgba(37,211,102,0.35) !important;
+}
+
+/* ===================== REGISTER FORM ===================== */
+.register-form {
+  max-width: 700px;
+  margin: 0 auto;
+}
+.register-form .form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+.register-form .form-group {
+  margin-bottom: 16px;
+}
+.register-form input,
+.register-form select,
+.register-form textarea {
+  width: 100%;
+  padding: 14px 18px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-size: 0.9rem;
+  font-family: var(--font);
+  background: #fff;
+  transition: var(--transition);
+}
+.register-form input:focus,
+.register-form select:focus,
+.register-form textarea:focus {
+  outline: none;
+  border-color: var(--teal);
+  box-shadow: 0 0 0 3px rgba(1,128,142,0.1);
+}
+
+/* ===================== FOOTER 5-COL ===================== */
+.footer-grid {
+  grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+}
+
 /* ===================== ANIMATIONS ===================== */
 @keyframes fadeInUp {
   from { opacity: 0; transform: translateY(30px); }
@@ -1176,7 +1650,12 @@ img { max-width: 100%; display: block; }
   .product-grid { grid-template-columns: 1fr; }
   .services-grid { grid-template-columns: 1fr 1fr; }
   .internship-grid { grid-template-columns: 1fr 1fr; }
+  .internship-types { grid-template-columns: 1fr; }
   .career-highlights { grid-template-columns: 1fr 1fr; }
+  .fyp-steps { grid-template-columns: repeat(2, 1fr); }
+  .courses-grid { grid-template-columns: 1fr; }
+  .success-stats { grid-template-columns: 1fr 1fr; }
+  .roles-grid { grid-template-columns: 1fr; }
 
   .about-grid { grid-template-columns: 1fr; gap: 40px; }
   .about-visual { height: 300px; }
@@ -1200,9 +1679,15 @@ img { max-width: 100%; display: block; }
   .form-row { grid-template-columns: 1fr; }
   .services-grid,
   .internship-grid { grid-template-columns: 1fr; }
+  .internship-types { grid-template-columns: 1fr; }
   .career-highlights { grid-template-columns: 1fr 1fr; }
+  .fyp-steps { grid-template-columns: 1fr; }
+  .success-stats { grid-template-columns: 1fr 1fr; }
+  .course-features { flex-direction: column; align-items: center; }
+  .booking-inner { padding: 40px 24px; }
+  .register-form .form-row { grid-template-columns: 1fr; }
   .logo-bg-section { padding: 72px 24px; }
-  .career-cta-btns { flex-direction: column; align-items: flex-start; }
+  .career-cta-btns { flex-direction: column; align-items: center; }
   .footer-grid { grid-template-columns: 1fr; gap: 32px; }
   .footer-bottom { flex-direction: column; gap: 8px; text-align: center; }
   .section { padding: 72px 0; }
@@ -1216,5 +1701,6 @@ img { max-width: 100%; display: block; }
   .training-grid { grid-template-columns: 1fr; }
   .tech-categories { grid-template-columns: 1fr; }
   .career-highlights { grid-template-columns: 1fr; }
+  .success-stats { grid-template-columns: 1fr; }
   .logo-bg-img { height: 60%; right: -10%; opacity: 0.05; }
 }

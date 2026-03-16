@@ -4,9 +4,11 @@ const navItems = [
   { href: '#hero', label: 'Home' },
   { href: '#products', label: 'Products' },
   { href: '#services', label: 'Solutions' },
-  { href: '#career', label: 'Career' },
-  { href: '#internship', label: 'Internship' },
   { href: '#training', label: 'Training' },
+  { href: '#courses', label: 'Courses' },
+  { href: '#internship', label: 'Internships' },
+  { href: '#projects', label: 'Final Year Projects' },
+  { href: '#career', label: 'Careers' },
   { href: '#about', label: 'About' },
   { href: '#contact', label: 'Contact' },
 ];
@@ -76,8 +78,8 @@ export default function Header() {
               </li>
             ))}
           </ul>
-          <a href="#contact" className="btn-cta-header" onClick={(e) => handleAnchorClick(e, '#contact')}>
-            Contact Us
+          <a href="#register" className="btn-cta-header" onClick={(e) => handleAnchorClick(e, '#register')}>
+            Register / Apply
           </a>
           <button
             className="mobile-toggle"
