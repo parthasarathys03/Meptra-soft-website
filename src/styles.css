@@ -188,18 +188,16 @@ img { max-width: 100%; display: block; }
   position: relative;
   height: 100vh;
   min-height: 600px;
-  display: flex;
-  align-items: stretch;
   overflow: hidden;
   background: var(--gradient-hero);
 }
 
 .hero-glow {
   position: absolute;
-  top: 50%; left: 25%;
+  top: 40%; left: 20%;
   transform: translate(-50%, -50%);
-  width: 1000px; height: 1000px;
-  background: radial-gradient(circle, rgba(0,212,170,0.10) 0%, rgba(14,165,233,0.05) 35%, transparent 65%);
+  width: 900px; height: 900px;
+  background: radial-gradient(circle, rgba(0,212,170,0.08) 0%, rgba(14,165,233,0.04) 35%, transparent 65%);
   z-index: 1;
   animation: pulseGlow 6s ease-in-out infinite;
   pointer-events: none;
@@ -207,48 +205,51 @@ img { max-width: 100%; display: block; }
 
 @keyframes pulseGlow {
   0%,100% { opacity: 0.5; transform: translate(-50%,-50%) scale(1); }
-  50% { opacity: 0.9; transform: translate(-50%,-50%) scale(1.08); }
+  50% { opacity: 0.8; transform: translate(-50%,-50%) scale(1.06); }
 }
 
 .hero-inner {
   position: relative;
   z-index: 2;
-  display: flex;
-  align-items: stretch;
   width: 100%;
   height: 100%;
-  margin: 0;
-  padding: 0;
+  /* Content sits on right, overlapping the globe */
 }
 
-/* Globe — left side, large, overflows top/bottom like Wakeo */
+/* Globe — absolute positioned, large, bleeds off left/top edges like Wakeo */
 .hero-globe-wrap {
-  position: relative;
-  width: 50%;
+  position: absolute;
+  top: 0;
+  left: -5%;
+  width: 60%;
   height: 100%;
-  flex-shrink: 0;
+  z-index: 1;
+  pointer-events: none;
 }
 
 #globeContainer {
   position: absolute;
   top: 50%;
-  left: -8%;
-  width: 115%;
-  height: 140%;
-  transform: translateY(-50%);
+  left: 50%;
+  width: 130%;
+  height: 150%;
+  transform: translate(-50%, -50%);
   cursor: grab;
+  pointer-events: all;
 }
 
 #globeContainer:active { cursor: grabbing; }
 
-/* Content — right side, vertically centered */
+/* Content — right side, vertically centered, overlaps globe */
 .hero-content {
   position: relative;
   z-index: 3;
   text-align: left;
-  max-width: 560px;
-  padding: 0 48px 0 0;
-  flex: 1;
+  max-width: 520px;
+  margin-left: auto;
+  margin-right: 5%;
+  padding-top: 80px; /* clear the fixed header */
+  height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -367,25 +368,25 @@ img { max-width: 100%; display: block; }
 .stat { text-align: center; }
 
 .stat-number {
-  font-size: 2.2rem;
+  font-size: 1.8rem;
   font-weight: 800;
   color: #fff;
 }
 
-.stat-plus { font-size: 1.5rem; font-weight: 700; color: var(--teal-light); }
+.stat-plus { font-size: 1.2rem; font-weight: 700; color: var(--teal-light); }
 
 .stat-label {
   display: block;
-  font-size: 0.8rem;
+  font-size: 0.72rem;
   color: rgba(255,255,255,0.6);
-  margin-top: 4px;
+  margin-top: 2px;
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
 
 .stat-divider {
-  width: 1px; height: 48px;
+  width: 1px; height: 36px;
   background: rgba(255,255,255,0.15);
 }
 
@@ -1094,8 +1095,8 @@ img { max-width: 100%; display: block; }
 
 /* --- LARGE DESKTOP (1440+) --- */
 @media (min-width: 1440px) {
-  .hero-content { max-width: 600px; padding-right: 80px; }
-  .hero-title { font-size: 3.2rem; }
+  .hero-content { max-width: 580px; margin-right: 8%; }
+  .hero-title { font-size: 2.6rem; }
 }
 
 /* --- TABLET / SMALL LAPTOP (≤1024) --- */
@@ -1106,26 +1107,26 @@ img { max-width: 100%; display: block; }
   .btn-cta-header { display: none; }
   .mobile-toggle { display: flex; }
 
-  /* Hero stacks: globe on top, content below */
-  .hero { height: auto; min-height: 100vh; }
-  .hero-inner { flex-direction: column; padding: 0; }
+  /* Globe becomes background covering full hero */
   .hero-globe-wrap {
-    width: 100%;
-    height: 50vh;
-    min-height: 340px;
+    position: absolute;
+    top: 0; left: -10%;
+    width: 80%;
+    height: 100%;
+    opacity: 0.4;
   }
   #globeContainer {
-    position: absolute;
     top: 50%; left: 50%;
-    width: 100%; height: 120%;
+    width: 140%; height: 140%;
     transform: translate(-50%, -50%);
   }
   .hero-content {
     max-width: 100%;
     text-align: center;
-    padding: 32px 32px 48px;
+    margin: 0 auto;
+    padding: 80px 32px 40px;
   }
-  .hero-sub { margin: 0 auto 32px; max-width: 600px; }
+  .hero-sub { margin: 0 auto 24px; max-width: 600px; }
   .hero-buttons { justify-content: center; }
   .hero-stats { justify-content: center; }
 
@@ -1148,8 +1149,8 @@ img { max-width: 100%; display: block; }
 
 /* --- PHONE (≤768) --- */
 @media (max-width: 768px) {
-  .hero-globe-wrap { height: 40vh; min-height: 280px; }
-  .hero-content { padding: 24px 20px 40px; }
+  .hero-globe-wrap { opacity: 0.3; }
+  .hero-content { padding: 80px 20px 32px; }
   .hero-stats { flex-direction: column; gap: 20px; }
   .stat-divider { width: 48px; height: 1px; }
   .contact-grid { grid-template-columns: 1fr; }
@@ -1166,8 +1167,8 @@ img { max-width: 100%; display: block; }
 
 /* --- SMALL PHONE (≤480) --- */
 @media (max-width: 480px) {
-  .hero-title { font-size: 1.75rem; }
-  .hero-globe-wrap { height: 35vh; min-height: 240px; }
+  .hero-title { font-size: 1.6rem; }
+  .hero-globe-wrap { opacity: 0.25; }
   .section-title { font-size: 1.5rem; }
   .training-grid { grid-template-columns: 1fr; }
   .tech-categories { grid-template-columns: 1fr; }

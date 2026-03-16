@@ -55,20 +55,20 @@ function GlobeCanvas() {
     const globeGroup = new THREE.Group();
     scene.add(globeGroup);
 
-    // Inner sphere — very subtle, blends with hero
+    // Inner sphere — almost invisible, just slightly darker than bg
     globeGroup.add(new THREE.Mesh(
       new THREE.SphereGeometry(0.99, 64, 64),
-      new THREE.MeshBasicMaterial({ color: 0x0b3535, transparent: true, opacity: 0.35 })
+      new THREE.MeshBasicMaterial({ color: 0x0a3d3d, transparent: true, opacity: 0.15 })
     ));
-    // Wireframe
+    // Wireframe — white, subtle like Wakeo
     globeGroup.add(new THREE.Mesh(
       new THREE.SphereGeometry(1.0, 40, 20),
-      new THREE.MeshBasicMaterial({ color: 0x22b8a0, transparent: true, opacity: 0.06, wireframe: true })
+      new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.06, wireframe: true })
     ));
-    // Atmosphere
+    // Atmosphere — very faint glow
     globeGroup.add(new THREE.Mesh(
-      new THREE.SphereGeometry(1.06, 64, 64),
-      new THREE.MeshBasicMaterial({ color: 0x00b4ae, transparent: true, opacity: 0.08, side: THREE.BackSide })
+      new THREE.SphereGeometry(1.04, 64, 64),
+      new THREE.MeshBasicMaterial({ color: 0x55e8c8, transparent: true, opacity: 0.04, side: THREE.BackSide })
     ));
 
     function ll2v(lat, lng, r) {
@@ -97,7 +97,7 @@ function GlobeCanvas() {
         const geo = new THREE.BufferGeometry();
         geo.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
         globeGroup.add(new THREE.Points(geo,
-          new THREE.PointsMaterial({ color: 0x55e8c8, size: 0.007, transparent: true, opacity: 0.75, sizeAttenuation: true })
+          new THREE.PointsMaterial({ color: 0xc8ede6, size: 0.006, transparent: true, opacity: 0.55, sizeAttenuation: true })
         ));
       })
       .catch(() => {
@@ -110,7 +110,7 @@ function GlobeCanvas() {
         const fg = new THREE.BufferGeometry();
         fg.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
         globeGroup.add(new THREE.Points(fg,
-          new THREE.PointsMaterial({ color: 0x55e8c8, size: 0.007, transparent: true, opacity: 0.6 })
+          new THREE.PointsMaterial({ color: 0xc8ede6, size: 0.006, transparent: true, opacity: 0.45 })
         ));
       });
 
@@ -194,9 +194,9 @@ function GlobeCanvas() {
         arc.phase = (arc.phase + arc.speed) % 1;
         const t = arc.phase;
         const env = t < 0.12 ? t / 0.12 : t > 0.88 ? (1 - t) / 0.12 : 1.0;
-        arc.line.material.opacity = env * 0.5;
+        arc.line.material.opacity = env * 0.35;
         arc.dot.position.copy(arc.curve.getPoint(t));
-        arc.dot.material.opacity = env * 0.9;
+        arc.dot.material.opacity = env * 0.7;
       });
       renderer.render(scene, camera);
     };
