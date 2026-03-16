@@ -28,19 +28,35 @@ function GlobeCanvas() {
     const container = containerRef.current;
     if (!container) return;
 
-    let W = container.offsetWidth || 560;
-    let H = container.offsetHeight || 600;
-
+    // ── Scene setup ──────────────────────────────────────────────
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(42, W / H, 0.1, 100);
+    const camera = new THREE.PerspectiveCamera(42, 1, 0.1, 100);
     camera.position.z = 2.55;
 
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-    renderer.setSize(W, H);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.setClearColor(0x000000, 0);
+    // Make the canvas fill its parent exactly
+    renderer.domElement.style.width  = '100%';
+    renderer.domElement.style.height = '100%';
+    renderer.domElement.style.display = 'block';
     container.appendChild(renderer.domElement);
 
+    // ── Resize helper (called by ResizeObserver + window resize) ─
+    function syncSize() {
+      const W = container.clientWidth;
+      const H = container.clientHeight;
+      if (!W || !H) return;
+      camera.aspect = W / H;
+      camera.updateProjectionMatrix();
+      renderer.setSize(W, H, false); // false → don't set canvas CSS size (already 100%)
+    }
+    syncSize();
+    const ro = new ResizeObserver(syncSize);
+    ro.observe(container);
+    window.addEventListener('resize', syncSize);
+
+    // ── Globe geometry ────────────────────────────────────────────
     const globeGroup = new THREE.Group();
     scene.add(globeGroup);
 
@@ -58,7 +74,7 @@ function GlobeCanvas() {
     ));
 
     function ll2v(lat, lng, r) {
-      const phi = (90 - lat) * Math.PI / 180;
+      const phi   = (90 - lat) * Math.PI / 180;
       const theta = (lng + 180) * Math.PI / 180;
       return new THREE.Vector3(
         -r * Math.sin(phi) * Math.cos(theta),
@@ -67,6 +83,7 @@ function GlobeCanvas() {
       );
     }
 
+    // ── Country dot cloud ─────────────────────────────────────────
     fetch('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json')
       .then(r => r.json())
       .then(world => {
@@ -89,10 +106,9 @@ function GlobeCanvas() {
       .catch(() => {
         const pos = [];
         for (let i = 0; i < 3000; i++) {
-          const phi = Math.acos(2 * Math.random() - 1);
+          const phi   = Math.acos(2 * Math.random() - 1);
           const theta = Math.random() * Math.PI * 2;
-          const r = 1.01;
-          pos.push(r * Math.sin(phi) * Math.cos(theta), r * Math.cos(phi), r * Math.sin(phi) * Math.sin(theta));
+          pos.push(1.01 * Math.sin(phi) * Math.cos(theta), 1.01 * Math.cos(phi), 1.01 * Math.sin(phi) * Math.sin(theta));
         }
         const fg = new THREE.BufferGeometry();
         fg.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
@@ -101,15 +117,16 @@ function GlobeCanvas() {
         ));
       });
 
+    // ── City arcs ─────────────────────────────────────────────────
     const arcDefs = [
-      [37.77, -122.42, 51.51, -0.13],
-      [40.71, -74.01,  35.68, 139.65],
-      [28.61,  77.21, -33.87, 151.21],
-      [48.86,   2.35,   1.35, 103.82],
-      [-23.55, -46.63, 55.76,  37.62],
-      [19.43, -99.13,  31.23, 121.47],
-      [ 1.35, 103.82,  37.77,-122.42],
-      [51.51,  -0.13, -23.55, -46.63],
+      [37.77,-122.42, 51.51,  -0.13],
+      [40.71, -74.01, 35.68, 139.65],
+      [28.61,  77.21,-33.87, 151.21],
+      [48.86,   2.35,  1.35, 103.82],
+      [-23.55,-46.63, 55.76,  37.62],
+      [19.43, -99.13, 31.23, 121.47],
+      [ 1.35, 103.82, 37.77,-122.42],
+      [51.51,  -0.13,-23.55, -46.63],
     ];
 
     const arcMeshes = arcDefs.map((d, i) => {
@@ -117,9 +134,8 @@ function GlobeCanvas() {
       const end   = ll2v(d[2], d[3], 1.01);
       const mid   = start.clone().add(end).normalize().multiplyScalar(1.52);
       const curve = new THREE.QuadraticBezierCurve3(start, mid, end);
-      const pts   = curve.getPoints(80);
       const line  = new THREE.Line(
-        new THREE.BufferGeometry().setFromPoints(pts),
+        new THREE.BufferGeometry().setFromPoints(curve.getPoints(80)),
         new THREE.LineBasicMaterial({ color: 0x00d4aa, transparent: true, opacity: 0 })
       );
       globeGroup.add(line);
@@ -131,51 +147,46 @@ function GlobeCanvas() {
       return { line, dot, curve, phase: i / arcDefs.length, speed: 0.0022 + Math.random() * 0.0018 };
     });
 
+    // ── City glow dots ────────────────────────────────────────────
     const seen = new Set();
     arcDefs.forEach(d => {
       [[d[0], d[1]], [d[2], d[3]]].forEach(([lat, lng]) => {
         const key = lat.toFixed(1) + ',' + lng.toFixed(1);
         if (seen.has(key)) return;
         seen.add(key);
-        const pos = ll2v(lat, lng, 1.015);
+        const p = ll2v(lat, lng, 1.015);
         const core = new THREE.Mesh(
           new THREE.SphereGeometry(0.016, 12, 12),
           new THREE.MeshBasicMaterial({ color: 0x55ffdd, transparent: true, opacity: 0.95 })
         );
-        core.position.copy(pos);
+        core.position.copy(p);
         globeGroup.add(core);
         const halo = new THREE.Mesh(
           new THREE.SphereGeometry(0.034, 12, 12),
           new THREE.MeshBasicMaterial({ color: 0x00d4aa, transparent: true, opacity: 0.22 })
         );
-        halo.position.copy(pos);
+        halo.position.copy(p);
         globeGroup.add(halo);
       });
     });
 
+    // ── Drag interaction ──────────────────────────────────────────
     let dragging = false, px = 0, py = 0, vx = 0, vy = 0.0016;
-    const onMouseDown = e => { dragging = true; px = e.clientX; py = e.clientY; };
-    const onMouseMove = e => {
-      if (!dragging) return;
-      vy = (e.clientX - px) * 0.005; vx = (e.clientY - py) * 0.005;
-      px = e.clientX; py = e.clientY;
-    };
-    const onMouseUp = () => { dragging = false; };
+    const onMouseDown  = e => { dragging = true; px = e.clientX; py = e.clientY; };
+    const onMouseMove  = e => { if (!dragging) return; vy = (e.clientX-px)*0.005; vx = (e.clientY-py)*0.005; px = e.clientX; py = e.clientY; };
+    const onMouseUp    = () => { dragging = false; };
     const onTouchStart = e => { dragging = true; px = e.touches[0].clientX; py = e.touches[0].clientY; };
-    const onTouchMove = e => {
-      if (!dragging) return;
-      vy = (e.touches[0].clientX - px) * 0.005; vx = (e.touches[0].clientY - py) * 0.005;
-      px = e.touches[0].clientX; py = e.touches[0].clientY;
-    };
-    const onTouchEnd = () => { dragging = false; };
+    const onTouchMove  = e => { if (!dragging) return; vy = (e.touches[0].clientX-px)*0.005; vx = (e.touches[0].clientY-py)*0.005; px = e.touches[0].clientX; py = e.touches[0].clientY; };
+    const onTouchEnd   = () => { dragging = false; };
 
-    container.addEventListener('mousedown', onMouseDown);
-    window.addEventListener('mousemove', onMouseMove);
-    window.addEventListener('mouseup', onMouseUp);
+    container.addEventListener('mousedown',  onMouseDown);
+    window.addEventListener('mousemove',     onMouseMove);
+    window.addEventListener('mouseup',       onMouseUp);
     container.addEventListener('touchstart', onTouchStart, { passive: true });
-    window.addEventListener('touchmove', onTouchMove, { passive: true });
-    window.addEventListener('touchend', onTouchEnd);
+    window.addEventListener('touchmove',     onTouchMove,  { passive: true });
+    window.addEventListener('touchend',      onTouchEnd);
 
+    // ── Animation loop ────────────────────────────────────────────
     let animId;
     const animate = () => {
       animId = requestAnimationFrame(animate);
@@ -188,40 +199,33 @@ function GlobeCanvas() {
       }
       arcMeshes.forEach(arc => {
         arc.phase = (arc.phase + arc.speed) % 1;
-        const t = arc.phase;
-        const env = t < 0.12 ? t / 0.12 : t > 0.88 ? (1 - t) / 0.12 : 1.0;
+        const t   = arc.phase;
+        const env = t < 0.12 ? t/0.12 : t > 0.88 ? (1-t)/0.12 : 1.0;
         arc.line.material.opacity = env * 0.42;
         arc.dot.position.copy(arc.curve.getPoint(t));
-        arc.dot.material.opacity = env * 0.95;
+        arc.dot.material.opacity  = env * 0.95;
       });
       renderer.render(scene, camera);
     };
     animate();
 
-    const onResize = () => {
-      W = container.offsetWidth; H = container.offsetHeight;
-      if (!W || !H) return;
-      camera.aspect = W / H;
-      camera.updateProjectionMatrix();
-      renderer.setSize(W, H);
-    };
-    window.addEventListener('resize', onResize);
-
+    // ── Cleanup ───────────────────────────────────────────────────
     return () => {
       cancelAnimationFrame(animId);
-      window.removeEventListener('resize', onResize);
-      container.removeEventListener('mousedown', onMouseDown);
-      window.removeEventListener('mousemove', onMouseMove);
-      window.removeEventListener('mouseup', onMouseUp);
+      ro.disconnect();
+      window.removeEventListener('resize',    syncSize);
+      container.removeEventListener('mousedown',  onMouseDown);
+      window.removeEventListener('mousemove',     onMouseMove);
+      window.removeEventListener('mouseup',       onMouseUp);
       container.removeEventListener('touchstart', onTouchStart);
-      window.removeEventListener('touchmove', onTouchMove);
-      window.removeEventListener('touchend', onTouchEnd);
+      window.removeEventListener('touchmove',     onTouchMove);
+      window.removeEventListener('touchend',      onTouchEnd);
       renderer.dispose();
       if (container.contains(renderer.domElement)) container.removeChild(renderer.domElement);
     };
   }, []);
 
-  return <div ref={containerRef} id="globeContainer" />;
+  return <div ref={containerRef} id="globeContainer" style={{ width: '100%', height: '100%' }} />;
 }
 
 function HeroCanvas() {
