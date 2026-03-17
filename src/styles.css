@@ -1529,12 +1529,12 @@ img { max-width: 100%; display: block; }
 }
 .booking-inner .section-title { color: #fff; }
 .booking-inner .gradient-text {
-  color: transparent;
-  -webkit-text-stroke: 1px rgba(255,255,255,0.95);
-  letter-spacing: 4px;
-  font-weight: 700;
-  display: inline-block;
-  paint-order: stroke fill;
+  background: linear-gradient(120deg, #ffffff 0%, #7fffd4 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 800;
+  -webkit-text-stroke: 0;
 }
 .booking-content p {
   color: rgba(255,255,255,0.9);
