@@ -60,11 +60,14 @@ function GlobeCanvas() {
 
     // Smooth scale-up animation on load
     const scaleStart = performance.now();
-    const scaleDuration = 1800;
+    const scaleDuration = 2200;
     function animateScale() {
       const elapsed = performance.now() - scaleStart;
       const progress = Math.min(elapsed / scaleDuration, 1);
-      const eased = 1 - Math.pow(1 - progress, 4);
+      // Smooth ease-in-out (cubic bezier style)
+      const eased = progress < 0.5
+        ? 4 * progress * progress * progress
+        : 1 - Math.pow(-2 * progress + 2, 3) / 2;
       const s = 0.01 + eased * 0.99;
       globeGroup.scale.set(s, s, s);
       if (progress < 1) requestAnimationFrame(animateScale);
