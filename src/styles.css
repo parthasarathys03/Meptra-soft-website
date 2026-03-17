@@ -11,7 +11,7 @@
   --bg-soft: #edf1f5;
   --text-dark: #0f1e2d;
   --text-body: #2d3e50;
-  --text-muted: #4e6278;
+  --text-muted: #3d5168;
   --teal: #01808e;
   --teal-light: #00b4ae;
   --teal-dark: #0a3d3d;
@@ -650,6 +650,7 @@ img { max-width: 100%; display: block; }
 }
 
 .logo-bg-content .section-title { color: #fff; }
+.logo-bg-content .gradient-text { -webkit-text-stroke: 1px rgba(255,255,255,0.85); text-stroke: 1px rgba(255,255,255,0.85); }
 
 .career-cta-btns {
   display: flex;
@@ -1412,7 +1413,7 @@ img { max-width: 100%; display: block; }
 
 /* ===================== OPEN ROLES (CAREER) ===================== */
 .open-roles {
-  padding: 64px 0 0;
+  padding: 64px 0 64px;
 }
 .open-roles-title {
   text-align: center;
@@ -1423,7 +1424,7 @@ img { max-width: 100%; display: block; }
 }
 .roles-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
   gap: 16px;
 }
 .role-card {
@@ -1466,15 +1467,8 @@ img { max-width: 100%; display: block; }
 
 /* ===================== STUDENT SUCCESS ===================== */
 .student-success {
-  background: var(--gradient-hero);
+  background: var(--bg-light);
 }
-.student-success .section-tag {
-  background: rgba(255,255,255,0.18);
-  color: #fff;
-  border: 1px solid rgba(255,255,255,0.3);
-}
-.student-success .section-title { color: #fff; }
-.student-success .section-sub { color: rgba(255,255,255,0.75); }
 .success-stats {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -1483,38 +1477,45 @@ img { max-width: 100%; display: block; }
 }
 .success-stat {
   padding: 32px 16px;
-  background: rgba(255,255,255,0.08);
-  border: 1px solid rgba(255,255,255,0.15);
+  background: #fff;
+  border: 1px solid var(--border);
   border-radius: var(--radius-lg);
+  transition: var(--transition);
+}
+.success-stat:hover {
+  box-shadow: var(--card-shadow-hover);
+  transform: translateY(-3px);
+  border-color: var(--teal);
 }
 .success-num {
   display: block;
   font-size: 2.5rem;
   font-weight: 800;
-  color: #fff;
+  color: var(--teal);
   margin-bottom: 4px;
 }
 .success-label {
   font-size: 0.85rem;
-  color: rgba(255,255,255,0.7);
+  color: var(--text-body);
   font-weight: 500;
 }
 
 /* ===================== BOOK CONSULTATION ===================== */
 .booking-inner {
-  background: var(--gradient-hero);
+  background: linear-gradient(135deg, #0d5c5c 0%, #01808e 50%, #0f2f50 100%);
   border-radius: var(--radius-xl);
   padding: 64px 48px;
   text-align: center;
 }
 .booking-inner .section-tag {
-  background: rgba(255,255,255,0.18);
+  background: rgba(255,255,255,0.2);
   color: #fff;
-  border: 1px solid rgba(255,255,255,0.3);
+  border: 1px solid rgba(255,255,255,0.35);
 }
 .booking-inner .section-title { color: #fff; }
+.booking-inner .gradient-text { -webkit-text-stroke: 1px rgba(255,255,255,0.85); text-stroke: 1px rgba(255,255,255,0.85); }
 .booking-content p {
-  color: rgba(255,255,255,0.8);
+  color: rgba(255,255,255,0.9);
   font-size: 1rem;
   max-width: 600px;
   margin: 0 auto 32px;
@@ -1531,7 +1532,7 @@ img { max-width: 100%; display: block; }
   display: flex;
   align-items: center;
   gap: 8px;
-  color: rgba(255,255,255,0.85);
+  color: #fff;
   font-size: 0.9rem;
   font-weight: 500;
 }

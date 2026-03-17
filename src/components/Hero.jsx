@@ -55,7 +55,21 @@ function GlobeCanvas() {
     ro.observe(container);
 
     const globeGroup = new THREE.Group();
+    globeGroup.scale.set(0.01, 0.01, 0.01);
     scene.add(globeGroup);
+
+    // Smooth scale-up animation on load
+    const scaleStart = performance.now();
+    const scaleDuration = 1800;
+    function animateScale() {
+      const elapsed = performance.now() - scaleStart;
+      const progress = Math.min(elapsed / scaleDuration, 1);
+      const eased = 1 - Math.pow(1 - progress, 4);
+      const s = 0.01 + eased * 0.99;
+      globeGroup.scale.set(s, s, s);
+      if (progress < 1) requestAnimationFrame(animateScale);
+    }
+    requestAnimationFrame(animateScale);
 
     // Inner sphere
     globeGroup.add(new THREE.Mesh(
