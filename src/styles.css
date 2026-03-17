@@ -1744,6 +1744,7 @@ img { max-width: 100%; display: block; }
   .footer-grid { grid-template-columns: 1fr; gap: 32px; }
   .footer-grid > * { text-align: center; }
   .footer-brand p { text-align: center; }
+  .footer-logo { display: block; margin-left: auto; margin-right: auto; }
   .footer-links ul { align-items: center; }
   .footer-links a { transform: none !important; }
   .footer-bottom { flex-direction: column; gap: 8px; text-align: center; }
