@@ -92,12 +92,20 @@ export default function Header() {
       </div>
 
       <div className={`mobile-nav${mobileOpen ? ' open' : ''}`}>
+        <button className="mobile-nav-close" aria-label="Close menu" onClick={() => setMobileOpen(false)}>
+          &times;
+        </button>
         <ul className="mobile-nav-links">
           {navItems.map(({ href, label }) => (
             <li key={href}>
               <a href={href} onClick={(e) => handleAnchorClick(e, href)}>{label}</a>
             </li>
           ))}
+          <li>
+            <a href="#register" className="btn-primary" onClick={(e) => handleAnchorClick(e, '#register')} style={{ marginTop: '8px' }}>
+              Register / Apply
+            </a>
+          </li>
         </ul>
       </div>
     </>

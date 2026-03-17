@@ -191,6 +191,19 @@ img { max-width: 100%; display: block; }
 
 .mobile-nav.open { display: flex; }
 
+.mobile-nav-close {
+  position: absolute;
+  top: 20px;
+  right: 24px;
+  background: none;
+  border: none;
+  font-size: 2rem;
+  color: var(--text-dark);
+  cursor: pointer;
+  line-height: 1;
+  padding: 8px;
+}
+
 .mobile-nav-links {
   display: flex;
   flex-direction: column;
@@ -261,6 +274,7 @@ img { max-width: 100%; display: block; }
   transform: translateX(-50%);
   cursor: grab;
   pointer-events: all;
+  will-change: transform;
 }
 
 #globeContainer:active { cursor: grabbing; }
@@ -1616,6 +1630,16 @@ img { max-width: 100%; display: block; }
   .hero-title { font-size: 2.6rem; }
 }
 
+/* --- MEDIUM DESKTOP (1025–1280) --- */
+@media (max-width: 1280px) and (min-width: 1025px) {
+  .hero-content { max-width: 540px; margin-left: 50%; margin-right: 2%; }
+  .hero-title { font-size: 2rem; }
+  .hero-sub { font-size: 0.9rem; }
+  .nav-link { padding: 7px 10px; font-size: 0.82rem; }
+  .header { padding: 8px 24px; }
+  .footer-grid { grid-template-columns: 2fr 1fr 1fr 1fr; gap: 32px; }
+}
+
 /* --- TABLET / SMALL LAPTOP (≤1024) --- */
 @media (max-width: 1024px) {
   .header-wrap { padding: 10px 16px; }
@@ -1623,6 +1647,8 @@ img { max-width: 100%; display: block; }
   .nav-links { display: none; }
   .btn-cta-header { display: none; }
   .mobile-toggle { display: flex; }
+  .mobile-toggle span { background: #fff; }
+  .header-wrap.scrolled .mobile-toggle span { background: var(--text-dark); }
 
   /* Globe becomes background covering full hero */
   .hero-globe-wrap {
@@ -1642,13 +1668,17 @@ img { max-width: 100%; display: block; }
     max-width: 100%;
     text-align: center;
     margin: 0 auto;
-    padding: 80px 32px 40px;
+    padding: 60px 32px 40px;
+    min-height: auto;
   }
+  .hero-badge { align-self: center; }
   .hero-sub { margin: 0 auto 24px; max-width: 600px; }
   .hero-buttons { justify-content: center; }
   .hero-stats { justify-content: center; }
+  .hero { min-height: auto; padding-top: 90px; padding-bottom: 40px; }
+  .hero-inner { min-height: auto; }
 
-  .product-grid { grid-template-columns: 1fr; }
+  .product-grid { grid-template-columns: 1fr 1fr; }
   .services-grid { grid-template-columns: 1fr 1fr; }
   .internship-grid { grid-template-columns: 1fr 1fr; }
   .internship-types { grid-template-columns: 1fr; }
@@ -1659,7 +1689,16 @@ img { max-width: 100%; display: block; }
   .roles-grid { grid-template-columns: 1fr; }
 
   .about-grid { grid-template-columns: 1fr; gap: 40px; }
-  .about-visual { height: 300px; }
+  .about-content .section-title { text-align: center; }
+  .about-content p { text-align: center; }
+  .about-values { align-items: center; }
+  .about-visual { height: 260px; }
+  .about-float-card { padding: 20px 24px; }
+  .afc-1 { top: 10px; left: 10px; }
+  .afc-2 { top: 100px; right: 5px; }
+  .afc-3 { bottom: 20px; left: 30px; }
+
+  .contact-grid { grid-template-columns: 1fr; }
 
   .footer-grid { grid-template-columns: 1fr 1fr; gap: 32px; }
 
@@ -1668,16 +1707,20 @@ img { max-width: 100%; display: block; }
     text-align: center;
     padding: 36px 24px;
   }
+
+  .section { padding: 80px 0; }
+  .section-header { margin-bottom: 48px; }
 }
 
 /* --- PHONE (≤768) --- */
 @media (max-width: 768px) {
-  .hero-globe-wrap { opacity: 0.3; }
-  .hero-content { padding: 80px 20px 32px; }
+  .hero-globe-wrap { opacity: 0.3; height: 50%; }
+  .hero-content { padding: 48px 20px 32px; }
+  .hero { padding-top: 80px; }
   .hero-stats { flex-direction: column; gap: 20px; }
   .stat-divider { width: 48px; height: 1px; }
-  .contact-grid { grid-template-columns: 1fr; }
   .form-row { grid-template-columns: 1fr; }
+  .product-grid { grid-template-columns: 1fr; }
   .services-grid,
   .internship-grid { grid-template-columns: 1fr; }
   .internship-types { grid-template-columns: 1fr; }
@@ -1685,23 +1728,64 @@ img { max-width: 100%; display: block; }
   .fyp-steps { grid-template-columns: 1fr; }
   .success-stats { grid-template-columns: 1fr 1fr; }
   .course-features { flex-direction: column; align-items: center; }
+  .courses-grid { grid-template-columns: 1fr; }
+  .roles-grid { grid-template-columns: 1fr; }
   .booking-inner { padding: 40px 24px; }
+  .booking-topics { gap: 16px; }
   .register-form .form-row { grid-template-columns: 1fr; }
-  .logo-bg-section { padding: 72px 24px; }
+  .logo-bg-section { padding: 64px 20px; }
   .career-cta-btns { flex-direction: column; align-items: center; }
   .footer-grid { grid-template-columns: 1fr; gap: 32px; }
   .footer-bottom { flex-direction: column; gap: 8px; text-align: center; }
-  .section { padding: 72px 0; }
+  .section { padding: 64px 0; }
+  .section-header { margin-bottom: 36px; }
+  .container { padding: 0 16px; }
+
+  .about-visual { height: 220px; }
+  .about-float-card { padding: 16px 20px; }
+  .afc-num { font-size: 1.5rem; }
+  .afc-label { font-size: 0.78rem; }
+  .afc-1 { top: 5px; left: 5px; }
+  .afc-2 { top: 80px; right: 0; }
+  .afc-3 { bottom: 10px; left: 20px; }
+
+  .btn-primary, .btn-secondary { padding: 12px 24px; font-size: 0.9rem; }
+
+  .mobile-nav-links { gap: 18px; }
+  .mobile-nav-links a { font-size: 1.1rem; }
 }
 
 /* --- SMALL PHONE (≤480) --- */
 @media (max-width: 480px) {
   .hero-title { font-size: 1.6rem; }
+  .hero-sub { font-size: 0.85rem; }
   .hero-globe-wrap { opacity: 0.25; }
+  .hero-content { padding: 36px 16px 24px; }
+  .hero { padding-top: 72px; padding-bottom: 24px; }
   .section-title { font-size: 1.5rem; }
+  .section-sub { font-size: 0.92rem; }
   .training-grid { grid-template-columns: 1fr; }
   .tech-categories { grid-template-columns: 1fr; }
   .career-highlights { grid-template-columns: 1fr; }
   .success-stats { grid-template-columns: 1fr; }
   .logo-bg-img { height: 60%; right: -10%; opacity: 0.05; }
+  .logo-bg-section { padding: 48px 16px; }
+  .booking-inner { padding: 32px 16px; }
+  .booking-topics { flex-direction: column; align-items: center; gap: 12px; }
+  .footer-logo { height: 56px; }
+  .section { padding: 48px 0; }
+  .container { padding: 0 12px; }
+
+  .product-card { padding: 24px 20px; }
+  .service-card { padding: 24px 20px; }
+  .training-card { padding: 24px 16px; }
+  .intern-card { padding: 24px 20px; }
+  .intern-type-card { padding: 28px 16px; }
+  .course-card { padding: 16px; gap: 12px; }
+  .fyp-step { padding: 24px 16px; }
+  .role-card { padding: 16px; }
+
+  .about-visual { height: 200px; }
+  .about-float-card { padding: 14px 16px; }
+  .afc-num { font-size: 1.3rem; }
 }
