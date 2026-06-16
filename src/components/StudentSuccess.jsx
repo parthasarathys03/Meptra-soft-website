@@ -39,29 +39,29 @@ export default function StudentSuccess() {
   const c4 = useCounter(200, visible);
 
   return (
-    <section className="section student-success" id="success" ref={sectionRef}>
-      <div className="container">
-        <div className="section-header">
-          <span className="section-tag">Impact</span>
-          <h2 className="section-title">Our <span className="gradient-text">Student Success</span></h2>
-          <p className="section-sub">Real outcomes from our training, internship, and product programs.</p>
+    <section className="relative bg-bg-light py-[100px] max-[1024px]:py-[80px] max-[768px]:py-[64px] max-[480px]:py-[48px]" id="success" ref={sectionRef}>
+      <div className="mx-auto max-w-[1200px] px-6 max-[768px]:px-4 max-[480px]:px-3">
+        <div className="mb-[64px] text-center max-[1024px]:mb-[48px] max-[768px]:mb-[36px]">
+          <span className="mb-[14px] inline-block rounded-pill border-[1.5px] border-[rgba(1,128,142,0.25)] bg-[rgba(1,128,142,0.08)] px-4 py-[5px] text-[0.78rem] font-extrabold uppercase tracking-[0.12em] text-teal">Impact</span>
+          <h2 className="mb-4 text-[clamp(1.8rem,4vw,2.8rem)] font-black tracking-[-0.025em] text-text-dark max-[480px]:text-[1.5rem]">Our <span className="text-teal">Student Success</span></h2>
+          <p className="mx-auto max-w-[600px] text-[1.05rem] leading-[1.75] text-text-body max-[480px]:text-[0.92rem]">Real outcomes from our training, internship, and product programs.</p>
         </div>
-        <div className="success-stats">
-          <div className="success-stat">
-            <span className="success-num">{c1}+</span>
-            <span className="success-label">Students Trained</span>
+        <div className="grid grid-cols-4 gap-8 text-center max-[1024px]:grid-cols-2 max-[480px]:grid-cols-1">
+          <div className="rounded-[16px] border border-border bg-white p-[32px_16px] transition duration-[700ms] ease-smooth hover:-translate-y-[2px] hover:border-teal hover:shadow-card-hover">
+            <span className="mb-1 block text-[2.5rem] font-extrabold text-teal">{c1}+</span>
+            <span className="text-[0.85rem] font-medium text-text-body">Students Trained</span>
           </div>
-          <div className="success-stat">
-            <span className="success-num">{c2}+</span>
-            <span className="success-label">AI Models Built</span>
+          <div className="rounded-[16px] border border-border bg-white p-[32px_16px] transition duration-[700ms] ease-smooth hover:-translate-y-[2px] hover:border-teal hover:shadow-card-hover">
+            <span className="mb-1 block text-[2.5rem] font-extrabold text-teal">{c2}+</span>
+            <span className="text-[0.85rem] font-medium text-text-body">AI Models Built</span>
           </div>
-          <div className="success-stat">
-            <span className="success-num">{c3}+</span>
-            <span className="success-label">Products Developed</span>
+          <div className="rounded-[16px] border border-border bg-white p-[32px_16px] transition duration-[700ms] ease-smooth hover:-translate-y-[2px] hover:border-teal hover:shadow-card-hover">
+            <span className="mb-1 block text-[2.5rem] font-extrabold text-teal">{c3}+</span>
+            <span className="text-[0.85rem] font-medium text-text-body">Products Developed</span>
           </div>
-          <div className="success-stat">
-            <span className="success-num">{c4}+</span>
-            <span className="success-label">Internships Completed</span>
+          <div className="rounded-[16px] border border-border bg-white p-[32px_16px] transition duration-[700ms] ease-smooth hover:-translate-y-[2px] hover:border-teal hover:shadow-card-hover">
+            <span className="mb-1 block text-[2.5rem] font-extrabold text-teal">{c4}+</span>
+            <span className="text-[0.85rem] font-medium text-text-body">Internships Completed</span>
           </div>
         </div>
       </div>
