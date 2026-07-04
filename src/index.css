@@ -1,68 +1,297 @@
+@import "tailwindcss";
+
+/* ============================================================
+   MEPTRASOFT AI TECHNOLOGIES — design tokens (BUILD_HANDOFF §3–5)
+   navy = surfaces (stable) · teal/aqua = Solutions accent
+   amber = Learn accent · sRGB only
+   ============================================================ */
+@theme {
+  --font-sans: "Sora", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  /* Main branch uses Sora only. Labels stay in Sora with wide tracking. */
+  --font-mono: "Sora", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+
+  /* Ink / Navy — surfaces, text, structure */
+  --color-ink-900: #0b1f38;
+  --color-navy-800: #0f2f50;
+  --color-navy-700: #164761;
+  --color-slate-500: #5c7085;
+  --color-line-200: #dce4ec;
+  --color-bg-50: #f5f8fa;
+  --color-surface: #ffffff;
+
+  /* Teal / Aqua — Pillar 1 (Solutions) accent */
+  --color-teal-700: #0a6e78;
+  --color-teal-600: #008088;
+  --color-teal-500: #0a9ca0;
+  --color-aqua-400: #00b4ae;
+  --color-aqua-300: #5bc3b9;
+
+  /* Amber — Pillar 2 (Learn) accent */
+  --color-amber-600: #e08a2b;
+  --color-amber-500: #f5a623;
+  --color-amber-300: #f5b84e;
+
+  /* On-dark text */
+  --color-hero-ink: #eaf1f7;
+  --color-hero-soft: #9fb3c6;
+  --color-hero-faint: #5c7085;
+
+  /* Semantic */
+  --color-success: #1e9e6a;
+  --color-warning: #e0a020;
+  --color-error: #d64545;
+
+  /* Radius */
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 24px;
+  --radius-pill: 100px;
+
+  /* Shadows */
+  --shadow-card: 0 2px 12px rgba(11, 31, 56, 0.06);
+  --shadow-hover: 0 14px 34px rgba(11, 31, 56, 0.1), 0 3px 10px rgba(11, 31, 56, 0.05);
+  --shadow-amber: 0 8px 26px rgba(245, 166, 35, 0.28);
+
+  /* Easing */
+  --ease-smooth: cubic-bezier(0.22, 0.9, 0.3, 1);
+  --ease-pop: cubic-bezier(0.3, 1.4, 0.5, 1);
+}
+
+/* Named gradients (referenced via utility classes below) */
 :root {
-  font-family: 'Sora', system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  --gradient-hero: linear-gradient(155deg, #0a1a30 0%, #0f2f50 45%, #0c3a44 100%);
+  --gradient-brand: linear-gradient(100deg, #00b4ae, #5bc3b9);
+  --gradient-brand-light: linear-gradient(100deg, #008088, #00b4ae);
+  --gradient-learn: linear-gradient(120deg, #164761, #e08a2b);
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
-}
-
-body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
-}
-
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
-}
-
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}
-
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
+@layer base {
+  * {
+    border-color: var(--color-line-200);
   }
-  a:hover {
-    color: #747bff;
+  html {
+    scroll-behavior: smooth;
   }
-  button {
-    background-color: #f9f9f9;
+  body {
+    font-family: var(--font-sans);
+    /* dark cinematic base */
+    background: #081426;
+    color: var(--color-hero-ink);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  ::selection {
+    background: var(--color-aqua-400);
+    color: #06232a;
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-aqua-400);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+    }
+  }
+}
+
+@layer utilities {
+  .bg-gradient-hero {
+    background: var(--gradient-hero);
+  }
+  .text-gradient-brand {
+    background: var(--gradient-brand);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .text-gradient-brand-light {
+    background: var(--gradient-brand-light);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .container-page {
+    width: 100%;
+    max-width: 1200px;
+    margin-inline: auto;
+    padding-inline: clamp(18px, 4vw, 48px);
+  }
+  .section-pad {
+    padding-block: clamp(56px, 9vw, 128px);
+  }
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+  /* circuit-dot ambient grid, cheap */
+  .circuit-grid {
+    background-image: radial-gradient(rgba(120, 150, 180, 0.12) 1px, transparent 1.4px);
+    background-size: 28px 28px;
+  }
+
+  /* ---- dark cinematic system ---- */
+  .section-dark {
+    position: relative;
+    background: #081426;
+    color: var(--color-hero-ink);
+    overflow: hidden;
+  }
+  /* alternating slightly-lifted dark band for rhythm */
+  .section-dark-alt {
+    position: relative;
+    background: linear-gradient(180deg, #0a1a30 0%, #0b2038 100%);
+    color: var(--color-hero-ink);
+    overflow: hidden;
+  }
+  /* frosted glass card for dark backgrounds */
+  .glass {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(14px);
+  }
+  /* elevated glass card — heavier blur + soft outer glow, for hero-level surfaces (e.g. lead form) */
+  .glass-panel {
+    background: linear-gradient(165deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.02));
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(20px);
+    box-shadow: 0 24px 60px rgba(3, 10, 20, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  }
+  /* neumorphic dark field: soft carved-in look via dual shadow, no border noise */
+  .neu-field {
+    background: rgba(8, 20, 36, 0.55);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow:
+      inset 2px 2px 5px rgba(0, 0, 0, 0.35),
+      inset -1px -1px 3px rgba(255, 255, 255, 0.04);
+  }
+  .neu-field:focus-visible {
+    box-shadow:
+      inset 2px 2px 5px rgba(0, 0, 0, 0.35),
+      inset -1px -1px 3px rgba(255, 255, 255, 0.04),
+      0 0 0 3px rgba(0, 180, 174, 0.35);
+  }
+  /* native <select>: browser renders the open option list with its own chrome,
+     ignoring most Tailwind utilities. Force dark bg/light text on the options
+     themselves so the popover matches the dark theme instead of flashing white. */
+  select.neu-field {
+    color-scheme: dark;
+  }
+  select.neu-field option {
+    background-color: #0f2436;
+    color: var(--color-hero-ink);
+  }
+  /* ambient accent glow blob — place absolutely inside a relative section */
+  .glow-teal {
+    background: radial-gradient(circle, rgba(0, 180, 174, 0.22), transparent 68%);
+    filter: blur(40px);
+  }
+  .glow-amber {
+    background: radial-gradient(circle, rgba(245, 166, 35, 0.18), transparent 68%);
+    filter: blur(40px);
+  }
+
+  /* ---- Mesh gradient (organic multi-color brand bg) ---- */
+  .mesh-hero {
+    background-color: #081426;
+    background-image:
+      radial-gradient(at 18% 22%, rgba(0, 180, 174, 0.22), transparent 46%),
+      radial-gradient(at 82% 14%, rgba(15, 47, 80, 0.65), transparent 52%),
+      radial-gradient(at 72% 72%, rgba(245, 166, 35, 0.1), transparent 46%),
+      radial-gradient(at 12% 82%, rgba(10, 110, 120, 0.28), transparent 52%);
+  }
+
+  /* ---- Aurora: slow flowing color veil (place absolute, behind content) ---- */
+  .aurora {
+    background:
+      conic-gradient(from 120deg at 50% 50%, rgba(0, 180, 174, 0.25), rgba(15, 47, 80, 0) 30%,
+        rgba(245, 166, 35, 0.14) 55%, rgba(0, 180, 174, 0) 75%, rgba(91, 195, 185, 0.22) 100%);
+    filter: blur(60px);
+    animation: aurora-spin 22s linear infinite;
+  }
+  @keyframes aurora-spin {
+    to { transform: rotate(360deg); }
+  }
+
+  /* ---- Fine grain noise overlay for depth ---- */
+  .noise::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 60;
+    pointer-events: none;
+    opacity: 0.04;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  /* ---- Neumorphism (Soft UI) for dark surfaces ---- */
+  .neu {
+    background: #0e2138;
+    box-shadow: -5px -5px 12px rgba(255, 255, 255, 0.045), 6px 6px 16px rgba(0, 0, 0, 0.55);
+  }
+  .neu-pressed,
+  .neu:active {
+    background: #0b1a2e;
+    box-shadow: inset -4px -4px 10px rgba(255, 255, 255, 0.035), inset 5px 5px 12px rgba(0, 0, 0, 0.6);
+  }
+  .neu {
+    transition: box-shadow 0.2s ease, background 0.2s ease, transform 0.15s ease;
+  }
+  .neu:active {
+    transform: scale(0.99);
+  }
+
+  /* ---- Animated gradient border (spinning conic ring) ---- */
+  .anim-border {
+    position: relative;
+    isolation: isolate;
+  }
+  .anim-border::before {
+    content: "";
+    position: absolute;
+    inset: -1.5px;
+    border-radius: inherit;
+    background: conic-gradient(from 0deg, transparent 0%, var(--color-aqua-400) 20%, transparent 40%, var(--color-amber-500) 60%, transparent 80%);
+    animation: border-settle 6s cubic-bezier(0.16, 1, 0.3, 1) 0.2s 1 both;
+    z-index: -1;
+  }
+  @keyframes border-settle {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .aurora, .anim-border::before { animation: none; }
+  }
+
+  /* ---- Animated underline for nav links ---- */
+  .link-underline {
+    position: relative;
+  }
+  .link-underline::after {
+    content: "";
+    position: absolute;
+    left: 12px;
+    right: 12px;
+    bottom: 4px;
+    height: 1.5px;
+    background: var(--color-aqua-400);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s var(--ease-smooth);
+  }
+  .link-underline:hover::after {
+    transform: scaleX(1);
   }
 }
