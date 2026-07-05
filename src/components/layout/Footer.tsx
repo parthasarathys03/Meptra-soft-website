@@ -1,7 +1,5 @@
 import type { ReactNode } from "react";
 import { Link } from "react-router-dom";
-import { Logo } from "@/components/brand/Logo";
-import { BrainTreeMotif } from "@/components/brand/BrainTreeMotif";
 import { Icon, type IconName } from "@/components/ui/Icon";
 import { MagneticButton } from "@/components/motion/MagneticButton";
 import { Reveal } from "@/components/motion/Reveal";
@@ -37,15 +35,15 @@ export function Footer() {
     <footer className="relative overflow-hidden bg-gradient-hero text-hero-ink">
       <div className="h-[2px] w-full bg-[linear-gradient(90deg,transparent,var(--color-aqua-400),var(--color-amber-500),var(--color-aqua-400),transparent)]" />
 
-      {/* ambient depth — glow blob + oversized watermark mark, both decorative */}
-      <div className="glow-teal pointer-events-none absolute -left-24 top-0 h-72 w-72 rounded-full" aria-hidden />
-      <div aria-hidden className="pointer-events-none absolute -bottom-16 -right-16 hidden opacity-[0.07] md:block">
-        <BrainTreeMotif light trigger="inView" className="aspect-[400/470] h-[340px] w-auto" />
-      </div>
-
       <div className="container-page relative grid gap-10 py-16 md:grid-cols-[1.4fr_1fr_1fr_1fr]">
         <Reveal>
-          <Logo light />
+          <Link to="/" aria-label="Meptrasoft AI Technologies — home" className="inline-block">
+            <img
+              src="/assets/logo.svg"
+              alt="Meptrasoft AI Technologies"
+              className="h-14 w-auto [filter:brightness(0)_invert(1)] md:h-20"
+            />
+          </Link>
           <p className="mt-4 max-w-[32ch] text-sm text-hero-soft">
             We build AI products for businesses — and train the engineers who build them.
           </p>
@@ -94,16 +92,14 @@ export function Footer() {
           <span>© {new Date().getFullYear()} {site.full}. All rights reserved.</span>
           <span className="font-mono">Built for businesses, students &amp; engineers.</span>
 
-          <MagneticButton strength={0.5} className="sm:absolute sm:right-0 sm:top-1/2 sm:-translate-y-1/2">
-            <button
-              type="button"
-              onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-              aria-label="Back to top"
-              className="flex h-9 w-9 items-center justify-center rounded-full border border-white/15 text-hero-soft transition-colors hover:border-aqua-400 hover:text-aqua-300"
-            >
-              <Icon name="arrow-right" size={13} className="-rotate-90" />
-            </button>
-          </MagneticButton>
+          <button
+            type="button"
+            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+            aria-label="Back to top"
+            className="flex h-9 w-9 items-center justify-center rounded-full border border-white/15 text-hero-soft transition-colors hover:border-aqua-400 hover:text-aqua-300 sm:absolute sm:right-0 sm:top-1/2 sm:-translate-y-1/2"
+          >
+            <Icon name="arrow-right" size={13} className="-rotate-90" />
+          </button>
         </div>
       </div>
     </footer>

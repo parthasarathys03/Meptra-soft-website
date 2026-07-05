@@ -32,6 +32,20 @@ export interface Offering {
   points?: string[];
   /** prominent duration/label badge, e.g. "2–4 months" or "Free" */
   duration?: string;
+  /** star rating 0–5 shown on course cards */
+  rating?: number;
+  /** enrolled count label, e.g. "10K" */
+  enrolled?: string;
+  /** languages of instruction, e.g. ["Tamil", "English"] */
+  languages?: string[];
+  /** original fee in ₹, struck through */
+  feeWas?: number;
+  /** current offer fee in ₹ */
+  feeNow?: number;
+  /** flagship pricing tier — different banner + fee */
+  premium?: boolean;
+  /** short offer line, e.g. "Special offer — 1 month only" */
+  offerNote?: string;
 }
 
 export interface Product {
@@ -63,12 +77,30 @@ export interface Testimonial {
   quote: string;
   name: string;
   role: string;
-  avatar?: string;
+  /** 1–5 star rating shown next to the name */
+  rating: number;
 }
 
 export interface Role {
   id: string;
   title: string;
+  /** e.g. "Full-time" or "Internship" */
   type: string;
   location: string;
+  experience: string;
+  duration: string;
+  openings: number;
+  description: string;
+  skills?: string[];
+}
+
+export interface Faq {
+  question: string;
+  answer: string;
+}
+
+export interface Office {
+  city: string;
+  address: string;
+  status: string;
 }

@@ -35,6 +35,11 @@ import {
   faUserGraduate,
   faPhone,
   faAward,
+  faPlus,
+  faMinus,
+  faClock,
+  faGlobe,
+  faUsers,
 } from "@fortawesome/free-solid-svg-icons";
 import {
   faInstagram,
@@ -81,6 +86,11 @@ export const icons = {
   graduate: faUserGraduate,
   phone: faPhone,
   award: faAward,
+  plus: faPlus,
+  minus: faMinus,
+  clock: faClock,
+  globe: faGlobe,
+  users: faUsers,
   instagram: faInstagram,
   linkedin: faLinkedinIn,
   whatsapp: faWhatsapp,

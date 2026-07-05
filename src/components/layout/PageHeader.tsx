@@ -16,6 +16,7 @@ export function PageHeader({
   accent = "navy",
   image,
   imageAlt = "",
+  imageWide = false,
   children,
 }: {
   eyebrow: string;
@@ -24,6 +25,8 @@ export function PageHeader({
   accent?: "teal" | "amber" | "navy";
   image?: string;
   imageAlt?: string;
+  /** Give the image column more room, extending it toward the text column. */
+  imageWide?: boolean;
   children?: ReactNode;
 }) {
   return (
@@ -32,7 +35,7 @@ export function PageHeader({
       <div
         className={cn(
           "container-page relative z-10 pb-16 pt-28 md:pb-24 md:pt-36",
-          image && "grid items-center gap-10 md:grid-cols-[1.05fr_0.95fr]"
+          image && (imageWide ? "grid items-center gap-6 md:grid-cols-[0.85fr_1.15fr]" : "grid items-center gap-10 md:grid-cols-[1.05fr_0.95fr]")
         )}
       >
         <div>
@@ -48,7 +51,7 @@ export function PageHeader({
         </div>
 
         {image && (
-          <div className="relative flex justify-center md:justify-end">
+          <div className={cn("relative flex justify-center md:justify-end", imageWide && "md:-ml-16")}>
             <span
               aria-hidden
               className="pointer-events-none absolute left-1/2 top-1/2 h-[70%] w-[70%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,rgba(0,180,174,0.22),transparent_66%)] blur-2xl"
@@ -57,7 +60,10 @@ export function PageHeader({
               src={image}
               alt={imageAlt}
               loading="eager"
-              className="relative w-[min(130%,780px)] drop-shadow-[0_20px_50px_rgba(0,0,0,0.35)]"
+              className={cn(
+                "relative drop-shadow-[0_20px_50px_rgba(0,0,0,0.35)]",
+                imageWide ? "w-[min(160%,980px)]" : "w-[min(130%,780px)]"
+              )}
             />
           </div>
         )}

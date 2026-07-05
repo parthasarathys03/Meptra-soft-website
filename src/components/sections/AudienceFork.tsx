@@ -13,6 +13,7 @@ interface Card {
   to: string;
   ctaLabel: string;
   icon: IconName;
+  bg: string;
 }
 
 const cards: Card[] = [
@@ -26,6 +27,7 @@ const cards: Card[] = [
     to: "/solutions",
     ctaLabel: "Explore Solutions",
     icon: "building",
+    bg: "/assets/pillar-1-left.jpeg",
   },
   {
     id: "students",
@@ -37,6 +39,7 @@ const cards: Card[] = [
     to: "/learn",
     ctaLabel: "Start Learning",
     icon: "graduation",
+    bg: "/assets/pillar-2-right.jpeg",
   },
 ];
 
@@ -72,10 +75,27 @@ export function AudienceFork() {
               <Reveal key={c.id} delay={i * 0.08} className={c.order}>
                 <div
                   className={cn(
-                    "group relative flex h-full flex-col overflow-hidden glass rounded-[var(--radius-lg)] p-7 transition-all duration-300 hover:-translate-y-1.5",
+                    "group relative flex h-full min-h-[380px] flex-col overflow-hidden glass rounded-[var(--radius-lg)] p-7 transition-all duration-300 hover:-translate-y-1.5",
                     accentHover[c.accent]
                   )}
                 >
+                  {/* background image */}
+                  <img
+                    src={c.bg}
+                    alt=""
+                    aria-hidden
+                    loading="lazy"
+                    className="pointer-events-none absolute inset-0 h-full w-full object-cover object-right transition-transform duration-500 group-hover:scale-105"
+                  />
+                  {/* readability overlay — dark on the text side, image visible on the far side */}
+                  <div
+                    aria-hidden
+                    className="pointer-events-none absolute inset-0 bg-gradient-to-r from-ink-900 via-ink-900/85 to-ink-900/30"
+                  />
+                  <div
+                    aria-hidden
+                    className="pointer-events-none absolute inset-0 bg-gradient-to-t from-ink-900/90 to-transparent"
+                  />
                   <span
                     aria-hidden
                     className={cn(
@@ -83,32 +103,36 @@ export function AudienceFork() {
                       accentGlow[c.accent]
                     )}
                   />
-                  <div
-                    className={cn(
-                      "relative flex h-12 w-12 items-center justify-center rounded-[var(--radius-md)]",
-                      accentIconWrap[c.accent]
-                    )}
-                  >
-                    <Icon name={c.icon} size={24} />
-                  </div>
 
-                  <p
-                    className={cn(
-                      "eyebrow mt-5",
-                      c.accent === "teal" ? "text-aqua-300" : "text-amber-300"
-                    )}
-                  >
-                    {c.eyebrow}
-                  </p>
-                  <h3 className="mt-2 text-xl font-bold tracking-[-0.01em] text-hero-ink">{c.title}</h3>
-                  <p className="mt-2 flex-1 font-mono text-[12.5px] uppercase tracking-[0.06em] text-hero-soft">
-                    {c.sublabel}
-                  </p>
+                  {/* content */}
+                  <div className="relative z-10 flex h-full flex-col">
+                    <div
+                      className={cn(
+                        "flex h-12 w-12 items-center justify-center rounded-[var(--radius-md)]",
+                        accentIconWrap[c.accent]
+                      )}
+                    >
+                      <Icon name={c.icon} size={24} />
+                    </div>
 
-                  <div className="mt-6">
-                    <Button variant={c.accent === "teal" ? "outline-light" : "amber"} to={c.to}>
-                      {c.ctaLabel}
-                    </Button>
+                    <p
+                      className={cn(
+                        "eyebrow mt-5",
+                        c.accent === "teal" ? "text-aqua-300" : "text-amber-300"
+                      )}
+                    >
+                      {c.eyebrow}
+                    </p>
+                    <h3 className="mt-2 text-xl font-bold tracking-[-0.01em] text-hero-ink">{c.title}</h3>
+                    <p className="mt-2 flex-1 font-mono text-[12.5px] uppercase tracking-[0.06em] text-hero-soft">
+                      {c.sublabel}
+                    </p>
+
+                    <div className="mt-6">
+                      <Button variant={c.accent === "teal" ? "outline-light" : "amber"} to={c.to}>
+                        {c.ctaLabel}
+                      </Button>
+                    </div>
                   </div>
                 </div>
               </Reveal>

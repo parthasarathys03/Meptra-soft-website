@@ -8,6 +8,7 @@ import { LearnPreview } from "@/components/sections/LearnPreview";
 import { SolutionsPreview } from "@/components/sections/SolutionsPreview";
 import { TrustMarquee } from "@/components/sections/TrustMarquee";
 import { Vision } from "@/components/sections/Vision";
+import { Faq } from "@/components/sections/Faq";
 import { FinalCTA } from "@/components/sections/FinalCTA";
 
 export default function Home() {
@@ -24,6 +25,7 @@ export default function Home() {
       <SolutionsPreview preview />
       <TrustMarquee />
       <Vision />
+      <Faq />
       <FinalCTA />
     </>
   );

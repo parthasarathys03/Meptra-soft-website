@@ -1,43 +1,32 @@
 import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { cn, prefersReducedMotion } from "@/lib/utils";
 import { Reveal } from "@/components/motion/Reveal";
+import { Icon, type IconName } from "@/components/ui/Icon";
 import { loopSteps } from "@/data/content";
 import type { LoopStep } from "@/lib/types";
 
-const ACCENT_TEXT: Record<LoopStep["accent"], string> = {
-  teal: "text-aqua-300",
-  amber: "text-amber-500",
-  aqua: "text-aqua-400",
+type Accent = LoopStep["accent"];
+
+const ACCENT: Record<Accent, { text: string; bg: string; border: string; hex: string }> = {
+  teal: { text: "text-teal-300", bg: "bg-teal-500", border: "border-teal-500", hex: "#2DD4BF" },
+  amber: { text: "text-amber-300", bg: "bg-amber-500", border: "border-amber-500", hex: "#F5A623" },
+  aqua: { text: "text-aqua-300", bg: "bg-aqua-400", border: "border-aqua-400", hex: "#00B4AE" },
 };
 
-const ACCENT_BG: Record<LoopStep["accent"], string> = {
-  teal: "bg-teal-500",
-  amber: "bg-amber-500",
-  aqua: "bg-aqua-400",
+const NODE_ICON: Record<LoopStep["node"], IconName> = {
+  products: "rocket",
+  learners: "graduate",
+  projects: "briefcase",
 };
 
-const ACCENT_BORDER: Record<LoopStep["accent"], string> = {
-  teal: "border-teal-500",
-  amber: "border-amber-500",
-  aqua: "border-aqua-400",
-};
-
-const ACCENT_STROKE: Record<LoopStep["accent"], string> = {
-  teal: "#2DD4BF",
-  amber: "#F5A623",
-  aqua: "#00B4AE",
-};
-
-/* Orbital geometry — all in ONE 420x420 SVG space (no HTML/% mismatch). */
-const ORBIT = { cx: 210, cy: 210, r: 140 };
-const CIRC = 2 * Math.PI * ORBIT.r;
-// nodes evenly on the ring, clockwise from top: products, learners, projects
+/* Node placement on the ring — clockwise from top. Percent of the square. */
+const RADIUS = 42;
 const NODE_ANGLES = [-90, 30, 150];
-const nodeXY = (deg: number) => ({
-  x: ORBIT.cx + ORBIT.r * Math.cos((deg * Math.PI) / 180),
-  y: ORBIT.cy + ORBIT.r * Math.sin((deg * Math.PI) / 180),
-});
+const nodePos = (deg: number) => {
+  const rad = (deg * Math.PI) / 180;
+  return { left: `${50 + RADIUS * Math.cos(rad)}%`, top: `${50 + RADIUS * Math.sin(rad)}%` };
+};
 
 function useIsDesktop(): boolean {
   const [isDesktop, setIsDesktop] = useState(false);
@@ -60,15 +49,13 @@ export function EcosystemLoop() {
     setReducedMotion(prefersReducedMotion());
   }, []);
 
-  const useAuto = isDesktop && !reducedMotion;
-
   return (
     <section className="relative overflow-hidden bg-ink-900 text-hero-ink">
       <div className="circuit-grid pointer-events-none absolute inset-0 opacity-10" aria-hidden />
 
       <div className="container-page relative z-10 section-pad pb-0">
         <Reveal className="mx-auto max-w-[60ch] text-center">
-          <p className="eyebrow inline-flex items-center gap-2.5 text-aqua-300 justify-center">
+          <p className="eyebrow inline-flex items-center justify-center gap-2.5 text-aqua-300">
             <span className="h-px w-6 bg-aqua-400" />
             How it works
           </p>
@@ -82,206 +69,147 @@ export function EcosystemLoop() {
         </Reveal>
       </div>
 
-      {useAuto ? <AutoLoop /> : <StackedLoop />}
+      {isDesktop && !reducedMotion ? <CircleWidget /> : <StackedLoop />}
     </section>
   );
 }
 
-/* --------------- Desktop: auto-advancing orbital loop (no scroll gap) --------------- */
+/* --------------- Desktop: interactive circular widget --------------- */
 
-function AutoLoop() {
-  const [activeIndex, setActiveIndex] = useState(0);
+function CircleWidget() {
+  const [active, setActive] = useState(0);
+  const [paused, setPaused] = useState(false);
 
-  // auto-cycle steps continuously (no hover-pause — it must always be moving)
   useEffect(() => {
-    const id = setInterval(() => {
-      setActiveIndex((prev) => (prev + 1) % loopSteps.length);
-    }, 2800);
+    if (paused) return;
+    const id = setInterval(() => setActive((p) => (p + 1) % loopSteps.length), 3200);
     return () => clearInterval(id);
-  }, []);
+  }, [paused]);
 
-  const activeStep = loopSteps[activeIndex];
-
-  return (
-    <div className="container-page pb-16 pt-10 md:pb-24">
-      <div className="grid w-full grid-cols-1 items-center gap-10 md:grid-cols-[1fr_1fr]">
-        <LoopDiagram activeIndex={activeIndex} />
-        <StepPanel activeStep={activeStep} activeIndex={activeIndex} onSelect={setActiveIndex} />
-      </div>
-    </div>
-  );
-}
-
-function LoopDiagram({ activeIndex }: { activeIndex: number }) {
-  const activeStep = loopSteps[activeIndex];
-  const accent = ACCENT_STROKE[activeStep.accent];
-
-  // fraction of the ring "travelled" by the current step (leading edge / comet)
-  const f = (activeIndex + 1) / loopSteps.length;
-  const headAngle = -90 + 360 * f;
-  const head = nodeXY(headAngle);
+  const step = loopSteps[active];
+  const accent = ACCENT[step.accent];
 
   return (
-    <div className="relative mx-auto w-full max-w-[440px]">
-      <svg viewBox="0 0 420 420" className="h-full w-full" aria-hidden>
-        <defs>
-          <filter id="loop-glow" x="-50%" y="-50%" width="200%" height="200%">
-            <feGaussianBlur stdDeviation="6" result="b" />
-            <feMerge>
-              <feMergeNode in="b" />
-              <feMergeNode in="SourceGraphic" />
-            </feMerge>
-          </filter>
-        </defs>
-
-        {/* slow ambient outer ring */}
-        <motion.circle
-          cx={ORBIT.cx}
-          cy={ORBIT.cy}
-          r={ORBIT.r + 22}
-          fill="none"
-          stroke="#5c7085"
-          strokeOpacity={0.18}
-          strokeWidth={1}
-          strokeDasharray="2 10"
+    <div className="container-page pb-20 pt-12 md:pb-28">
+      <div
+        className="relative mx-auto aspect-square w-full max-w-[520px]"
+        onMouseEnter={() => setPaused(true)}
+        onMouseLeave={() => setPaused(false)}
+      >
+        {/* outer ambient dashed ring */}
+        <motion.div
+          aria-hidden
+          className="absolute left-1/2 top-1/2 h-[93%] w-[93%] -translate-x-1/2 -translate-y-1/2 rounded-full border border-dashed border-slate-500/20"
           animate={{ rotate: 360 }}
-          transition={{ duration: 60, ease: "linear", repeat: Infinity }}
-          style={{ transformOrigin: `${ORBIT.cx}px ${ORBIT.cy}px` }}
+          transition={{ duration: 70, ease: "linear", repeat: Infinity }}
+        />
+        {/* gradient track the nodes sit on — same aqua→amber gradient as the header Contact button */}
+        <motion.div
+          aria-hidden
+          className="absolute left-1/2 top-1/2 h-[84%] w-[84%] -translate-x-1/2 -translate-y-1/2 rounded-full"
+          style={{
+            background:
+              "conic-gradient(from 90deg, var(--color-aqua-400), var(--color-amber-500), var(--color-aqua-400))",
+            WebkitMask:
+              "radial-gradient(farthest-side, transparent calc(100% - 2.5px), #000 calc(100% - 2.5px))",
+            mask: "radial-gradient(farthest-side, transparent calc(100% - 2.5px), #000 calc(100% - 2.5px))",
+            opacity: 0.7,
+          }}
+          animate={{ rotate: 360 }}
+          transition={{ duration: 90, ease: "linear", repeat: Infinity }}
+        />
+        {/* glow that follows the active accent */}
+        <motion.div
+          aria-hidden
+          className="absolute left-1/2 top-1/2 h-40 w-40 -translate-x-1/2 -translate-y-1/2 rounded-full blur-3xl"
+          animate={{ backgroundColor: accent.hex, opacity: 0.14 }}
+          transition={{ duration: 0.6 }}
         />
 
-        {/* base track */}
-        <circle
-          cx={ORBIT.cx}
-          cy={ORBIT.cy}
-          r={ORBIT.r}
-          fill="none"
-          stroke="#5c7085"
-          strokeOpacity={0.22}
-          strokeWidth={2}
-        />
+        {/* center hub */}
+        <div className="absolute left-1/2 top-1/2 flex h-[48%] w-[48%] -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-center rounded-full border border-white/10 bg-navy-800/70 p-6 text-center backdrop-blur-sm">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={step.id}
+              initial={{ opacity: 0, y: 10, scale: 0.96 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -10, scale: 0.96 }}
+              transition={{ duration: 0.4, ease: [0.22, 0.9, 0.3, 1] }}
+              className="flex flex-col items-center"
+            >
+              <span className={cn("text-[11px] font-bold uppercase tracking-[0.18em]", accent.text)}>
+                {step.eyebrow}
+              </span>
+              <h3 className="mt-2 text-[clamp(16px,2vw,20px)] font-bold leading-[1.2] tracking-[-0.01em] text-hero-ink">
+                {step.title}
+              </h3>
+              <p className="mt-2 text-[12.5px] leading-relaxed text-hero-soft [display:-webkit-box] [-webkit-box-orient:vertical] [-webkit-line-clamp:4] overflow-hidden">
+                {step.body}
+              </p>
+            </motion.div>
+          </AnimatePresence>
+        </div>
 
-        {/* progress arc (starts at top, grows clockwise) */}
-        <motion.circle
-          cx={ORBIT.cx}
-          cy={ORBIT.cy}
-          r={ORBIT.r}
-          fill="none"
-          stroke={accent}
-          strokeWidth={3}
-          strokeLinecap="round"
-          strokeDasharray={CIRC}
-          transform={`rotate(-90 ${ORBIT.cx} ${ORBIT.cy})`}
-          animate={{ strokeDashoffset: CIRC * (1 - f) }}
-          transition={{ duration: 0.7, ease: [0.22, 0.9, 0.3, 1] }}
-        />
-
-        {/* comet head at the leading edge */}
-        <motion.circle
-          r={6}
-          fill={accent}
-          filter="url(#loop-glow)"
-          animate={{ cx: head.x, cy: head.y }}
-          transition={{ duration: 0.7, ease: [0.22, 0.9, 0.3, 1] }}
-        />
-
-        {/* nodes on the ring */}
-        {loopSteps.map((step, i) => {
-          const p = nodeXY(NODE_ANGLES[i]);
-          const isActive = i === activeIndex;
-          const c = ACCENT_STROKE[step.accent];
+        {/* orbiting nodes */}
+        {loopSteps.map((s, i) => {
+          const isActive = i === active;
+          const a = ACCENT[s.accent];
+          const pos = nodePos(NODE_ANGLES[i]);
           return (
-            <g key={step.id}>
-              {isActive && (
-                <circle cx={p.x} cy={p.y} r={30} fill={c} opacity={0.16} filter="url(#loop-glow)" />
-              )}
-              <motion.circle
-                cx={p.x}
-                cy={p.y}
-                fill="#0f2f50"
-                animate={{ r: isActive ? 26 : 20, stroke: isActive ? c : "#5c7085" }}
-                strokeWidth={isActive ? 2.5 : 1.5}
-                transition={{ duration: 0.4, ease: [0.22, 0.9, 0.3, 1] }}
-              />
-              <text
-                x={p.x}
-                y={p.y + 4}
-                textAnchor="middle"
-                fontSize={11}
-                fontWeight={700}
-                letterSpacing={0.5}
-                fill={isActive ? c : "#9fb3c6"}
-                style={{ transition: "fill 0.4s ease" }}
+            <button
+              key={s.id}
+              type="button"
+              onClick={() => setActive(i)}
+              aria-label={`${s.node}: ${s.title}`}
+              className="absolute -translate-x-1/2 -translate-y-1/2 focus:outline-none"
+              style={pos}
+            >
+              <motion.span
+                className={cn(
+                  "flex flex-col items-center gap-2",
+                )}
+                animate={{ scale: isActive ? 1.08 : 1 }}
+                transition={{ duration: 0.35, ease: [0.22, 0.9, 0.3, 1] }}
               >
-                {String(i + 1).padStart(2, "0")}
-              </text>
-              <text
-                x={p.x}
-                y={p.y + (i === 0 ? -40 : 46)}
-                textAnchor="middle"
-                fontSize={12}
-                letterSpacing={1.5}
-                fill={isActive ? c : "#5c7085"}
-                style={{ transition: "fill 0.4s ease", textTransform: "uppercase" }}
-              >
-                {step.node.toUpperCase()}
-              </text>
-            </g>
+                <motion.span
+                  className={cn(
+                    "flex h-16 w-16 items-center justify-center rounded-full border-2 bg-navy-800 transition-colors md:h-[72px] md:w-[72px]",
+                    isActive ? cn(a.border, a.text) : "border-slate-500/40 text-slate-400"
+                  )}
+                  animate={{
+                    boxShadow: isActive
+                      ? `0 0 0 6px ${a.hex}22, 0 10px 30px -8px ${a.hex}88`
+                      : "0 0 0 0px rgba(0,0,0,0)",
+                  }}
+                  transition={{ duration: 0.4 }}
+                >
+                  <Icon name={NODE_ICON[s.node]} size={26} />
+                </motion.span>
+                <span
+                  className={cn(
+                    "text-[11px] font-bold uppercase tracking-[0.14em] transition-colors",
+                    isActive ? a.text : "text-slate-500"
+                  )}
+                >
+                  {s.node}
+                </span>
+              </motion.span>
+            </button>
           );
         })}
+      </div>
 
-        {/* center label */}
-        <text x={ORBIT.cx} y={ORBIT.cy - 6} textAnchor="middle" fontSize={44} fontWeight={800} fill="#eaf1f7">
-          {String(activeIndex + 1).padStart(2, "0")}
-        </text>
-        <text x={ORBIT.cx} y={ORBIT.cy + 20} textAnchor="middle" fontSize={12} letterSpacing={2} fill="#5c7085">
-          / {String(loopSteps.length).padStart(2, "0")}
-        </text>
-      </svg>
-    </div>
-  );
-}
-
-function StepPanel({
-  activeStep,
-  activeIndex,
-  onSelect,
-}: {
-  activeStep: LoopStep;
-  activeIndex: number;
-  onSelect?: (i: number) => void;
-}) {
-  return (
-    <div className="relative min-h-[220px]">
-      {loopSteps.map((step, i) => (
-        <motion.div
-          key={step.id}
-          className="absolute inset-0"
-          animate={{
-            opacity: i === activeIndex ? 1 : 0,
-            y: i === activeIndex ? 0 : 12,
-          }}
-          transition={{ duration: 0.45, ease: [0.22, 0.9, 0.3, 1] }}
-          style={{ pointerEvents: i === activeIndex ? "auto" : "none" }}
-        >
-          <p className={cn("eyebrow", ACCENT_TEXT[step.accent])}>{step.eyebrow}</p>
-          <h3 className="mt-4 text-[clamp(22px,2.8vw,32px)] font-bold leading-[1.15] tracking-[-0.02em] text-hero-ink">
-            {step.title}
-          </h3>
-          <p className="mt-4 max-w-[46ch] text-[15px] leading-relaxed text-hero-soft">{step.body}</p>
-        </motion.div>
-      ))}
-
-      <div className="absolute -bottom-2 left-0 flex items-center gap-2">
-        {loopSteps.map((step, i) => (
+      {/* pager */}
+      <div className="mt-2 flex items-center justify-center gap-2">
+        {loopSteps.map((s, i) => (
           <button
-            key={step.id}
+            key={s.id}
             type="button"
-            onClick={() => onSelect?.(i)}
-            aria-label={`Go to step ${i + 1}: ${step.node}`}
+            onClick={() => setActive(i)}
+            aria-label={`Go to step ${i + 1}`}
             className={cn(
               "h-1.5 rounded-full transition-all duration-300",
-              onSelect && "cursor-pointer",
-              i === activeIndex ? cn("w-8", ACCENT_BG[activeStep.accent]) : "w-4 bg-slate-500/30 hover:bg-slate-500/50"
+              i === active ? cn("w-8", ACCENT[s.accent].bg) : "w-4 bg-slate-500/30 hover:bg-slate-500/50"
             )}
           />
         ))}
@@ -296,31 +224,34 @@ function StackedLoop() {
   return (
     <div className="container-page section-pad pt-12">
       <div className="relative mx-auto max-w-[560px]">
-        {loopSteps.map((step, i) => (
-          <Reveal key={step.id} delay={i * 0.08} className="relative pl-16 pb-10 last:pb-0">
-            {i < loopSteps.length - 1 && (
-              <span
-                className="absolute left-[23px] top-12 bottom-0 w-px bg-gradient-to-b from-slate-500/40 to-slate-500/10"
-                aria-hidden
-              />
-            )}
-            <span
-              className={cn(
-                "absolute left-0 top-0 flex h-12 w-12 items-center justify-center rounded-full border-2 bg-navy-800 font-mono text-[10px] font-bold",
-                ACCENT_BORDER[step.accent],
-                ACCENT_TEXT[step.accent]
+        {loopSteps.map((step, i) => {
+          const a = ACCENT[step.accent];
+          return (
+            <Reveal key={step.id} delay={i * 0.08} className="relative pb-10 pl-16 last:pb-0">
+              {i < loopSteps.length - 1 && (
+                <span
+                  className="absolute bottom-0 left-[23px] top-12 w-px bg-gradient-to-b from-slate-500/40 to-slate-500/10"
+                  aria-hidden
+                />
               )}
-            >
-              {i + 1}
-            </span>
+              <span
+                className={cn(
+                  "absolute left-0 top-0 flex h-12 w-12 items-center justify-center rounded-full border-2 bg-navy-800",
+                  a.border,
+                  a.text
+                )}
+              >
+                <Icon name={NODE_ICON[step.node]} size={18} />
+              </span>
 
-            <p className={cn("eyebrow", ACCENT_TEXT[step.accent])}>{step.eyebrow}</p>
-            <h3 className="mt-2 text-[19px] font-bold leading-[1.2] tracking-[-0.01em] text-hero-ink">
-              {step.title}
-            </h3>
-            <p className="mt-2 text-[14px] leading-relaxed text-hero-soft">{step.body}</p>
-          </Reveal>
-        ))}
+              <p className={cn("eyebrow", a.text)}>{step.eyebrow}</p>
+              <h3 className="mt-2 text-[19px] font-bold leading-[1.2] tracking-[-0.01em] text-hero-ink">
+                {step.title}
+              </h3>
+              <p className="mt-2 text-[14px] leading-relaxed text-hero-soft">{step.body}</p>
+            </Reveal>
+          );
+        })}
 
         <Reveal delay={loopSteps.length * 0.08} className="relative pl-16">
           <span

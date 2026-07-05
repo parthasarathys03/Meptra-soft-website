@@ -1,6 +1,6 @@
 import { Icon } from "@/components/ui/Icon";
 import { LeadForm } from "@/components/ui/LeadForm";
-import { site } from "@/data/content";
+import { site, offices } from "@/data/content";
 
 const directLines = [
   {
@@ -69,6 +69,31 @@ export default function Contact() {
 
           <div className="glass-panel rounded-[var(--radius-lg)] p-6 md:p-7">
             <LeadForm variant="dark" />
+          </div>
+        </div>
+
+        <div className="mt-10">
+          <h2 className="text-lg font-bold tracking-[-0.01em]">Our offices</h2>
+          <p className="mt-1 text-sm text-hero-soft">
+            Two virtual offices today — physical offices in both cities are coming soon.
+          </p>
+          <div className="mt-4 grid gap-4 sm:grid-cols-2">
+            {offices.map((o) => (
+              <div key={o.city} className="glass-panel flex gap-3 rounded-[var(--radius-lg)] p-5">
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-aqua-400/15 text-aqua-300">
+                  <Icon name="map-pin" size={18} />
+                </span>
+                <div className="min-w-0">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="text-sm font-semibold text-hero-ink">{o.city}</span>
+                    <span className="rounded-full border border-aqua-400/30 bg-aqua-400/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.06em] text-aqua-300">
+                      {o.status}
+                    </span>
+                  </div>
+                  <p className="mt-1.5 text-[13px] leading-relaxed text-hero-soft">{o.address}</p>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </div>
