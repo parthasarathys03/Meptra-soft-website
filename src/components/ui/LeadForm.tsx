@@ -1,8 +1,8 @@
-import { useId, useState } from "react";
+import { useEffect, useId, useState } from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
-import { site } from "@/data/content";
+import { buildLeadPayload, flushQueuedLeads, submitLead } from "@/lib/leads";
 
 const interests = ["Business enquiry", "A course", "An internship", "Project help"] as const;
 const contactMethods = ["WhatsApp", "Call"] as const;
@@ -46,16 +46,15 @@ const initialState: FormState = {
   message: "",
 };
 
-/** wa.me only accepts digits — strip spaces, dashes, parens, leading +. */
-function toWhatsAppDigits(phone: string) {
-  return phone.replace(/[^\d]/g, "");
-}
-
 /** Phone-first lead capture — students convert over call/WhatsApp, not email forms. */
 export function LeadForm({ variant = "light", className }: LeadFormProps) {
   const [values, setValues] = useState<FormState>(initialState);
-  const [submitted, setSubmitted] = useState(false);
+  const [submitState, setSubmitState] = useState<"idle" | "submitted" | "queued">("idle");
   const formId = useId();
+
+  useEffect(() => {
+    flushQueuedLeads();
+  }, []);
 
   const isDark = variant === "dark";
   const showStudentFields = studentInterests.includes(values.interest);
@@ -73,30 +72,27 @@ export function LeadForm({ variant = "light", className }: LeadFormProps) {
     setValues((prev) => ({ ...prev, [key]: value }));
   }
 
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
     const whatsappNumber = values.whatsappSameAsPhone ? values.phone : values.whatsappNumber;
-    const lines = [
-      `New enquiry from ${values.name || "website"}`,
-      `Phone: ${values.phone}`,
-      `Interest: ${values.interest}`,
-      `Preferred contact: ${values.preferredContact}`,
-      whatsappNumber && `WhatsApp: ${whatsappNumber}`,
-      values.college && `College: ${values.college}`,
-      values.year && `Year: ${values.year}`,
-      values.location && `Location: ${values.location}`,
-      values.message && `Message: ${values.message}`,
-    ].filter(Boolean);
+    const payload = buildLeadPayload({
+      name: values.name,
+      phone: values.phone,
+      interest: values.interest,
+      preferredContact: values.preferredContact,
+      whatsappNumber,
+      college: values.college,
+      year: values.year,
+      location: values.location,
+      message: values.message,
+    });
 
-    const businessDigits = toWhatsAppDigits(site.social.whatsapp.replace("https://wa.me/", ""));
-    const waLink = `https://wa.me/${businessDigits}?text=${encodeURIComponent(lines.join("\n"))}`;
-    window.open(waLink, "_blank", "noopener,noreferrer");
-
-    setSubmitted(true);
+    const { ok } = await submitLead(payload);
+    setSubmitState(ok ? "submitted" : "queued");
   }
 
-  if (submitted) {
+  if (submitState !== "idle") {
     const rows: [string, string][] = [
       ["Name", values.name],
       ["Phone", values.phone],
@@ -131,9 +127,13 @@ export function LeadForm({ variant = "light", className }: LeadFormProps) {
           <Icon name="check" size={32} className="text-aqua-400" />
         </span>
         <div>
-          <p className="text-xl font-bold tracking-[-0.01em]">Meptrasoft team will contact you</p>
+          <p className="text-xl font-bold tracking-[-0.01em]">
+            {submitState === "submitted" ? "Meptrasoft team will contact you" : "Saved on this device"}
+          </p>
           <p className={cn("mt-2 text-sm", isDark ? "text-hero-soft" : "text-slate-500")}>
-            We'll reach out via {values.preferredContact} shortly — keep your phone handy.
+            {submitState === "submitted"
+              ? `We'll reach out via ${values.preferredContact} shortly — keep your phone handy.`
+              : "We'll finish sending it once you're back online — no need to resubmit."}
           </p>
         </div>
 
