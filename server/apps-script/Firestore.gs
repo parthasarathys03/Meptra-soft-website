@@ -45,7 +45,14 @@ function firestoreCreateDoc(collection, docId, fields) {
 }
 
 function firestoreUpdateDoc(collection, docId, fields) {
-  return firestoreCreateDoc(collection, docId, fields); // patch is upsert-by-id, same call
+  var maskParams = Object.keys(fields)
+    .map(function (key) { return 'updateMask.fieldPaths=' + encodeURIComponent(key); })
+    .join('&');
+  return firestoreRequest(
+    'patch',
+    '/' + collection + '/' + docId + '?' + maskParams,
+    { fields: toFirestoreFields(fields) }
+  );
 }
 
 function firestoreDeleteDoc(collection, docId) {
