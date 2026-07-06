@@ -47,7 +47,11 @@ function readQueue(): LeadPayload[] {
 }
 
 function writeQueue(queue: LeadPayload[]) {
-  localStorage.setItem(QUEUE_KEY, JSON.stringify(queue));
+  try {
+    localStorage.setItem(QUEUE_KEY, JSON.stringify(queue));
+  } catch {
+    // localStorage unavailable (private browsing, quota) — queueing is best-effort
+  }
 }
 
 function enqueue(payload: LeadPayload) {
