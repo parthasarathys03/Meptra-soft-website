@@ -13,8 +13,12 @@ all using free services, no server to operate.
 ## Architecture
 
 A single **Google Apps Script web app** is the backend hub. It holds every secret
-(Telegram bot token, admin password, Firestore access, Sheet id) in Script Properties,
-so nothing sensitive ships in the browser bundle.
+(Telegram bot token, admin password, Firestore service-account key, Sheet id) in
+Script Properties, so nothing sensitive ships in the browser bundle.
+
+**Firestore is the single source of truth.** Google Sheets is a reporting/mirror
+layer only, for the owner to eyeball leads without opening the dashboard — the
+dashboard, exports, and stats always read from Firestore, never from the Sheet.
 
 ```
 Public site (browser)
@@ -75,16 +79,16 @@ fields serialize as empty strings for non-student interests).
 ### 1. Client capture (`src/lib/leads.ts`)
 - `buildLeadPayload(formValues)` — assembles the full record: form fields + `submissionId` + browser/device/UA parsing (`src/lib/device.ts`).
 - `submitLead(payload)` — POSTs JSON to the Apps Script URL (URL from `import.meta.env.VITE_LEADS_ENDPOINT`). Uses `fetch` with `Content-Type: text/plain` to avoid a CORS preflight Apps Script can't answer. Returns `{ok}`; never blocks the success UI on channel failures.
-- `LeadForm.tsx` `handleSubmit` calls `submitLead` (replaces the current CallMeBot fetch). Success UI unchanged. On network failure, the lead is queued to `localStorage` and retried on next load (best-effort, so a flaky network never silently loses a lead).
+- `LeadForm.tsx` `handleSubmit` calls `submitLead` (replaces the current CallMeBot fetch). On success, the existing confirmation UI shows. On network failure, the lead is queued to `localStorage` for automatic retry on next page load, and the form shows a distinct message — "Saved on this device — we'll finish sending it once you're back online" — never the same success UI, so the user is never told a submission completed when it hasn't reached the server yet.
 
 ### 2. Apps Script backend (`server/apps-script/Code.gs` — committed for reference, deployed manually)
 - `doPost(e)` — routes by `action`:
-  - `submit` — validate → write Firestore (REST, service-account or Firebase Web API key + open-write-to-Apps-Script only) → append Sheet row → send Gmail → send Telegram. Each channel wrapped in try/catch; failures logged to a `_errors` sheet, never fail the submission.
+  - `submit` — validate → write Firestore (REST, authenticated as a Google service account: Apps Script signs a JWT with the service-account private key via `Utilities.computeRsaSha256Signature`, exchanges it for an OAuth2 access token at Google's token endpoint, then calls the Firestore REST API with `Authorization: Bearer <token>`; Firestore security rules deny all direct client access, so this server-signed token is the only path in) → append Sheet row (mirror) → send Gmail → send Telegram. Each channel wrapped in try/catch; failures logged to a `_errors` sheet, never fail the submission.
   - `login` — verify username/password from Script Properties, return a random session token (kept in a short-lived cache).
   - `update` / `delete` — require valid token; mutate Firestore + Sheet.
 - `doGet(e)` — `action=list` (token-gated): returns leads JSON for the dashboard, supports server-side paging params.
-- Config via `PropertiesService.getScriptProperties()`: `TG_TOKEN`, `TG_CHAT_ID`, `ADMIN_USER`, `ADMIN_PASS`, `SHEET_ID`, `FB_PROJECT`, `FB_KEY`, `NOTIFY_EMAIL`.
-- `SETUP.md` documents: create Sheet, create Telegram bot via @BotFather, get chat id, set Script Properties, deploy as web app, paste URL into site `.env`.
+- Config via `PropertiesService.getScriptProperties()`: `TG_TOKEN`, `TG_CHAT_ID`, `ADMIN_USER`, `ADMIN_PASS`, `SHEET_ID`, `FB_PROJECT_ID`, `FB_SA_CLIENT_EMAIL`, `FB_SA_PRIVATE_KEY`, `NOTIFY_EMAIL`.
+- `SETUP.md` documents: create Sheet, create a Firebase service account (Firebase console → Project settings → Service accounts → Generate key) and paste its `client_email`/`private_key` into Script Properties, create Telegram bot via @BotFather, get chat id, deploy as web app, paste URL into site `.env`.
 
 ### 3. Admin dashboard (`src/pages/Admin.tsx` + `src/components/admin/*`)
 - Route `/admin` added to `src/App.tsx` (lazy-loaded, not in public nav).
@@ -107,7 +111,7 @@ fields serialize as empty strings for non-student interests).
 5. Owner clicks WhatsApp → summary copied, wa.me opens → paste into group.
 
 ## Error Handling
-- **Client:** validation before submit (existing rules kept). Network failure → queue in `localStorage`, retry next load, show success anyway (lead not lost). Clipboard API failure → fallback `execCommand('copy')` + manual-copy textarea.
+- **Client:** validation before submit (existing rules kept). Network failure → queue in `localStorage`, retry next load, show a "saved locally, will retry" state distinct from success (lead not lost, but user isn't told it already reached the server). Clipboard API failure → fallback `execCommand('copy')` + manual-copy textarea.
 - **Server:** every external channel (Firestore/Sheet/Gmail/Telegram) in its own try/catch; a failure is logged to an `_errors` sheet with the payload so nothing is lost silently. `submit` returns 200 as long as at least the Sheet or Firestore write succeeds.
 - **Auth:** invalid token → 401 JSON → dashboard clears token, returns to login.
 
@@ -131,8 +135,7 @@ Each phase is independently shippable.
 - CAPTCHA / bot defense beyond server validation (per requirements).
 - Realtime dashboard updates (poll/refresh button is enough).
 - Firebase Cloud Functions (billing plan required).
-```
 
 ## Non-obvious decisions to note
 - `text/plain` POST is deliberate — Apps Script web apps cannot respond to a CORS preflight, so an `application/json` content-type would fail from the browser. The body is still JSON, parsed with `JSON.parse(e.postData.contents)` server-side.
-- Firestore is written from Apps Script via REST using the Firebase Web API key with security rules that deny all direct client access — only the server key path is used.
+- Firestore is written from Apps Script authenticated as a Google service account (JWT-signed, OAuth2 token exchange) — not a Firebase Web API key. Firestore security rules deny all direct client reads/writes; the service-account token from Apps Script is the only write path.
