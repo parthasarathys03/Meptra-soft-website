@@ -39,12 +39,16 @@ export function clearToken() {
 
 async function post(body: Record<string, unknown>) {
   if (!ENDPOINT) return { ok: false, error: "missing_endpoint" };
-  const res = await fetch(ENDPOINT, {
-    method: "POST",
-    headers: { "Content-Type": "text/plain" },
-    body: JSON.stringify(body),
-  });
-  return res.json();
+  try {
+    const res = await fetch(ENDPOINT, {
+      method: "POST",
+      headers: { "Content-Type": "text/plain" },
+      body: JSON.stringify(body),
+    });
+    return await res.json();
+  } catch {
+    return { ok: false, error: "network" };
+  }
 }
 
 export async function login(username: string, password: string) {
@@ -53,8 +57,12 @@ export async function login(username: string, password: string) {
 
 export async function listLeads(token: string) {
   if (!ENDPOINT) return { ok: false, error: "missing_endpoint" };
-  const res = await fetch(`${ENDPOINT}?action=list&token=${encodeURIComponent(token)}`);
-  return res.json() as Promise<{ ok: boolean; leads?: Lead[]; error?: string }>;
+  try {
+    const res = await fetch(`${ENDPOINT}?action=list&token=${encodeURIComponent(token)}`);
+    return (await res.json()) as { ok: boolean; leads?: Lead[]; error?: string };
+  } catch {
+    return { ok: false, error: "network" };
+  }
 }
 
 export async function updateLead(token: string, submissionId: string, updates: Partial<Lead>) {

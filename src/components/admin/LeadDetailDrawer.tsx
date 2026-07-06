@@ -46,16 +46,17 @@ export function LeadDetailDrawer({
   const [error, setError] = useState<string | null>(null);
   const [toast, setToast] = useState<string | null>(null);
 
-  async function saveUpdates(updates: Partial<Lead>) {
+  async function saveUpdates(updates: Partial<Lead>): Promise<boolean> {
     setSaving(true);
     setError(null);
     const result = await updateLead(token, lead.submissionId, updates);
     setSaving(false);
     if (result.ok) {
-      onUpdated({ ...lead, ...draft, ...updates });
+      onUpdated({ ...lead, ...updates });
     } else {
       setError("Save failed — try again");
     }
+    return result.ok;
   }
 
   async function handleStatusChange(status: LeadStatus) {
@@ -71,8 +72,8 @@ export function LeadDetailDrawer({
     EDITABLE_FIELDS.forEach((key) => {
       if (draft[key] !== lead[key]) (updates as Record<string, unknown>)[key] = draft[key];
     });
-    await saveUpdates(updates);
-    setEditing(false);
+    const ok = await saveUpdates(updates);
+    if (ok) setEditing(false);
   }
 
   async function handleWhatsApp() {

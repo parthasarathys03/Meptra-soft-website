@@ -22,6 +22,8 @@ export function AdminDashboard({ token, onLogout }: { token: string; onLogout: (
     const result = await listLeads(token);
     if (result.ok && result.leads) {
       setLeads([...result.leads].sort((a, b) => b.createdAt.localeCompare(a.createdAt)));
+    } else {
+      onLogout();
     }
     setLoading(false);
   }
