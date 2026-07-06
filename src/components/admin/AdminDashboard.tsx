@@ -4,6 +4,7 @@ import { listLeads, type Lead, type LeadStatus } from "@/lib/adminApi";
 import { StatsBar } from "@/components/admin/StatsBar";
 import { LeadTable } from "@/components/admin/LeadTable";
 import { LeadDetailDrawer } from "@/components/admin/LeadDetailDrawer";
+import { exportLeadsToCsv, exportLeadsToExcel } from "@/lib/exportLeads";
 
 const PAGE_SIZE = 20;
 const STATUS_FILTERS: (LeadStatus | "All")[] = ["All", "New", "Contacted", "Follow-up", "Closed", "Converted"];
@@ -83,6 +84,18 @@ export function AdminDashboard({ token, onLogout }: { token: string; onLogout: (
         </select>
         <button onClick={load} className="rounded border border-line-200 px-3 py-2 text-sm font-semibold">
           Refresh
+        </button>
+        <button
+          onClick={() => exportLeadsToCsv(filtered)}
+          className="rounded border border-line-200 px-3 py-2 text-sm font-semibold"
+        >
+          Export CSV
+        </button>
+        <button
+          onClick={() => exportLeadsToExcel(filtered)}
+          className="rounded border border-line-200 px-3 py-2 text-sm font-semibold"
+        >
+          Export Excel
         </button>
       </div>
 
