@@ -1,6 +1,7 @@
 // src/components/admin/LeadDetailDrawer.tsx
 import { useState } from "react";
 import { deleteLead, updateLead, type Lead, type LeadStatus } from "@/lib/adminApi";
+import { copyAndOpenWhatsApp } from "@/lib/whatsappSummary";
 
 const STATUSES: LeadStatus[] = ["New", "Contacted", "Follow-up", "Closed", "Converted"];
 
@@ -43,6 +44,7 @@ export function LeadDetailDrawer({
   const [notes, setNotes] = useState(lead.notes);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [toast, setToast] = useState<string | null>(null);
 
   async function saveUpdates(updates: Partial<Lead>) {
     setSaving(true);
@@ -71,6 +73,16 @@ export function LeadDetailDrawer({
     });
     await saveUpdates(updates);
     setEditing(false);
+  }
+
+  async function handleWhatsApp() {
+    const { copied } = await copyAndOpenWhatsApp(lead);
+    setToast(
+      copied
+        ? "Summary copied — paste it into the Leads-group chat"
+        : "Couldn't copy automatically — select and copy the summary manually"
+    );
+    setTimeout(() => setToast(null), 4000);
   }
 
   async function handleDelete() {
@@ -139,7 +151,13 @@ export function LeadDetailDrawer({
           ))}
         </dl>
 
-        <div className="mt-6 flex gap-2">
+        <div className="mt-6 flex flex-wrap gap-2">
+          <button
+            onClick={handleWhatsApp}
+            className="flex-1 rounded bg-green-600 py-2 text-sm font-semibold text-white"
+          >
+            WhatsApp
+          </button>
           {editing ? (
             <>
               <button
@@ -175,6 +193,12 @@ export function LeadDetailDrawer({
             Delete
           </button>
         </div>
+
+        {toast && (
+          <div className="mt-3 rounded bg-navy-800 px-3 py-2 text-center text-xs font-medium text-white">
+            {toast}
+          </div>
+        )}
       </div>
     </div>
   );
