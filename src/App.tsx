@@ -9,6 +9,7 @@ const Learn = lazy(() => import("@/pages/Learn"));
 const Careers = lazy(() => import("@/pages/Careers"));
 const About = lazy(() => import("@/pages/About"));
 const Contact = lazy(() => import("@/pages/Contact"));
+const Admin = lazy(() => import("@/pages/Admin"));
 
 export default function App() {
   return (
@@ -57,6 +58,14 @@ export default function App() {
         />
         <Route path="*" element={<Home />} />
       </Route>
+      <Route
+        path="/admin"
+        element={
+          <Suspense fallback={null}>
+            <Admin />
+          </Suspense>
+        }
+      />
     </Routes>
   );
 }
