@@ -115,7 +115,20 @@ export function AdminDashboard({ token, onLogout }: { token: string; onLogout: (
         </div>
       )}
 
-      {selected && <LeadDetailDrawer lead={selected} onClose={() => setSelected(null)} />}
+      {selected && (
+        <LeadDetailDrawer
+          lead={selected}
+          token={token}
+          onClose={() => setSelected(null)}
+          onUpdated={(updated) => {
+            setLeads((prev) => prev.map((l) => (l.submissionId === updated.submissionId ? updated : l)));
+            setSelected(updated);
+          }}
+          onDeleted={(submissionId) => {
+            setLeads((prev) => prev.filter((l) => l.submissionId !== submissionId));
+          }}
+        />
+      )}
     </div>
   );
 }
