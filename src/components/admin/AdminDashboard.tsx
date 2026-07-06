@@ -3,6 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import { listLeads, type Lead, type LeadStatus } from "@/lib/adminApi";
 import { StatsBar } from "@/components/admin/StatsBar";
 import { LeadTable } from "@/components/admin/LeadTable";
+import { LeadDetailDrawer } from "@/components/admin/LeadDetailDrawer";
 
 const PAGE_SIZE = 20;
 const STATUS_FILTERS: (LeadStatus | "All")[] = ["All", "New", "Contacted", "Follow-up", "Closed", "Converted"];
@@ -114,24 +115,7 @@ export function AdminDashboard({ token, onLogout }: { token: string; onLogout: (
         </div>
       )}
 
-      {selected && (
-        <div
-          className="fixed inset-0 z-50 flex justify-end bg-black/30"
-          onClick={() => setSelected(null)}
-        >
-          <div
-            className="h-full w-full max-w-md overflow-y-auto bg-white p-6"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <p className="text-slate-500">
-              Detail drawer placeholder — extended in a later task with edit/notes/delete/WhatsApp.
-            </p>
-            <button onClick={() => setSelected(null)} className="mt-4 text-sm font-semibold text-navy-800">
-              Close
-            </button>
-          </div>
-        </div>
-      )}
+      {selected && <LeadDetailDrawer lead={selected} onClose={() => setSelected(null)} />}
     </div>
   );
 }
