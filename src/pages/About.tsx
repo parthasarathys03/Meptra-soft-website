@@ -12,7 +12,7 @@ export default function About() {
         title="One company bridging industry and education."
         subtitle="We build AI products for businesses and train the engineers who build them. The two sides feed each other — that's the whole idea."
         accent="navy"
-        image="/assets/about.png"
+        image="/assets/about.webp"
         imageAlt="Meptrasoft AI Technologies"
       />
       <PillarSplit />

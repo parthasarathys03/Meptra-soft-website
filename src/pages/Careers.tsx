@@ -16,7 +16,7 @@ export default function Careers() {
         title="Build products people actually use."
         subtitle="We hire engineers who want to ship real AI products — and grow the next ones alongside our students."
         accent="navy"
-        image="/assets/career.png"
+        image="/assets/career.webp"
         imageAlt="Careers at Meptrasoft AI Technologies"
         imageWide
       />

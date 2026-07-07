@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 import { SmartImage } from "@/components/ui/SmartImage";
 import type { Product } from "@/lib/types";
 
@@ -11,6 +12,7 @@ export function ProductCarousel({ items }: { items: Product[] }) {
   const [active, setActive] = useState(0);
   const paused = useRef(false);
   const startX = useRef<number | null>(null);
+  const navigate = useNavigate();
 
   const CARD = 300;
   const GAP = 34;
@@ -59,7 +61,11 @@ export function ProductCarousel({ items }: { items: Product[] }) {
           return (
             <motion.button
               key={p.id}
-              onClick={() => setActive(i)}
+              onClick={() =>
+                isActive
+                  ? navigate(`/contact?product=${encodeURIComponent(p.name)}`)
+                  : setActive(i)
+              }
               style={{ width: CARD, height: 380, marginLeft: -CARD / 2, marginTop: -190, zIndex: n - dist }}
               animate={{
                 x: offset * (CARD + GAP),
@@ -73,7 +79,7 @@ export function ProductCarousel({ items }: { items: Product[] }) {
                   ? "border-white/15 shadow-[0_30px_70px_-20px_rgba(0,0,0,0.6)]"
                   : "border-white/10"
               }`}
-              aria-label={p.name}
+              aria-label={isActive ? `Request a demo of ${p.name}` : p.name}
             >
               <SmartImage
                 src={p.image}

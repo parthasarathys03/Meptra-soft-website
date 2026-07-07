@@ -6,8 +6,6 @@ import path from "node:path";
 
 const rootDir = path.dirname(fileURLToPath(import.meta.url));
 const srcDir = path.resolve(rootDir, "src");
-// eslint-disable-next-line no-console
-console.log("[vite] alias @ ->", srcDir);
 
 export default defineConfig({
   plugins: [react(), tailwindcss()],

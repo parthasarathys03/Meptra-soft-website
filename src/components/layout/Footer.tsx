@@ -19,7 +19,7 @@ const companyLinks = [
 
 function FooterLink({ to, children }: { to: string; children: ReactNode }) {
   return (
-    <Link to={to} className="group inline-flex items-center gap-1.5 text-sm text-hero-soft transition-colors hover:text-white">
+    <Link to={to} className="group inline-flex items-center gap-1.5 text-[13px] leading-snug text-hero-soft transition-colors hover:text-white sm:text-sm">
       <span>{children}</span>
       <Icon
         name="arrow-right"
@@ -35,8 +35,8 @@ export function Footer() {
     <footer className="relative overflow-hidden bg-gradient-hero text-hero-ink">
       <div className="h-[2px] w-full bg-[linear-gradient(90deg,transparent,var(--color-aqua-400),var(--color-amber-500),var(--color-aqua-400),transparent)]" />
 
-      <div className="container-page relative grid gap-10 py-16 md:grid-cols-[1.4fr_1fr_1fr_1fr]">
-        <Reveal>
+      <div className="container-page relative grid grid-cols-2 gap-x-5 gap-y-9 py-12 md:grid-cols-[1.4fr_1fr_1fr_1fr] md:gap-10 md:gap-y-10 md:py-16">
+        <Reveal className="col-span-2 flex flex-col items-center text-center md:col-span-1 md:items-start md:text-left">
           <Link to="/" aria-label="Meptrasoft AI Technologies — home" className="inline-block">
             <img
               src="/assets/logo.svg"
@@ -47,7 +47,7 @@ export function Footer() {
           <p className="mt-4 max-w-[32ch] text-sm text-hero-soft">
             We build AI products for businesses — and train the engineers who build them.
           </p>
-          <div className="mt-5 flex gap-3">
+          <div className="mt-5 flex justify-center gap-3 md:justify-start">
             {socials.map((s) => (
               <MagneticButton key={s.name} strength={0.4}>
                 <a
@@ -63,11 +63,11 @@ export function Footer() {
         </Reveal>
 
         {nav.filter((g) => g.children).map((group, i) => (
-          <Reveal key={group.label} delay={0.08 * (i + 1)}>
-            <h3 className="eyebrow text-aqua-300">{group.label}</h3>
-            <ul className="mt-4 flex flex-col gap-2.5">
+          <Reveal key={group.label} delay={0.08 * (i + 1)} className="min-w-0 text-left">
+            <h3 className="eyebrow text-aqua-300 text-left">{group.label}</h3>
+            <ul className="mt-3.5 flex flex-col items-start gap-3">
               {group.children!.map((c) => (
-                <li key={c.href}>
+                <li key={c.href} className="min-w-0 max-w-full">
                   <FooterLink to={c.href}>{c.label}</FooterLink>
                 </li>
               ))}
@@ -75,9 +75,12 @@ export function Footer() {
           </Reveal>
         ))}
 
-        <Reveal delay={0.08 * (nav.filter((g) => g.children).length + 1)}>
+        <Reveal
+          delay={0.08 * (nav.filter((g) => g.children).length + 1)}
+          className="col-span-2 text-center md:col-span-1 md:text-left"
+        >
           <h3 className="eyebrow text-aqua-300">Company</h3>
-          <ul className="mt-4 flex flex-col gap-2.5">
+          <ul className="mt-4 flex flex-col items-center gap-2.5 md:items-start">
             {companyLinks.map((c) => (
               <li key={c.href}>
                 <FooterLink to={c.href}>{c.label}</FooterLink>

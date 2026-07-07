@@ -1,3 +1,4 @@
+import { useSearchParams } from "react-router-dom";
 import { Icon } from "@/components/ui/Icon";
 import { LeadForm } from "@/components/ui/LeadForm";
 import { site, offices } from "@/data/content";
@@ -24,6 +25,9 @@ const directLines = [
 ];
 
 export default function Contact() {
+  const [searchParams] = useSearchParams();
+  const product = searchParams.get("product") ?? undefined;
+
   return (
     <section className="relative min-h-screen overflow-hidden bg-gradient-hero text-hero-ink">
       <div aria-hidden className="circuit-grid pointer-events-none absolute inset-0 opacity-30" />
@@ -68,7 +72,7 @@ export default function Contact() {
           </div>
 
           <div className="glass-panel rounded-[var(--radius-lg)] p-6 md:p-7">
-            <LeadForm variant="dark" />
+            <LeadForm variant="dark" defaultProduct={product} />
           </div>
         </div>
 

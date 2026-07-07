@@ -4,42 +4,44 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project
 
-Single-page marketing/landing site for **Meptrasoft AI Technologies** (AI products + engineering training/internships). React 18 + Vite, no router, no backend. Everything renders on one page; navigation is anchor links that smooth-scroll to `section[id]` blocks.
+Marketing/product site for **Meptrasoft AI Technologies** (AI products + engineering training/internships). **React 18 + TypeScript + Vite + Tailwind CSS v4**, client-side routing via **react-router-dom**, no backend. Multi-page: `/`, `/solutions`, `/learn`, `/careers`, `/about`, `/contact`.
 
 ## Commands
 
 ```bash
 npm run dev       # Vite dev server with HMR
-npm run build     # production build to dist/
+npm run build     # tsc -b && vite build → dist/
 npm run preview   # serve the production build locally
-npm run lint      # ESLint over the repo (flat config, eslint.config.js)
+npm run lint      # ESLint (flat config: eslint.config.js)
 ```
 
-No test framework is configured.
+No test framework is configured. Typecheck standalone with `npx tsc -b --noEmit`.
 
 ## Architecture
 
-- **Entry**: `src/main.jsx` mounts `<App />` in `StrictMode` and imports `src/styles.css` (the real stylesheet). `src/index.css` and `src/App.css` are leftover Vite-template files and are **not imported** — ignore them; don't add styles there.
-- **`src/App.jsx`** is the whole page composition. `Header` and `Hero` load eagerly; every section below is `React.lazy` + a single `<Suspense fallback={null}>`. New sections go here, in render order, and must be lazy-loaded to match the pattern.
-- **Sections** live in `src/components/*.jsx`, one component per page section (Products, Services, Training, Courses, Internship, FinalYearProjects, Career, StudentSuccess, TechStack, About, BookConsultation, Register, Contact, Footer). Each renders a `<section id="...">` whose id is the scroll anchor target.
-- **Navigation contract**: `Header.jsx` holds the `navItems` array (`href` → `label`) and uses an `IntersectionObserver` to highlight the active section. Anchor clicks call `handleAnchorClick`, which `preventDefault()`s and does `scrollIntoView({ behavior: 'smooth' })`. When you add/rename/remove a section, keep three things in sync: the `id` on the section, the entry in `navItems`, and any `href="#..."` links pointing at it.
+- **Entry**: `src/main.tsx` mounts `<App />` in `StrictMode`, wrapped in `<BrowserRouter>` (with v7 future flags) and `<MotionConfig reducedMotion="user">` (so all Framer Motion honors `prefers-reduced-motion`). Imports `src/index.css` (the real stylesheet).
+- **`src/App.tsx`** holds the `<Routes>`. `Home` is imported eagerly for fast first paint; `Solutions`, `Learn`, `Careers`, `About`, `Contact` are `React.lazy` + `<Suspense>` (route-level code splitting).
+- **Pages** live in `src/pages/*.tsx`; each composes **section** components from `src/components/sections/*.tsx`. Shared UI in `src/components/ui`, motion primitives in `src/components/motion`, layout in `src/components/layout`, brand visuals in `src/components/brand`.
+- **Content** is centralized in `src/data/content.ts`; types in `src/lib/types.ts`; helpers in `src/lib/utils.ts` (incl. `prefersReducedMotion`).
 
 ## Styling
 
-- All styling is **one global stylesheet**, `src/styles.css` (~2000 lines), driven by CSS custom properties in `:root` (`--teal`, `--orange`, `--navy`, `--gradient-hero`, `--radius*`, `--transition`, etc.). Use these tokens rather than hardcoding colors/radii. There are no CSS modules and no styled-components — components reference plain `className` strings.
-- Font is **Sora**, loaded via `<link>` in `index.html` (not npm).
+- **Tailwind CSS v4** via `@tailwindcss/vite` — components use utility `className` strings. Design tokens (colors like `--color-aqua-400`, gradients, radii) and a few custom utilities live in `src/index.css` (`@layer base/utilities`). Prefer tokens over hardcoded values.
+- Global `:focus-visible` ring and a `prefers-reduced-motion` block are in `src/index.css`. Note that block only affects **CSS** animation/transition; JS-driven motion is handled by `MotionConfig` (Framer) and explicit checks (Globe, `prefersReducedMotion()`).
+- Font is **Sora**, loaded via `<link>` in `index.html` (weights 400/500/600/700/900 — the ones actually used).
 
 ## Hero globe (the one heavy piece)
 
-`src/components/Hero.jsx` renders an interactive 3D dotted globe with animated arcs using **three.js** directly (no react-three-fiber). Key points:
-- The whole scene is built inside a single `useEffect(() => {...}, [])` with a full cleanup return (cancels RAF, disconnects `ResizeObserver`, removes window/container listeners, disposes renderer). Preserve this teardown — leaks here cause WebGL context exhaustion under StrictMode double-mount.
-- Globe point positions come from `src/components/globePoints.json` (precomputed `[x,y,z]` triples fed into a `BufferGeometry`).
-- Stat counters and the globe scale-in animate via `requestAnimationFrame`; counters start on `IntersectionObserver` visibility.
+`src/components/brand/Globe.tsx` renders an interactive 3D dotted globe with animated arcs using **three.js** directly (no react-three-fiber).
+- three.js is ~129 kB gzip, so `Hero` (`src/components/sections/Hero.tsx`) loads `Globe` via `React.lazy` and only mounts it on `requestIdleCallback` after first paint — the chunk stays off the critical path. The hero's right column reserves the globe's box (`min-h`) so the late mount causes **no layout shift**. Keep both the lazy import and the reserved space.
+- The whole scene lives in one `useEffect` with a full cleanup return (cancels RAF, disconnects `ResizeObserver` + `IntersectionObserver`, removes listeners, disposes renderer). Preserve this teardown — leaks cause WebGL context exhaustion under StrictMode double-mount.
+- The render loop is paused via `IntersectionObserver` when the globe is off-screen, and under `prefers-reduced-motion` it draws a single static frame (no loop). Preserve both.
+- Globe point positions come from `src/data/globePoints.json` (`[x,y,z]` triples → `BufferGeometry`).
 
 ## Build config
 
-`vite.config.js` defines `manualChunks` splitting `three`, `topojson-client`, and the FontAwesome packages into separate bundles, and targets `es2020`. If you add a large dependency that should be code-split, add it here.
+`vite.config.ts` targets `es2020` and defines `manualChunks` splitting `three`, `react-router-dom` (router), and `framer-motion` (motion) into separate bundles. `three` + `Globe` are async chunks (dynamic import). If you add a large dependency to code-split, add it here.
 
 ## Icons
 
-Two icon sources are in use: **grommet-icons** (e.g. `FormNextLink` in the Hero) and **FontAwesome** (`@fortawesome/*`, used across most section components). Match whichever the surrounding component already uses.
+Two icon sources are in use: **grommet-icons** and **FontAwesome** (`@fortawesome/*`, tree-shaken). There is also a local `Icon` wrapper (`src/components/ui/Icon.tsx`). Match whichever the surrounding component already uses.

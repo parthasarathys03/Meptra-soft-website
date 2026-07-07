@@ -264,8 +264,13 @@
     inset: -1.5px;
     border-radius: inherit;
     background: conic-gradient(from 0deg, transparent 0%, var(--color-aqua-400) 20%, transparent 40%, var(--color-amber-500) 60%, transparent 80%);
-    animation: border-settle 6s cubic-bezier(0.16, 1, 0.3, 1) 0.2s 1 both;
     z-index: -1;
+  }
+  /* spinning light-beam border: desktop only — distracting on small screens */
+  @media (min-width: 768px) {
+    .anim-border::before {
+      animation: border-settle 6s cubic-bezier(0.16, 1, 0.3, 1) 0.2s 1 both;
+    }
   }
   @keyframes border-settle {
     from { transform: rotate(0deg); }

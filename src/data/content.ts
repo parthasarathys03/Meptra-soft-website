@@ -23,9 +23,26 @@ export const site = {
     linkedin: "https://linkedin.com/",
     whatsapp: "https://wa.me/919345984804",
   },
+  /**
+   * CallMeBot free WhatsApp API — sends lead-form submissions straight to the
+   * owner's WhatsApp with no backend. Setup (one-time, from the owner's phone):
+   *   1. Save +34 644 51 71 41 as a contact.
+   *   2. WhatsApp that number: "I allow callmebot to send me messages".
+   *   3. CallMeBot replies with an apikey — paste it below.
+   * phone must be the owner's number in international format, no "+" or spaces.
+   */
+  callmebot: {
+    phone: "919345984804",
+    apikey: "YOUR_CALLMEBOT_APIKEY",
+  },
 };
 
 export const nav: NavGroup[] = [
+  {
+    label: "Home",
+    href: "/",
+    accent: "teal",
+  },
   {
     label: "Solutions",
     href: "/solutions",
@@ -56,6 +73,7 @@ export const heroStats: Stat[] = [
   { value: 500, suffix: "+", label: "Engineers trained" },
   { value: 10, suffix: "+", label: "Products shipped" },
   { value: 200, suffix: "+", label: "Internships" },
+  { value: 50, suffix: "+", label: "AI models deployed" },
 ];
 
 export const proofStats: Stat[] = [
@@ -65,9 +83,6 @@ export const proofStats: Stat[] = [
   { value: 200, suffix: "+", label: "Internships completed" },
 ];
 
-// NOTE: images are temporary Unsplash placeholders — swap for real product screenshots later.
-const img = (id: string) => `https://images.unsplash.com/${id}?auto=format&fit=crop&w=900&q=70`;
-
 // AI Products — SaaS and AI tools we build and run in-house.
 export const products: Product[] = [
   { id: "exam-ai", name: "Exam Intelligence", what: "Generates, delivers, and grades assessments with AI — turning hours of paper-setting into minutes.", span: 1, tag: "SaaS", image: "/assets/exam_intelligence.jpeg" },
@@ -75,8 +90,8 @@ export const products: Product[] = [
   { id: "doc-ai", name: "Document Intelligence", what: "OCR and NLP that extract clean, structured data from invoices, forms, and IDs.", span: 1, tag: "AI", image: "/assets/Document_intelligence.jpeg" },
   { id: "resume-ai", name: "AI Resume Builder", what: "Builds recruiter-ready, ATS-optimized resumes from a few prompts — tailored to each role.", span: 1, tag: "SaaS", image: "/assets/ai-resume-builder.jpeg" },
   { id: "chatbot-ai", name: "AI Business Chatbot", what: "A chatbot that answers on your own data and drops into any website or app in minutes.", span: 1, tag: "AI", image: "/assets/chat_bot.jpeg" },
-  { id: "easy-apply", name: "Easy Apply", what: "A job app that matches candidates to the right openings and applies in a single tap.", span: 1, tag: "SaaS", image: "/assets/easy-job.png" },
-  { id: "analytics", name: "Analytics & BI", what: "AI dashboards and reporting layered on your existing data — no rebuild required.", span: 1, tag: "Data", image: "/assets/analytics-bi.png" },
+  { id: "easy-apply", name: "Easy Apply", what: "A job app that matches candidates to the right openings and applies in a single tap.", span: 1, tag: "SaaS", image: "/assets/easy-job.jpg" },
+  { id: "analytics", name: "Analytics & BI", what: "AI dashboards and reporting layered on your existing data — no rebuild required.", span: 1, tag: "Data", image: "/assets/analytics-bi.jpg" },
 ];
 
 // Technology Services — engineering we deliver for clients.

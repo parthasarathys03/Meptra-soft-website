@@ -14,7 +14,7 @@ export default function Solutions() {
         title="Technology services and AI products, built to ship."
         subtitle="We deliver AI, software, data, and cloud services for businesses — and build our own AI products on the same stack."
         accent="teal"
-        image="/assets/aiandit.png"
+        image="/assets/aiandit.webp"
         imageAlt="Meptrasoft AI ecosystem — cloud, data, security, software, and AI solutions"
       />
       <ServicesCatalog />

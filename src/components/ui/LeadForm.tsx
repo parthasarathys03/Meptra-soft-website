@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
 import { buildLeadPayload, flushQueuedLeads, submitLead } from "@/lib/leads";
 
-const interests = ["Business enquiry", "A course", "An internship", "Project help"] as const;
+const interests = ["Request a demo", "Business enquiry", "A course", "An internship", "Project help"] as const;
 const contactMethods = ["WhatsApp", "Call"] as const;
 const years = ["1st year", "2nd year", "3rd year", "4th year", "Passed out"] as const;
 
@@ -18,6 +18,8 @@ const studentInterests: readonly (typeof interests)[number][] = [
 export interface LeadFormProps {
   variant?: "light" | "dark";
   className?: string;
+  /** product name to prefill (e.g. arriving from a "request demo" click) */
+  defaultProduct?: string;
 }
 
 interface FormState {
@@ -46,10 +48,21 @@ const initialState: FormState = {
   message: "",
 };
 
+/** 10-digit local number, optionally with a +91 country code in front. */
+function isValidPhone(phone: string) {
+  const digits = phone.replace(/[^\d]/g, "");
+  return digits.length === 10 || (digits.length === 12 && digits.startsWith("91"));
+}
+
 /** Phone-first lead capture — students convert over call/WhatsApp, not email forms. */
-export function LeadForm({ variant = "light", className }: LeadFormProps) {
-  const [values, setValues] = useState<FormState>(initialState);
+export function LeadForm({ variant = "light", className, defaultProduct }: LeadFormProps) {
+  const [values, setValues] = useState<FormState>(() =>
+    defaultProduct
+      ? { ...initialState, interest: "Request a demo", message: `I'd like a demo of ${defaultProduct}.` }
+      : initialState
+  );
   const [submitState, setSubmitState] = useState<"idle" | "submitted" | "queued">("idle");
+  const [errors, setErrors] = useState<{ name?: string; phone?: string }>({});
   const formId = useId();
 
   useEffect(() => {
@@ -70,10 +83,23 @@ export function LeadForm({ variant = "light", className }: LeadFormProps) {
 
   function handleChange<K extends keyof FormState>(key: K, value: FormState[K]) {
     setValues((prev) => ({ ...prev, [key]: value }));
+    if (key === "name" || key === "phone") {
+      setErrors((prev) => ({ ...prev, [key]: undefined }));
+    }
+  }
+
+  function validate() {
+    const nextErrors: { name?: string; phone?: string } = {};
+    if (!values.name.trim()) nextErrors.name = "Name is required";
+    if (!values.phone.trim()) nextErrors.phone = "Phone number is required";
+    else if (!isValidPhone(values.phone)) nextErrors.phone = "Enter a valid 10-digit phone number";
+    setErrors(nextErrors);
+    return Object.keys(nextErrors).length === 0;
   }
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    if (!validate()) return;
 
     const whatsappNumber = values.whatsappSameAsPhone ? values.phone : values.whatsappNumber;
     const payload = buildLeadPayload({
@@ -167,12 +193,19 @@ export function LeadForm({ variant = "light", className }: LeadFormProps) {
           type="text"
           required
           aria-required="true"
+          aria-invalid={!!errors.name}
+          aria-describedby={errors.name ? `${formId}-name-error` : undefined}
           autoComplete="name"
           value={values.name}
           onChange={(e) => handleChange("name", e.target.value)}
           placeholder="Your name"
-          className={inputClass}
+          className={cn(inputClass, errors.name && "outline outline-2 outline-red-500")}
         />
+        {errors.name && (
+          <p id={`${formId}-name-error`} className="mt-1.5 text-[13px] font-medium text-red-500">
+            {errors.name}
+          </p>
+        )}
       </div>
 
       <div>
@@ -186,13 +219,21 @@ export function LeadForm({ variant = "light", className }: LeadFormProps) {
           type="tel"
           required
           aria-required="true"
+          aria-invalid={!!errors.phone}
+          aria-describedby={errors.phone ? `${formId}-phone-error` : undefined}
           autoComplete="tel"
           inputMode="tel"
+          maxLength={13}
           value={values.phone}
           onChange={(e) => handleChange("phone", e.target.value)}
           placeholder="+91 98765 43210"
-          className={inputClass}
+          className={cn(inputClass, errors.phone && "outline outline-2 outline-red-500")}
         />
+        {errors.phone && (
+          <p id={`${formId}-phone-error`} className="mt-1.5 text-[13px] font-medium text-red-500">
+            {errors.phone}
+          </p>
+        )}
       </div>
 
       <label

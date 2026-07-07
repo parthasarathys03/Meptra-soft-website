@@ -22,6 +22,13 @@ export function TiltCard({
   const ry = useSpring(useTransform(px, [0, 1], [-6, 6]), { stiffness: 200, damping: 20 });
   const gx = useTransform(px, (v) => `${v * 100}%`);
   const gy = useTransform(py, (v) => `${v * 100}%`);
+  // Hooks must run unconditionally — build the spotlight gradient here, not
+  // inline in conditionally-rendered JSX (rules-of-hooks).
+  const spotlight_bg = useTransform(
+    [gx, gy],
+    ([x, y]) =>
+      `radial-gradient(300px circle at ${x} ${y}, rgba(0,180,174,0.14), transparent 60%)`
+  );
 
   const enabled =
     typeof window !== "undefined" &&
@@ -51,12 +58,7 @@ export function TiltCard({
         <motion.div
           aria-hidden
           className="pointer-events-none absolute inset-0 rounded-[inherit] opacity-0 transition-opacity duration-300 hover:opacity-100"
-          style={{
-            background: useTransform(
-              [gx, gy],
-              ([x, y]) => `radial-gradient(300px circle at ${x} ${y}, rgba(0,180,174,0.14), transparent 60%)`
-            ),
-          }}
+          style={{ background: spotlight_bg }}
         />
       )}
       {children}

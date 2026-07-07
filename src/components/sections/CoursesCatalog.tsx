@@ -6,7 +6,7 @@ import { Reveal } from "@/components/motion/Reveal";
 import { courses, courseCategories } from "@/data/content";
 import type { Offering } from "@/lib/types";
 
-const MotionLink = motion(Link);
+const MotionLink = motion.create(Link);
 
 const DOT_GRID =
   "radial-gradient(circle at 1px 1px, rgba(255,255,255,0.08) 1px, transparent 0)";

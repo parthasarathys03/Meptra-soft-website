@@ -15,7 +15,7 @@ export default function Learn() {
         title="Learn by building on real products."
         subtitle="Placement prep, job-focused courses, internships, and real projects — designed for college students who want to get hired."
         accent="amber"
-        image="/assets/courses.png"
+        image="/assets/courses.webp"
         imageAlt="Meptrasoft courses — AI, data science, and full stack training"
       />
       <PlacementProgram />

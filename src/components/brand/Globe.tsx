@@ -1,5 +1,24 @@
 import { useEffect, useRef } from "react";
-import * as THREE from "three";
+import {
+  AdditiveBlending,
+  BufferGeometry,
+  DoubleSide,
+  Float32BufferAttribute,
+  Group,
+  Line,
+  LineBasicMaterial,
+  Mesh,
+  MeshBasicMaterial,
+  PerspectiveCamera,
+  Points,
+  PointsMaterial,
+  QuadraticBezierCurve3,
+  RingGeometry,
+  Scene,
+  SphereGeometry,
+  Vector3,
+  WebGLRenderer,
+} from "three";
 import globePoints from "@/data/globePoints.json";
 
 /** Interactive 3D dotted globe with animated arcs. Drag to spin; auto-rotates
@@ -13,11 +32,15 @@ export function Globe({ className }: { className?: string }) {
     const container = containerRef.current;
     if (!container) return;
 
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
+    const reduce =
+      typeof window.matchMedia === "function" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    const scene = new Scene();
+    const camera = new PerspectiveCamera(45, 1, 0.1, 100);
     camera.position.z = 2.55;
 
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    const renderer = new WebGLRenderer({ antialias: true, alpha: true });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.setClearColor(0x000000, 0);
     renderer.domElement.style.width = "100%";
@@ -37,11 +60,11 @@ export function Globe({ className }: { className?: string }) {
     const ro = new ResizeObserver(syncSize);
     ro.observe(container);
 
-    const globeGroup = new THREE.Group();
+    const globeGroup = new Group();
     globeGroup.scale.set(0.01, 0.01, 0.01);
     scene.add(globeGroup);
 
-    // Smooth scale-up animation on load
+    // Smooth scale-up animation on load (skipped under reduced-motion)
     const scaleStart = performance.now();
     const scaleDuration = 2200;
     function animateScale() {
@@ -55,20 +78,21 @@ export function Globe({ className }: { className?: string }) {
       globeGroup.scale.set(s, s, s);
       if (progress < 1) requestAnimationFrame(animateScale);
     }
-    requestAnimationFrame(animateScale);
+    if (reduce) globeGroup.scale.set(1, 1, 1);
+    else requestAnimationFrame(animateScale);
 
     // Inner sphere
     globeGroup.add(
-      new THREE.Mesh(
-        new THREE.SphereGeometry(0.99, 64, 64),
-        new THREE.MeshBasicMaterial({ color: 0x0a3d3d, transparent: true, opacity: 0.15 })
+      new Mesh(
+        new SphereGeometry(0.99, 64, 64),
+        new MeshBasicMaterial({ color: 0x0a3d3d, transparent: true, opacity: 0.15 })
       )
     );
 
     function ll2v(lat: number, lng: number, r: number) {
       const phi = ((90 - lat) * Math.PI) / 180;
       const theta = ((lng + 180) * Math.PI) / 180;
-      return new THREE.Vector3(
+      return new Vector3(
         -r * Math.sin(phi) * Math.cos(theta),
         r * Math.cos(phi),
         r * Math.sin(phi) * Math.sin(theta)
@@ -76,14 +100,14 @@ export function Globe({ className }: { className?: string }) {
     }
 
     // Dotted globe points
-    const geo = new THREE.BufferGeometry();
+    const geo = new BufferGeometry();
     geo.setAttribute(
       "position",
-      new THREE.Float32BufferAttribute(globePoints as number[], 3)
+      new Float32BufferAttribute(globePoints as number[], 3)
     );
-    const globeDots = new THREE.Points(
+    const globeDots = new Points(
       geo,
-      new THREE.PointsMaterial({
+      new PointsMaterial({
         color: 0xc8ede6,
         size: 0.011,
         transparent: true,
@@ -110,33 +134,33 @@ export function Globe({ className }: { className?: string }) {
       const start = ll2v(d[0], d[1], 1.01);
       const end = ll2v(d[2], d[3], 1.01);
       const mid = start.clone().add(end).normalize().multiplyScalar(1.85);
-      const curve = new THREE.QuadraticBezierCurve3(start, mid, end);
-      const lineGeo = new THREE.BufferGeometry().setFromPoints(curve.getPoints(ARC_PTS));
+      const curve = new QuadraticBezierCurve3(start, mid, end);
+      const lineGeo = new BufferGeometry().setFromPoints(curve.getPoints(ARC_PTS));
       lineGeo.setDrawRange(0, 0);
-      const line = new THREE.Line(
+      const line = new Line(
         lineGeo,
-        new THREE.LineBasicMaterial({ color: 0xff6b35, transparent: true, opacity: 0.55 })
+        new LineBasicMaterial({ color: 0xff6b35, transparent: true, opacity: 0.55 })
       );
       globeGroup.add(line);
-      const dot = new THREE.Mesh(
-        new THREE.SphereGeometry(0.013, 12, 12),
-        new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0 })
+      const dot = new Mesh(
+        new SphereGeometry(0.013, 12, 12),
+        new MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0 })
       );
       globeGroup.add(dot);
       // Impact ripple ring, laid flat on the surface at the landing point
-      const ring = new THREE.Mesh(
-        new THREE.RingGeometry(0.6, 1.0, 28),
-        new THREE.MeshBasicMaterial({
+      const ring = new Mesh(
+        new RingGeometry(0.6, 1.0, 28),
+        new MeshBasicMaterial({
           color: 0xffffff,
           transparent: true,
           opacity: 0,
-          side: THREE.DoubleSide,
-          blending: THREE.AdditiveBlending,
+          side: DoubleSide,
+          blending: AdditiveBlending,
           depthWrite: false,
         })
       );
       ring.position.copy(end.clone().normalize().multiplyScalar(1.0));
-      ring.quaternion.setFromUnitVectors(new THREE.Vector3(0, 0, 1), end.clone().normalize());
+      ring.quaternion.setFromUnitVectors(new Vector3(0, 0, 1), end.clone().normalize());
       ring.scale.setScalar(0.001);
       globeGroup.add(ring);
       return {
@@ -193,7 +217,8 @@ export function Globe({ className }: { className?: string }) {
     window.addEventListener("touchmove", onTouchMove, { passive: true });
     window.addEventListener("touchend", onTouchEnd);
 
-    let animId: number;
+    let animId = 0;
+    let running = false;
     const animate = () => {
       animId = requestAnimationFrame(animate);
       if (!dragging) {
@@ -214,9 +239,9 @@ export function Globe({ className }: { className?: string }) {
         arc.line.geometry.setDrawRange(tail, head - tail);
         arc.dot.position.copy(arc.curve.getPoint(t));
         const env = t < 0.05 ? t / 0.05 : 1.0;
-        const ringMat = arc.ring.material as THREE.MeshBasicMaterial;
-        const dotMat = arc.dot.material as THREE.MeshBasicMaterial;
-        const lineMat = arc.line.material as THREE.LineBasicMaterial;
+        const ringMat = arc.ring.material as MeshBasicMaterial;
+        const dotMat = arc.dot.material as MeshBasicMaterial;
+        const lineMat = arc.line.material as LineBasicMaterial;
         if (arc.ripple < 1) {
           arc.ripple += 0.05;
           const r = Math.min(arc.ripple, 1);
@@ -232,10 +257,35 @@ export function Globe({ className }: { className?: string }) {
       });
       renderer.render(scene, camera);
     };
-    animate();
+
+    const start = () => {
+      if (running) return;
+      running = true;
+      animate();
+    };
+    const stop = () => {
+      if (!running) return;
+      running = false;
+      cancelAnimationFrame(animId);
+    };
+
+    // Under reduced-motion: draw one static frame, never loop.
+    // Otherwise: only run the render loop while the globe is on-screen —
+    // no wasted CPU/GPU/battery when scrolled away.
+    let io: IntersectionObserver | null = null;
+    if (reduce) {
+      renderer.render(scene, camera);
+    } else {
+      io = new IntersectionObserver(
+        ([entry]) => (entry.isIntersecting ? start() : stop()),
+        { threshold: 0 }
+      );
+      io.observe(container);
+    }
 
     return () => {
-      cancelAnimationFrame(animId);
+      stop();
+      io?.disconnect();
       ro.disconnect();
       container.removeEventListener("mousedown", onMouseDown);
       window.removeEventListener("mousemove", onMouseMove);
