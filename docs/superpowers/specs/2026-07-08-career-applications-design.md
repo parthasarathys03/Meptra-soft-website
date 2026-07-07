@@ -71,6 +71,8 @@ New Firestore collection `applications`, mirrored as rows in a new "Applications
 | `notes` | admin | free text |
 | `pageUrl` / `referrer` / `userAgent` / `device` / `browser` | client | same telemetry fields as leads, via existing `parseDevice` helper |
 
+`APPLICATION_COLUMNS` (Apps Script, mirrors `LEAD_COLUMNS`): `['submissionId', 'createdAt', 'name', 'phone', 'email', 'roleTitle', 'resumeUrl', 'resumeFileName', 'pageUrl', 'referrer', 'userAgent', 'device', 'browser', 'status', 'notes', 'updatedAt']` — defines both the Sheet header row and per-row value order.
+
 ## Frontend
 
 - **`src/lib/applications.ts`** (new, mirrors `src/lib/leads.ts`):
@@ -85,13 +87,14 @@ New Firestore collection `applications`, mirrored as rows in a new "Applications
 
 - `AdminDashboard.tsx` gains a two-tab switcher: **Leads** / **Applications** (mirrors the existing single-list layout, just tab-scoped state + fetch call).
 - **`ApplicationTable.tsx`** (new, mirrors `LeadTable.tsx`): columns name, role, phone, email, resume (link), status, appliedAt. Row actions: View, Delete.
-- **`ApplicationDetailDrawer.tsx`** (new, mirrors `LeadDetailDrawer.tsx`): editable fields (name, phone, email, roleTitle), status dropdown, notes (blur-save), resume link opens in new tab, Delete (confirms, then removes Firestore doc + Sheet row + Storage object).
+- **`ApplicationDetailDrawer.tsx`** (new, mirrors `LeadDetailDrawer.tsx`): editable fields (name, phone, email, roleTitle), status dropdown, notes (blur-save), resume link opens in new tab, Delete (confirms, then removes Firestore doc + Sheet row + Storage object). Accepted limitation: no resume re-upload from the admin drawer — if a corrected resume is needed, delete and have the applicant reapply. Matches leads, which also have no re-upload-style field.
 - CSV export button reuses the `exportLeads.ts` pattern (new `exportApplicationsToCsv`), including the same CSV-injection sanitization.
 
 ## Backend (Apps Script, `server/apps-script/`)
 
 - **`Storage.gs`** (new): `uploadResumeToBucket(base64, filename, mimeType, submissionId)` — gets an OAuth token via the existing `FirestoreAuth.gs` flow, extended to also request scope `https://www.googleapis.com/auth/devstorage.read_write`. PUTs to `https://storage.googleapis.com/upload/storage/v1/b/{FB_STORAGE_BUCKET}/o?uploadType=media&name=resumes/{submissionId}-{filename}`, then sets that one object's ACL to public-read via the Storage JSON API, and returns its public URL (`https://storage.googleapis.com/{bucket}/resumes/...`).
-- **`Code.gs`**: new `action:"apply"` in `doPost` — validates fields + resume size/type server-side, calls `uploadResumeToBucket`, writes the Firestore doc (`firestoreCreateDoc` against collection `applications`), appends the Sheet row, calls the new notify functions. New `doGet` action `list_apps` (token-gated, mirrors `list`). New `doPost` actions `update_app` / `delete_app` (delete also calls a `deleteResumeFromBucket` helper).
+- **`Code.gs`**: new `action:"apply"` in `doPost` — validates fields + resume size/type server-side. **Idempotency (mirrors `handleSubmit`'s lead dedupe):** first `firestoreGetDoc('applications', submissionId)` — if it already exists, skip re-upload/re-create entirely and return `{ok:true}` immediately (handles offline-queue retries and double-clicks without duplicating the resume or the doc). Only if no existing doc: calls `uploadResumeToBucket`, then `firestoreCreateDoc('applications', submissionId, record)`. **Orphan cleanup:** if `firestoreCreateDoc` throws after the upload succeeded, best-effort `deleteResumeFromBucket` before returning the error, so a client retry (same submissionId) starts clean instead of leaking an unreferenced resume. Only after the Firestore write succeeds: append the Sheet row and fire notify — both best-effort (log and continue, don't fail the response), same as leads. New `doGet` action `list_apps` (token-gated, mirrors `list`). New `doPost` actions `update_app` / `delete_app`.
+  - **`delete_app` order (mirrors `handleDelete`):** 1) `firestoreDeleteDoc('applications', submissionId)` — if this fails, abort and return an error, nothing else runs. 2) Best-effort `deleteApplicationFromSheet(submissionId)` — log and continue on failure. 3) Best-effort `deleteResumeFromBucket(resumeUrl)` — log and continue on failure (an orphaned resume object with no doc is a low-cost leak, not worth failing the delete over).
 - **`Notify.gs`**: `sendApplicationEmail(application)` / `sendApplicationTelegram(application)` — same `NOTIFY_EMAIL`/`TG_CHAT_ID` script properties as leads, different message template (name, role, phone, email, resume link).
 - **New Script Property:** `FB_STORAGE_BUCKET` — the bucket name (you'll set this after confirming/creating the bucket in the Firebase/GCP console and granting the existing service account the **Storage Object Admin** role on it).
 
@@ -100,6 +103,13 @@ New Firestore collection `applications`, mirrored as rows in a new "Applications
 - Client: required-field + phone/email format validation before submit (reuses existing validators where possible); resume type/size checked before base64 encoding even starts (fail fast, no wasted encode on a 40MB file).
 - Server: re-validates resume size/type as a backstop (never trust the client); if the Storage upload fails, the whole `apply` action fails (no orphaned Firestore doc without a resume) and the client falls back to the offline queue for retry.
 - Offline queue: identical retry-on-mount pattern to leads, scoped to its own localStorage key so a stuck application never blocks the lead queue or vice versa.
+
+## Dependency Check
+
+No new npm packages. `FileReader`/base64 encoding is browser-native (used only in
+`ApplyModal.tsx`), no Firebase client SDK, no polyfills needed for the `es2020`
+Vite build target. Backend adds no new Apps Script libraries — `Storage.gs` uses
+the same `UrlFetchApp` + OAuth-token pattern already used by `Firestore.gs`.
 
 ## Testing / Verification
 
