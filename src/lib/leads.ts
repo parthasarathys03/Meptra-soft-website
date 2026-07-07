@@ -25,11 +25,11 @@ export interface LeadPayload extends LeadFormValues {
 const ENDPOINT = import.meta.env.VITE_LEADS_ENDPOINT as string | undefined;
 const QUEUE_KEY = "meptrasoft_lead_queue";
 
-export function buildLeadPayload(values: LeadFormValues): LeadPayload {
+export function buildLeadPayload(values: LeadFormValues, submissionId?: string): LeadPayload {
   const { device, browser } = parseDevice(navigator.userAgent);
   return {
     ...values,
-    submissionId: crypto.randomUUID(),
+    submissionId: submissionId || crypto.randomUUID(),
     pageUrl: window.location.href,
     referrer: document.referrer,
     userAgent: navigator.userAgent,

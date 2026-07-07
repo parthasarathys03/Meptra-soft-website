@@ -44,24 +44,57 @@ function handleSubmit(body) {
     return jsonResponse({ ok: false, error: 'missing_required_fields' });
   }
 
-  var record = {};
-  LEAD_COLUMNS.forEach(function (col) { record[col] = lead[col] || ''; });
-  record.createdAt = new Date().toISOString();
-  record.status = 'New';
-  record.notes = '';
-  record.updatedAt = record.createdAt;
-
-  var firestoreOk = false;
+  var existing = null;
   try {
-    firestoreCreateDoc('leads', record.submissionId, record);
-    firestoreOk = true;
+    existing = firestoreGetDoc('leads', lead.submissionId);
   } catch (err) {
-    logError('firestore_create', err, record);
+    // Ignore, assume new lead
   }
 
-  try { appendLeadToSheet(record); } catch (err) { logError('sheet_append', err, record); }
-  try { sendLeadEmail(record); } catch (err) { logError('email_send', err, record); }
-  try { sendLeadTelegram(record); } catch (err) { logError('telegram_send', err, record); }
+  var record = {};
+  LEAD_COLUMNS.forEach(function (col) { record[col] = lead[col] || ''; });
+
+  var firestoreOk = false;
+
+  if (existing) {
+    // Preserve existing metadata
+    record.createdAt = existing.createdAt || new Date().toISOString();
+    record.status = existing.status || 'New';
+    record.notes = existing.notes || '';
+    record.updatedAt = new Date().toISOString();
+
+    try {
+      firestoreCreateDoc('leads', record.submissionId, record);
+      firestoreOk = true;
+    } catch (err) {
+      logError('firestore_update_submit', err, record);
+    }
+
+    try {
+      var sheetUpdated = updateLeadInSheet(record);
+      if (!sheetUpdated) {
+        appendLeadToSheet(record);
+      }
+    } catch (err) {
+      logError('sheet_update_submit', err, record);
+    }
+  } else {
+    record.createdAt = new Date().toISOString();
+    record.status = 'New';
+    record.notes = '';
+    record.updatedAt = record.createdAt;
+
+    try {
+      firestoreCreateDoc('leads', record.submissionId, record);
+      firestoreOk = true;
+    } catch (err) {
+      logError('firestore_create', err, record);
+    }
+
+    try { appendLeadToSheet(record); } catch (err) { logError('sheet_append', err, record); }
+    try { sendLeadEmail(record); } catch (err) { logError('email_send', err, record); }
+    try { sendLeadTelegram(record); } catch (err) { logError('telegram_send', err, record); }
+  }
 
   return jsonResponse({ ok: firestoreOk });
 }

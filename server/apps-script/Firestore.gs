@@ -36,6 +36,20 @@ function firestoreRequest(method, path, body) {
   return JSON.parse(response.getContentText());
 }
 
+function firestoreGetDoc(collection, docId) {
+  try {
+    var result = firestoreRequest('get', '/' + collection + '/' + docId, null);
+    if (result && result.fields) {
+      var obj = fromFirestoreFields(result.fields);
+      obj.submissionId = obj.submissionId || docId;
+      return obj;
+    }
+    return null;
+  } catch (err) {
+    return null;
+  }
+}
+
 function firestoreCreateDoc(collection, docId, fields) {
   return firestoreRequest(
     'patch',

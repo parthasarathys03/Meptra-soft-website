@@ -63,6 +63,8 @@ export function LeadForm({ variant = "light", className, defaultProduct }: LeadF
   );
   const [submitState, setSubmitState] = useState<"idle" | "submitted" | "queued">("idle");
   const [errors, setErrors] = useState<{ name?: string; phone?: string }>({});
+  const [submissionId, setSubmissionId] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const formId = useId();
 
   useEffect(() => {
@@ -99,9 +101,11 @@ export function LeadForm({ variant = "light", className, defaultProduct }: LeadF
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    if (!validate()) return;
+    if (!validate() || isSubmitting) return;
 
+    setIsSubmitting(true);
     const whatsappNumber = values.whatsappSameAsPhone ? values.phone : values.whatsappNumber;
+    const subId = submissionId || crypto.randomUUID();
     const payload = buildLeadPayload({
       name: values.name,
       phone: values.phone,
@@ -112,10 +116,17 @@ export function LeadForm({ variant = "light", className, defaultProduct }: LeadF
       year: values.year,
       location: values.location,
       message: values.message,
-    });
+    }, subId);
 
-    const { ok } = await submitLead(payload);
-    setSubmitState(ok ? "submitted" : "queued");
+    try {
+      const { ok } = await submitLead(payload);
+      setSubmissionId(subId);
+      setSubmitState(ok ? "submitted" : "queued");
+    } catch {
+      setSubmitState("queued");
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   if (submitState !== "idle") {
@@ -176,6 +187,19 @@ export function LeadForm({ variant = "light", className, defaultProduct }: LeadF
             </div>
           ))}
         </dl>
+
+        <button
+          type="button"
+          onClick={() => setSubmitState("idle")}
+          className={cn(
+            "mt-2 w-full max-w-sm rounded-[var(--radius-md)] py-2.5 text-sm font-semibold transition-all border",
+            isDark
+              ? "border-aqua-400/30 bg-aqua-400/10 text-aqua-300 hover:bg-aqua-400/20"
+              : "border-line-300 bg-slate-50 text-navy-800 hover:bg-slate-100"
+          )}
+        >
+          Edit details / Correct mistake
+        </button>
       </div>
     );
   }
@@ -408,8 +432,8 @@ export function LeadForm({ variant = "light", className, defaultProduct }: LeadF
         />
       </div>
 
-      <Button type="submit" variant="amber" size="lg" className="mt-1 w-full">
-        Get started
+      <Button type="submit" variant="amber" size="lg" className="mt-1 w-full" disabled={isSubmitting}>
+        {isSubmitting ? "Submitting..." : "Get started"}
       </Button>
     </form>
   );

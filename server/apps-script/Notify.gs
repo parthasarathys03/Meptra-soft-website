@@ -9,6 +9,29 @@ function appendLeadToSheet(lead) {
   sheet.appendRow(LEAD_COLUMNS.map(function (col) { return lead[col] || ''; }));
 }
 
+/** Update the row in Google Sheet that matches the lead's submissionId. */
+function updateLeadInSheet(lead) {
+  var sheetId = PropertiesService.getScriptProperties().getProperty('SHEET_ID');
+  var ss = SpreadsheetApp.openById(sheetId);
+  var sheet = ss.getSheetByName('Leads');
+  if (!sheet) return false;
+
+  var lastRow = sheet.getLastRow();
+  if (lastRow <= 1) return false; // only header or empty
+
+  // submissionId is the first column (index 1). Search bottom-up for efficiency.
+  var data = sheet.getRange(2, 1, lastRow - 1, 1).getValues(); // column A, rows 2..lastRow
+  for (var i = data.length - 1; i >= 0; i--) {
+    if (String(data[i][0]) === lead.submissionId) {
+      var rowNum = i + 2; // +2 because data index 0 = row 2
+      var rowValues = LEAD_COLUMNS.map(function (col) { return lead[col] || ''; });
+      sheet.getRange(rowNum, 1, 1, LEAD_COLUMNS.length).setValues([rowValues]);
+      return true;
+    }
+  }
+  return false;
+}
+
 /** Delete the row from Google Sheet that matches the given submissionId (column 1). */
 function deleteLeadFromSheet(submissionId) {
   var sheetId = PropertiesService.getScriptProperties().getProperty('SHEET_ID');
