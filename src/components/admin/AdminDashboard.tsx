@@ -16,6 +16,12 @@ export function AdminDashboard({ token, onLogout }: { token: string; onLogout: (
   const [statusFilter, setStatusFilter] = useState<(typeof STATUS_FILTERS)[number]>("All");
   const [page, setPage] = useState(1);
   const [selected, setSelected] = useState<Lead | null>(null);
+  const [toast, setToast] = useState<string | null>(null);
+
+  function handleTableWhatsApp(copied: boolean) {
+    setToast(copied ? "Summary copied — paste it into WhatsApp" : "Couldn't copy automatically — copy it manually");
+    setTimeout(() => setToast(null), 4000);
+  }
 
   async function load() {
     setLoading(true);
@@ -49,9 +55,9 @@ export function AdminDashboard({ token, onLogout }: { token: string; onLogout: (
   const pageItems = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
 
   return (
-    <div className="min-h-screen bg-slate-50 p-6">
+    <div className="h-[100dvh] overflow-y-auto bg-slate-50 p-4 sm:p-6">
       <div className="mb-6 flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-navy-800">Leads</h1>
+        <h1 className="text-xl font-bold text-navy-800 sm:text-2xl">Leads</h1>
         <button onClick={onLogout} className="text-sm font-semibold text-slate-500 hover:text-navy-800">
           Log out
         </button>
@@ -68,7 +74,7 @@ export function AdminDashboard({ token, onLogout }: { token: string; onLogout: (
             setSearch(e.target.value);
             setPage(1);
           }}
-          className="w-64 rounded border border-line-200 px-3 py-2 text-sm"
+          className="w-full rounded border border-line-200 px-3 py-2 text-sm text-navy-800 placeholder:text-slate-400 sm:w-64"
         />
         <select
           value={statusFilter}
@@ -76,7 +82,7 @@ export function AdminDashboard({ token, onLogout }: { token: string; onLogout: (
             setStatusFilter(e.target.value as (typeof STATUS_FILTERS)[number]);
             setPage(1);
           }}
-          className="rounded border border-line-200 px-3 py-2 text-sm"
+          className="flex-1 rounded border border-line-200 px-3 py-2 text-sm text-navy-800 sm:flex-none"
         >
           {STATUS_FILTERS.map((s) => (
             <option key={s} value={s}>
@@ -84,44 +90,54 @@ export function AdminDashboard({ token, onLogout }: { token: string; onLogout: (
             </option>
           ))}
         </select>
-        <button onClick={load} className="rounded border border-line-200 px-3 py-2 text-sm font-semibold">
+        <button
+          onClick={load}
+          className="flex-1 rounded border border-line-200 px-3 py-2 text-sm font-semibold text-navy-800 sm:flex-none"
+        >
           Refresh
         </button>
         <button
           onClick={() => exportLeadsToCsv(filtered)}
-          className="rounded border border-line-200 px-3 py-2 text-sm font-semibold"
+          className="flex-1 rounded border border-line-200 px-3 py-2 text-sm font-semibold text-navy-800 sm:flex-none"
         >
           Export CSV
         </button>
         <button
           onClick={() => exportLeadsToExcel(filtered)}
-          className="rounded border border-line-200 px-3 py-2 text-sm font-semibold"
+          className="flex-1 rounded border border-line-200 px-3 py-2 text-sm font-semibold text-navy-800 sm:flex-none"
         >
           Export Excel
         </button>
       </div>
 
+      {toast && (
+        <div className="mb-4 rounded bg-navy-800 px-3 py-2 text-center text-xs font-medium text-white">{toast}</div>
+      )}
+
       {loading ? (
         <p className="text-slate-500">Loading...</p>
       ) : (
         <div className="rounded-lg border border-line-200 bg-white p-4">
-          <LeadTable leads={pageItems} onSelect={setSelected} />
-          <div className="mt-4 flex items-center justify-between text-sm">
-            <span className="text-slate-500">
+          <p className="mb-2 text-xs text-slate-500 sm:hidden">Swipe the table left/right to see all columns →</p>
+          <div className="overflow-x-auto">
+            <LeadTable leads={pageItems} onSelect={setSelected} onWhatsApp={handleTableWhatsApp} />
+          </div>
+          <div className="mt-4 flex flex-wrap items-center justify-between gap-2 text-sm">
+            <span className="text-slate-600">
               Page {page} of {totalPages} ({filtered.length} leads)
             </span>
             <div className="flex gap-2">
               <button
                 disabled={page <= 1}
                 onClick={() => setPage((p) => p - 1)}
-                className="rounded border border-line-200 px-3 py-1 disabled:opacity-40"
+                className="rounded border border-line-200 px-3 py-1 text-navy-800 disabled:opacity-40"
               >
                 Prev
               </button>
               <button
                 disabled={page >= totalPages}
                 onClick={() => setPage((p) => p + 1)}
-                className="rounded border border-line-200 px-3 py-1 disabled:opacity-40"
+                className="rounded border border-line-200 px-3 py-1 text-navy-800 disabled:opacity-40"
               >
                 Next
               </button>

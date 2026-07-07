@@ -68,12 +68,21 @@ function handleSubmit(body) {
 
 function handleLogin(body) {
   var props = PropertiesService.getScriptProperties();
-  if (body.username === props.getProperty('ADMIN_USER') && body.password === props.getProperty('ADMIN_PASS')) {
+  var validUser = body.username === props.getProperty('ADMIN_USER');
+  var validPass = body.password === props.getProperty('ADMIN_PASS');
+
+  if (validUser && validPass) {
     var token = Utilities.getUuid();
     CacheService.getScriptCache().put('session_' + token, '1', 6 * 60 * 60); // 6h
     return jsonResponse({ ok: true, token: token });
   }
-  return jsonResponse({ ok: false, error: 'invalid_credentials' });
+  if (!validUser && !validPass) {
+    return jsonResponse({ ok: false, error: 'invalid_both' });
+  }
+  if (!validUser) {
+    return jsonResponse({ ok: false, error: 'invalid_username' });
+  }
+  return jsonResponse({ ok: false, error: 'invalid_password' });
 }
 
 function handleUpdate(body) {

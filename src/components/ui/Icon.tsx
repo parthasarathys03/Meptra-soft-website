@@ -40,6 +40,8 @@ import {
   faClock,
   faGlobe,
   faUsers,
+  faEye,
+  faEyeSlash,
 } from "@fortawesome/free-solid-svg-icons";
 import {
   faInstagram,
@@ -91,6 +93,8 @@ export const icons = {
   clock: faClock,
   globe: faGlobe,
   users: faUsers,
+  eye: faEye,
+  "eye-slash": faEyeSlash,
   instagram: faInstagram,
   linkedin: faLinkedinIn,
   whatsapp: faWhatsapp,

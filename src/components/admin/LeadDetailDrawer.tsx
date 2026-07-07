@@ -101,7 +101,10 @@ export function LeadDetailDrawer({
 
   return (
     <div className="fixed inset-0 z-50 flex justify-end bg-black/30" onClick={onClose}>
-      <div className="h-full w-full max-w-md overflow-y-auto bg-white p-6" onClick={(e) => e.stopPropagation()}>
+      <div
+        className="h-full w-full max-w-md overflow-y-auto overscroll-contain bg-white p-6"
+        onClick={(e) => e.stopPropagation()}
+      >
         <div className="mb-4 flex items-center justify-between">
           <h2 className="text-lg font-bold text-navy-800">{lead.name}</h2>
           <button onClick={onClose} className="text-sm font-semibold text-slate-500 hover:text-navy-800">
@@ -114,7 +117,7 @@ export function LeadDetailDrawer({
           value={lead.status}
           onChange={(e) => handleStatusChange(e.target.value as LeadStatus)}
           disabled={saving}
-          className="mb-4 w-full rounded border border-line-200 px-3 py-2 text-sm"
+          className="mb-4 w-full rounded border border-line-200 px-3 py-2 text-sm text-navy-800"
         >
           {STATUSES.map((s) => (
             <option key={s} value={s}>
@@ -130,7 +133,7 @@ export function LeadDetailDrawer({
           onBlur={handleNotesBlur}
           rows={3}
           disabled={saving}
-          className="mb-4 w-full rounded border border-line-200 px-3 py-2 text-sm"
+          className="mb-4 w-full rounded border border-line-200 px-3 py-2 text-sm text-navy-800 placeholder:text-slate-400"
         />
 
         {error && <p className="mb-3 text-sm font-medium text-red-500">{error}</p>}
@@ -143,7 +146,7 @@ export function LeadDetailDrawer({
                 <input
                   value={String(draft[key])}
                   onChange={(e) => setDraft((d) => ({ ...d, [key]: e.target.value }))}
-                  className="w-40 rounded border border-line-200 px-2 py-1 text-right"
+                  className="w-40 rounded border border-line-200 px-2 py-1 text-right text-navy-800"
                 />
               ) : (
                 <dd className="text-right font-medium text-navy-800 break-all">{String(lead[key] || "—")}</dd>
@@ -173,7 +176,7 @@ export function LeadDetailDrawer({
                   setDraft(lead);
                   setEditing(false);
                 }}
-                className="flex-1 rounded border border-line-200 py-2 text-sm font-semibold"
+                className="flex-1 rounded border border-line-200 py-2 text-sm font-semibold text-navy-800"
               >
                 Cancel
               </button>
@@ -181,7 +184,7 @@ export function LeadDetailDrawer({
           ) : (
             <button
               onClick={() => setEditing(true)}
-              className="flex-1 rounded border border-line-200 py-2 text-sm font-semibold"
+              className="flex-1 rounded border border-line-200 py-2 text-sm font-semibold text-navy-800"
             >
               Edit
             </button>
