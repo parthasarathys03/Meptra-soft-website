@@ -18,12 +18,22 @@ export function FinalCTA() {
             the same: tell us where you're starting from and we'll take it from there.
           </p>
 
-          <div className="mt-8 flex flex-wrap gap-3">
-            <Button variant="amber" size="lg" to="/learn">
-              Start Learning
-            </Button>
-            <Button variant="outline-light" size="lg" to="/solutions">
+          <div className="mt-8 grid grid-cols-2 gap-3 sm:flex sm:flex-wrap">
+            <Button
+              variant="outline-light"
+              size="lg"
+              to="/solutions"
+              className="w-full whitespace-nowrap px-3 text-[13px] sm:w-auto sm:px-7 sm:text-base"
+            >
               Explore Solutions
+            </Button>
+            <Button
+              variant="amber"
+              size="lg"
+              to="/learn"
+              className="w-full whitespace-nowrap px-3 text-[13px] sm:w-auto sm:px-7 sm:text-base"
+            >
+              Start Learning
             </Button>
           </div>
         </Reveal>

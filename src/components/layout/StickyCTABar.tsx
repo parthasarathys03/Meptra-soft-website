@@ -15,7 +15,7 @@ export function StickyCTABar() {
           size="md"
           href={site.social.whatsapp}
           aria-label="Chat on WhatsApp"
-          className="!px-4"
+          className="!px-4 !bg-[#25D366] !text-white shadow-[0_2px_10px_rgba(37,211,102,0.45)] hover:!bg-[#20bd5a]"
         >
           <Icon name="whatsapp" size={20} />
         </Button>
