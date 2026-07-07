@@ -106,12 +106,22 @@ function handleDelete(body) {
   var submissionId = body.submissionId;
   if (!submissionId) return jsonResponse({ ok: false, error: 'missing_submissionId' });
 
+  // 1. Delete from Firestore
   try {
     firestoreDeleteDoc('leads', submissionId);
   } catch (err) {
     logError('firestore_delete', err, { submissionId: submissionId });
     return jsonResponse({ ok: false, error: 'firestore_delete_failed' });
   }
+
+  // 2. Delete matching row from Google Sheet
+  try {
+    deleteLeadFromSheet(submissionId);
+  } catch (err) {
+    logError('sheet_delete', err, { submissionId: submissionId });
+    // Firestore already deleted — don't fail the whole request, just log the sheet error
+  }
+
   return jsonResponse({ ok: true });
 }
 

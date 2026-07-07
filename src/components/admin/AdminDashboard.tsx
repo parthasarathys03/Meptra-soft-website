@@ -1,6 +1,6 @@
 // src/components/admin/AdminDashboard.tsx
 import { useEffect, useMemo, useState } from "react";
-import { listLeads, type Lead, type LeadStatus } from "@/lib/adminApi";
+import { deleteLead, listLeads, type Lead, type LeadStatus } from "@/lib/adminApi";
 import { StatsBar } from "@/components/admin/StatsBar";
 import { LeadTable } from "@/components/admin/LeadTable";
 import { LeadDetailDrawer } from "@/components/admin/LeadDetailDrawer";
@@ -21,6 +21,20 @@ export function AdminDashboard({ token, onLogout }: { token: string; onLogout: (
   function handleTableWhatsApp(copied: boolean) {
     setToast(copied ? "Summary copied — paste it into WhatsApp" : "Couldn't copy automatically — copy it manually");
     setTimeout(() => setToast(null), 4000);
+  }
+
+  async function handleDelete(submissionId: string): Promise<boolean> {
+    const result = await deleteLead(token, submissionId);
+    if (result.ok) {
+      setLeads((prev) => prev.filter((l) => l.submissionId !== submissionId));
+      setToast("Lead deleted from Firebase & Google Sheets");
+      setTimeout(() => setToast(null), 4000);
+      return true;
+    } else {
+      setToast("Delete failed — try again");
+      setTimeout(() => setToast(null), 4000);
+      return false;
+    }
   }
 
   async function load() {
@@ -120,7 +134,7 @@ export function AdminDashboard({ token, onLogout }: { token: string; onLogout: (
         <div className="rounded-lg border border-line-200 bg-white p-4">
           <p className="mb-2 text-xs text-slate-500 sm:hidden">Swipe the table left/right to see all columns →</p>
           <div className="overflow-x-auto">
-            <LeadTable leads={pageItems} onSelect={setSelected} onWhatsApp={handleTableWhatsApp} />
+            <LeadTable leads={pageItems} onSelect={setSelected} onWhatsApp={handleTableWhatsApp} onDelete={handleDelete} />
           </div>
           <div className="mt-4 flex flex-wrap items-center justify-between gap-2 text-sm">
             <span className="text-slate-600">

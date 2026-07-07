@@ -1,4 +1,5 @@
 // src/components/admin/LeadTable.tsx
+import { useState } from "react";
 import type { Lead } from "@/lib/adminApi";
 import { copyAndOpenWhatsApp } from "@/lib/whatsappSummary";
 
@@ -6,14 +7,24 @@ export function LeadTable({
   leads,
   onSelect,
   onWhatsApp,
+  onDelete,
 }: {
   leads: Lead[];
   onSelect: (lead: Lead) => void;
   onWhatsApp: (copied: boolean) => void;
+  onDelete: (submissionId: string) => Promise<boolean>;
 }) {
+  const [deletingId, setDeletingId] = useState<string | null>(null);
   async function handleWhatsAppClick(lead: Lead) {
     const { copied } = await copyAndOpenWhatsApp(lead);
     onWhatsApp(copied);
+  }
+
+  async function handleDeleteClick(lead: Lead) {
+    if (!window.confirm(`Delete lead "${lead.name}"? This removes it from Firebase and Google Sheets and cannot be undone.`)) return;
+    setDeletingId(lead.submissionId);
+    await onDelete(lead.submissionId);
+    setDeletingId(null);
   }
 
   if (leads.length === 0) {
@@ -59,6 +70,13 @@ export function LeadTable({
                   className="rounded bg-green-600 px-3 py-1 text-xs font-semibold text-white hover:bg-green-700"
                 >
                   Copy &amp; Send
+                </button>
+                <button
+                  onClick={() => handleDeleteClick(lead)}
+                  disabled={deletingId === lead.submissionId}
+                  className="rounded border border-red-300 bg-white px-3 py-1 text-xs font-semibold text-red-500 hover:bg-red-500 hover:text-white disabled:opacity-50"
+                >
+                  {deletingId === lead.submissionId ? "Deleting…" : "Delete"}
                 </button>
               </div>
             </td>
