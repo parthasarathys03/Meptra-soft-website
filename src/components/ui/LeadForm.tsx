@@ -129,6 +129,16 @@ export function LeadForm({ variant = "light", className, defaultProduct }: LeadF
     }
   }
 
+  function handleNewSubmission() {
+    setValues(
+      defaultProduct
+        ? { ...initialState, interest: "Request a demo", message: `I'd like a demo of ${defaultProduct}.` }
+        : initialState
+    );
+    setSubmissionId(null);
+    setSubmitState("idle");
+  }
+
   if (submitState !== "idle") {
     const rows: [string, string][] = [
       ["Name", values.name],
@@ -188,18 +198,30 @@ export function LeadForm({ variant = "light", className, defaultProduct }: LeadF
           ))}
         </dl>
 
-        <button
-          type="button"
-          onClick={() => setSubmitState("idle")}
-          className={cn(
-            "mt-2 w-full max-w-sm rounded-[var(--radius-md)] py-2.5 text-sm font-semibold transition-all border",
-            isDark
-              ? "border-aqua-400/30 bg-aqua-400/10 text-aqua-300 hover:bg-aqua-400/20"
-              : "border-line-300 bg-slate-50 text-navy-800 hover:bg-slate-100"
-          )}
-        >
-          Edit details / Correct mistake
-        </button>
+        <div className="flex w-full max-w-sm flex-col gap-2 mt-3">
+          <Button
+            type="button"
+            variant="amber"
+            size="lg"
+            className="w-full"
+            onClick={handleNewSubmission}
+          >
+            Done / Submit another
+          </Button>
+
+          <button
+            type="button"
+            onClick={() => setSubmitState("idle")}
+            className={cn(
+              "w-full rounded-[var(--radius-md)] py-2.5 text-sm font-semibold transition-all border",
+              isDark
+                ? "border-aqua-400/30 bg-aqua-400/10 text-aqua-300 hover:bg-aqua-400/20"
+                : "border-line-300 bg-slate-50 text-navy-800 hover:bg-slate-100"
+            )}
+          >
+            Edit details / Correct mistake
+          </button>
+        </div>
       </div>
     );
   }
