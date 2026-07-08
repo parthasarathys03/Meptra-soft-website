@@ -234,7 +234,7 @@ function handleApply(body) {
 
     var resumeUrl;
     try {
-      resumeUrl = uploadResumeToBucket(
+      resumeUrl = uploadResumeToDrive(
         application.resumeBase64,
         application.resumeFileName,
         application.resumeMimeType,
@@ -257,7 +257,7 @@ function handleApply(body) {
       firestoreCreateDoc('applications', record.submissionId, record);
     } catch (err) {
       logError('firestore_create_application', err, record);
-      try { deleteResumeFromBucket(resumeUrl); } catch (cleanupErr) { logError('resume_cleanup', cleanupErr, record); }
+      try { deleteResumeFromDrive(resumeUrl); } catch (cleanupErr) { logError('resume_cleanup', cleanupErr, record); }
       return jsonResponse({ ok: false, error: 'firestore_create_failed' });
     }
   } finally {
@@ -331,7 +331,7 @@ function handleDeleteApplication(body) {
 
   if (existing && existing.resumeUrl) {
     try {
-      deleteResumeFromBucket(existing.resumeUrl);
+      deleteResumeFromDrive(existing.resumeUrl);
     } catch (err) {
       logError('resume_delete', err, { submissionId: submissionId });
     }

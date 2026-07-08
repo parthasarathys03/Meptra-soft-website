@@ -1,72 +1,39 @@
 // server/apps-script/Storage.gs
 
-function storageBucketName() {
-  var bucket = PropertiesService.getScriptProperties().getProperty('FB_STORAGE_BUCKET');
-  if (!bucket) throw new Error('FB_STORAGE_BUCKET script property is not set');
-  return bucket;
+function resumeDriveFolderId() {
+  var folderId = PropertiesService.getScriptProperties().getProperty('RESUME_DRIVE_FOLDER_ID');
+  if (!folderId) throw new Error('RESUME_DRIVE_FOLDER_ID script property is not set');
+  return folderId;
 }
 
 /**
- * Uploads a base64-encoded resume to the configured bucket at
- * resumes/{submissionId}-{filename}, makes that one object public-read,
- * and returns its public URL. Throws on any failure (caller decides
- * whether to fail the whole request or clean up).
+ * Uploads a base64-encoded resume to the configured Google Drive folder as
+ * {submissionId}-{filename}, shares it "anyone with the link can view", and
+ * returns its Drive view URL. Throws on any failure (caller decides whether
+ * to fail the whole request or clean up).
  */
-function uploadResumeToBucket(base64, filename, mimeType, submissionId) {
-  var token = getFirestoreAccessToken();
-  var bucket = storageBucketName();
-  var objectName = 'resumes/' + submissionId + '-' + filename;
+function uploadResumeToDrive(base64, filename, mimeType, submissionId) {
+  var folder = DriveApp.getFolderById(resumeDriveFolderId());
   var bytes = Utilities.base64Decode(base64);
-
-  var uploadResponse = UrlFetchApp.fetch(
-    'https://storage.googleapis.com/upload/storage/v1/b/' + bucket + '/o?uploadType=media&name=' + encodeURIComponent(objectName),
-    {
-      method: 'post',
-      contentType: mimeType || 'application/octet-stream',
-      headers: { Authorization: 'Bearer ' + token },
-      payload: bytes,
-      muteHttpExceptions: true
-    }
-  );
-  if (uploadResponse.getResponseCode() >= 300) {
-    throw new Error('Resume upload failed (' + uploadResponse.getResponseCode() + '): ' + uploadResponse.getContentText());
-  }
-
-  var aclResponse = UrlFetchApp.fetch(
-    'https://storage.googleapis.com/storage/v1/b/' + bucket + '/o/' + encodeURIComponent(objectName) + '/acl',
-    {
-      method: 'post',
-      contentType: 'application/json',
-      headers: { Authorization: 'Bearer ' + token },
-      payload: JSON.stringify({ entity: 'allUsers', role: 'READER' }),
-      muteHttpExceptions: true
-    }
-  );
-  if (aclResponse.getResponseCode() >= 300) {
-    throw new Error('Resume ACL update failed (' + aclResponse.getResponseCode() + '): ' + aclResponse.getContentText());
-  }
-
-  return 'https://storage.googleapis.com/' + bucket + '/' + objectName;
+  var blob = Utilities.newBlob(bytes, mimeType || 'application/octet-stream', submissionId + '-' + filename);
+  var file = folder.createFile(blob);
+  file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+  return file.getUrl();
 }
 
-/** Best-effort delete of a resume object, given its public URL. */
-function deleteResumeFromBucket(resumeUrl) {
+/** Best-effort delete (trash) of a resume file, given its Drive view URL. */
+function deleteResumeFromDrive(resumeUrl) {
   if (!resumeUrl) return;
-  var token = getFirestoreAccessToken();
-  var bucket = storageBucketName();
-  var prefix = 'https://storage.googleapis.com/' + bucket + '/';
-  if (resumeUrl.indexOf(prefix) !== 0) throw new Error('resumeUrl does not match configured bucket: ' + resumeUrl);
-  var objectName = resumeUrl.slice(prefix.length);
+  var match = resumeUrl.match(/\/d\/([^/]+)/);
+  var fileId = match ? match[1] : null;
+  if (!fileId) throw new Error('Could not parse Drive file id from resumeUrl: ' + resumeUrl);
 
-  var response = UrlFetchApp.fetch(
-    'https://storage.googleapis.com/storage/v1/b/' + bucket + '/o/' + encodeURIComponent(objectName),
-    {
-      method: 'delete',
-      headers: { Authorization: 'Bearer ' + token },
-      muteHttpExceptions: true
-    }
-  );
-  if (response.getResponseCode() >= 300 && response.getResponseCode() !== 404) {
-    throw new Error('Resume delete failed (' + response.getResponseCode() + '): ' + response.getContentText());
+  try {
+    var file = DriveApp.getFileById(fileId);
+    file.setTrashed(true);
+  } catch (err) {
+    // File already deleted/missing — treat as success, matching the
+    // 404-tolerant delete semantics the rest of the pipeline expects.
+    if (String(err && err.message).indexOf('not found') === -1) throw err;
   }
 }

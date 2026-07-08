@@ -8,7 +8,7 @@
  */
 function getFirestoreAccessToken() {
   var cache = CacheService.getScriptCache();
-  var cached = cache.get('gcp_access_token');
+  var cached = cache.get('fs_access_token');
   if (cached) return cached;
 
   var props = PropertiesService.getScriptProperties();
@@ -19,7 +19,7 @@ function getFirestoreAccessToken() {
   var now = Math.floor(new Date().getTime() / 1000);
   var claimSet = {
     iss: clientEmail,
-    scope: 'https://www.googleapis.com/auth/datastore https://www.googleapis.com/auth/devstorage.read_write',
+    scope: 'https://www.googleapis.com/auth/datastore',
     aud: 'https://oauth2.googleapis.com/token',
     exp: now + 3600,
     iat: now
@@ -49,6 +49,6 @@ function getFirestoreAccessToken() {
     throw new Error('Firestore auth failed: ' + response.getContentText());
   }
 
-  cache.put('gcp_access_token', body.access_token, 55 * 60);
+  cache.put('fs_access_token', body.access_token, 55 * 60);
   return body.access_token;
 }

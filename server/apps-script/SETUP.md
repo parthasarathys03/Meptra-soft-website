@@ -35,13 +35,14 @@ Apps Script project → Project Settings (gear) → Script Properties → add:
 | `TG_CHAT_ID` | Telegram chat/group id to notify |
 | `ADMIN_USER` | dashboard login username |
 | `ADMIN_PASS` | dashboard login password |
-| `FB_STORAGE_BUCKET` | Cloud Storage bucket name for resume uploads (see Resume storage setup below) |
+| `RESUME_DRIVE_FOLDER_ID` | Google Drive folder id for resume uploads (see Resume storage setup below) |
 
-## 4. Resume storage (Cloud Storage)
+## 4. Resume storage (Google Drive)
 
-1. In the Firebase console for this project, open **Build → Storage** and note the default bucket name (usually `<project-id>.appspot.com`). If Storage has never been enabled, enable it once — the free Spark plan default bucket is sufficient.
-2. In Google Cloud Console → IAM, grant the existing service account (the one whose key is in `FB_SA_CLIENT_EMAIL`) the **Storage Object Admin** role on that bucket.
-3. In the Apps Script project, add a new Script Property: `FB_STORAGE_BUCKET` = the bucket name from step 1.
+1. In Google Drive, create a folder to hold applicant resumes (e.g. "Meptrasoft Resumes").
+2. Open the folder and copy its id from the URL: `https://drive.google.com/drive/folders/`**`<FOLDER_ID>`**.
+3. In the Apps Script project, add a new Script Property: `RESUME_DRIVE_FOLDER_ID` = that folder id.
+4. The script uploads/deletes files as the Apps Script project's own authorized user (the "Execute as: Me" account from step 5) — no service account or extra IAM grant is needed. The first deployment/run will prompt that account to authorize the Drive scope; approve it.
 
 ## 5. Deploy
 Deploy → New deployment → Web app → Execute as: Me → Who has access: Anyone → Deploy.
