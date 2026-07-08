@@ -19,8 +19,8 @@ export const site = {
   /** Job applications route here — intentionally not rendered as visible text anywhere. */
   applicationEmail: "parthasarathysankar03@gmail.com",
   social: {
-    instagram: "https://instagram.com/",
-    linkedin: "https://linkedin.com/",
+    instagram: "https://www.instagram.com/meptrasoft_ai_technologies?igsh=MWxseTlmN2kzbzZqYQ==",
+    linkedin: "https://www.linkedin.com/in/meptrasoft-ai-technologies-b90442420",
     whatsapp: "https://wa.me/919345984804",
   },
   /**

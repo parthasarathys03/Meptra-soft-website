@@ -52,6 +52,8 @@ export function Footer() {
               <MagneticButton key={s.name} strength={0.4}>
                 <a
                   href={s.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   aria-label={s.label}
                   className="flex h-9 w-9 items-center justify-center rounded-full border border-white/15 text-hero-soft transition-colors hover:border-aqua-400 hover:text-aqua-300"
                 >
