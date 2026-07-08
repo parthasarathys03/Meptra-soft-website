@@ -35,11 +35,18 @@ Apps Script project → Project Settings (gear) → Script Properties → add:
 | `TG_CHAT_ID` | Telegram chat/group id to notify |
 | `ADMIN_USER` | dashboard login username |
 | `ADMIN_PASS` | dashboard login password |
+| `FB_STORAGE_BUCKET` | Cloud Storage bucket name for resume uploads (see Resume storage setup below) |
 
-## 4. Deploy
+## 4. Resume storage (Cloud Storage)
+
+1. In the Firebase console for this project, open **Build → Storage** and note the default bucket name (usually `<project-id>.appspot.com`). If Storage has never been enabled, enable it once — the free Spark plan default bucket is sufficient.
+2. In Google Cloud Console → IAM, grant the existing service account (the one whose key is in `FB_SA_CLIENT_EMAIL`) the **Storage Object Admin** role on that bucket.
+3. In the Apps Script project, add a new Script Property: `FB_STORAGE_BUCKET` = the bucket name from step 1.
+
+## 5. Deploy
 Deploy → New deployment → Web app → Execute as: Me → Who has access: Anyone → Deploy.
 Copy the `/exec` URL — this is `VITE_LEADS_ENDPOINT` for the React app's `.env`.
 
-## 5. Redeploying after code changes
+## 6. Redeploying after code changes
 Existing deployments don't pick up new code automatically. After editing any `.gs` file:
 Deploy → Manage deployments → pick the deployment → Edit (pencil) → Version: New version → Deploy.
