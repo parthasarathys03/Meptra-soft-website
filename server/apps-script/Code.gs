@@ -181,6 +181,18 @@ function handleList(params) {
   }
 }
 
+var ACCEPTED_RESUME_EXTENSIONS = ['.pdf', '.doc', '.docx'];
+
+function hasAcceptedResumeExtension(fileName) {
+  var lower = String(fileName).toLowerCase();
+  for (var i = 0; i < ACCEPTED_RESUME_EXTENSIONS.length; i++) {
+    if (lower.indexOf(ACCEPTED_RESUME_EXTENSIONS[i], lower.length - ACCEPTED_RESUME_EXTENSIONS[i].length) !== -1) {
+      return true;
+    }
+  }
+  return false;
+}
+
 function handleApply(body) {
   var application = body.application || {};
   if (!application.name || !application.phone || !application.email || !application.submissionId) {
@@ -188,6 +200,9 @@ function handleApply(body) {
   }
   if (!application.resumeBase64 || !application.resumeFileName) {
     return jsonResponse({ ok: false, error: 'missing_resume' });
+  }
+  if (!hasAcceptedResumeExtension(application.resumeFileName)) {
+    return jsonResponse({ ok: false, error: 'invalid_resume_type' });
   }
   if (application.resumeBase64.length > MAX_RESUME_BASE64_LENGTH) {
     return jsonResponse({ ok: false, error: 'resume_too_large' });
