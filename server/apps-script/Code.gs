@@ -195,43 +195,58 @@ function handleApply(body) {
 
   // Idempotency: a retried submission (offline queue or double-click) with the
   // same submissionId must not re-upload the resume or create a duplicate doc.
-  var existing = null;
+  // The check-then-act sequence below is guarded by a script lock so two
+  // near-simultaneous requests with the same submissionId can't both pass the
+  // dedupe check before either writes.
+  var lock = LockService.getScriptLock();
   try {
-    existing = firestoreGetDoc('applications', application.submissionId);
+    lock.waitLock(10000); // wait up to 10s for the lock
   } catch (err) {
-    // Ignore, assume new application
-  }
-  if (existing) {
-    return jsonResponse({ ok: true });
-  }
-
-  var resumeUrl;
-  try {
-    resumeUrl = uploadResumeToBucket(
-      application.resumeBase64,
-      application.resumeFileName,
-      application.resumeMimeType,
-      application.submissionId
-    );
-  } catch (err) {
-    logError('resume_upload', err, { submissionId: application.submissionId });
-    return jsonResponse({ ok: false, error: 'resume_upload_failed' });
+    return jsonResponse({ ok: false, error: 'apply_lock_timeout' });
   }
 
-  var record = {};
-  APPLICATION_COLUMNS.forEach(function (col) { record[col] = application[col] || ''; });
-  record.resumeUrl = resumeUrl;
-  record.createdAt = new Date().toISOString();
-  record.status = 'New';
-  record.notes = '';
-  record.updatedAt = record.createdAt;
-
+  var record;
   try {
-    firestoreCreateDoc('applications', record.submissionId, record);
-  } catch (err) {
-    logError('firestore_create_application', err, record);
-    try { deleteResumeFromBucket(resumeUrl); } catch (cleanupErr) { logError('resume_cleanup', cleanupErr, record); }
-    return jsonResponse({ ok: false, error: 'firestore_create_failed' });
+    var existing = null;
+    try {
+      existing = firestoreGetDoc('applications', application.submissionId);
+    } catch (err) {
+      // Ignore, assume new application
+    }
+    if (existing) {
+      return jsonResponse({ ok: true });
+    }
+
+    var resumeUrl;
+    try {
+      resumeUrl = uploadResumeToBucket(
+        application.resumeBase64,
+        application.resumeFileName,
+        application.resumeMimeType,
+        application.submissionId
+      );
+    } catch (err) {
+      logError('resume_upload', err, { submissionId: application.submissionId });
+      return jsonResponse({ ok: false, error: 'resume_upload_failed' });
+    }
+
+    record = {};
+    APPLICATION_COLUMNS.forEach(function (col) { record[col] = application[col] || ''; });
+    record.resumeUrl = resumeUrl;
+    record.createdAt = new Date().toISOString();
+    record.status = 'New';
+    record.notes = '';
+    record.updatedAt = record.createdAt;
+
+    try {
+      firestoreCreateDoc('applications', record.submissionId, record);
+    } catch (err) {
+      logError('firestore_create_application', err, record);
+      try { deleteResumeFromBucket(resumeUrl); } catch (cleanupErr) { logError('resume_cleanup', cleanupErr, record); }
+      return jsonResponse({ ok: false, error: 'firestore_create_failed' });
+    }
+  } finally {
+    lock.releaseLock();
   }
 
   try { appendApplicationToSheet(record); } catch (err) { logError('sheet_append_application', err, record); }
