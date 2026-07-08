@@ -7,6 +7,14 @@ var LEAD_COLUMNS = [
   'status', 'notes', 'updatedAt'
 ];
 
+var APPLICATION_COLUMNS = [
+  'submissionId', 'createdAt', 'name', 'phone', 'email', 'roleTitle',
+  'resumeUrl', 'resumeFileName', 'pageUrl', 'referrer', 'userAgent',
+  'device', 'browser', 'status', 'notes', 'updatedAt'
+];
+
+var MAX_RESUME_BASE64_LENGTH = Math.ceil(5 * 1024 * 1024 * 4 / 3); // ~5MB file → base64 length ceiling
+
 function jsonResponse(obj) {
   return ContentService.createTextOutput(JSON.stringify(obj))
     .setMimeType(ContentService.MimeType.JSON);
@@ -29,12 +37,16 @@ function doPost(e) {
   if (body.action === 'login') return handleLogin(body);
   if (body.action === 'update') return handleUpdate(body);
   if (body.action === 'delete') return handleDelete(body);
+  if (body.action === 'apply') return handleApply(body);
+  if (body.action === 'update_app') return handleUpdateApplication(body);
+  if (body.action === 'delete_app') return handleDeleteApplication(body);
 
   return jsonResponse({ ok: false, error: 'unknown_action' });
 }
 
 function doGet(e) {
   if (e.parameter.action === 'list') return handleList(e.parameter);
+  if (e.parameter.action === 'list_apps') return handleListApplications(e.parameter);
   return jsonResponse({ ok: false, error: 'unknown_action' });
 }
 
@@ -167,4 +179,133 @@ function handleList(params) {
     logError('firestore_list', err, {});
     return jsonResponse({ ok: false, error: 'firestore_list_failed' });
   }
+}
+
+function handleApply(body) {
+  var application = body.application || {};
+  if (!application.name || !application.phone || !application.email || !application.submissionId) {
+    return jsonResponse({ ok: false, error: 'missing_required_fields' });
+  }
+  if (!application.resumeBase64 || !application.resumeFileName) {
+    return jsonResponse({ ok: false, error: 'missing_resume' });
+  }
+  if (application.resumeBase64.length > MAX_RESUME_BASE64_LENGTH) {
+    return jsonResponse({ ok: false, error: 'resume_too_large' });
+  }
+
+  // Idempotency: a retried submission (offline queue or double-click) with the
+  // same submissionId must not re-upload the resume or create a duplicate doc.
+  var existing = null;
+  try {
+    existing = firestoreGetDoc('applications', application.submissionId);
+  } catch (err) {
+    // Ignore, assume new application
+  }
+  if (existing) {
+    return jsonResponse({ ok: true });
+  }
+
+  var resumeUrl;
+  try {
+    resumeUrl = uploadResumeToBucket(
+      application.resumeBase64,
+      application.resumeFileName,
+      application.resumeMimeType,
+      application.submissionId
+    );
+  } catch (err) {
+    logError('resume_upload', err, { submissionId: application.submissionId });
+    return jsonResponse({ ok: false, error: 'resume_upload_failed' });
+  }
+
+  var record = {};
+  APPLICATION_COLUMNS.forEach(function (col) { record[col] = application[col] || ''; });
+  record.resumeUrl = resumeUrl;
+  record.createdAt = new Date().toISOString();
+  record.status = 'New';
+  record.notes = '';
+  record.updatedAt = record.createdAt;
+
+  try {
+    firestoreCreateDoc('applications', record.submissionId, record);
+  } catch (err) {
+    logError('firestore_create_application', err, record);
+    try { deleteResumeFromBucket(resumeUrl); } catch (cleanupErr) { logError('resume_cleanup', cleanupErr, record); }
+    return jsonResponse({ ok: false, error: 'firestore_create_failed' });
+  }
+
+  try { appendApplicationToSheet(record); } catch (err) { logError('sheet_append_application', err, record); }
+  try { sendApplicationEmail(record); } catch (err) { logError('email_send_application', err, record); }
+  try { sendApplicationTelegram(record); } catch (err) { logError('telegram_send_application', err, record); }
+
+  return jsonResponse({ ok: true });
+}
+
+function handleListApplications(params) {
+  if (!requireValidToken(params.token)) return jsonResponse({ ok: false, error: 'unauthorized' });
+  try {
+    var applications = firestoreListDocs('applications');
+    return jsonResponse({ ok: true, applications: applications });
+  } catch (err) {
+    logError('firestore_list_applications', err, {});
+    return jsonResponse({ ok: false, error: 'firestore_list_failed' });
+  }
+}
+
+function handleUpdateApplication(body) {
+  if (!requireValidToken(body.token)) return jsonResponse({ ok: false, error: 'unauthorized' });
+  var submissionId = body.submissionId;
+  if (!submissionId) return jsonResponse({ ok: false, error: 'missing_submissionId' });
+
+  var updates = body.updates || {};
+  updates.updatedAt = new Date().toISOString();
+  try {
+    firestoreUpdateDoc('applications', submissionId, updates);
+  } catch (err) {
+    logError('firestore_update_application', err, { submissionId: submissionId, updates: updates });
+    return jsonResponse({ ok: false, error: 'firestore_update_failed' });
+  }
+  try {
+    var merged = firestoreGetDoc('applications', submissionId) || updates;
+    updateApplicationInSheet(merged);
+  } catch (err) {
+    logError('sheet_update_application', err, { submissionId: submissionId });
+  }
+  return jsonResponse({ ok: true });
+}
+
+function handleDeleteApplication(body) {
+  if (!requireValidToken(body.token)) return jsonResponse({ ok: false, error: 'unauthorized' });
+  var submissionId = body.submissionId;
+  if (!submissionId) return jsonResponse({ ok: false, error: 'missing_submissionId' });
+
+  var existing = null;
+  try {
+    existing = firestoreGetDoc('applications', submissionId);
+  } catch (err) {
+    // Ignore — proceed with delete attempt regardless
+  }
+
+  try {
+    firestoreDeleteDoc('applications', submissionId);
+  } catch (err) {
+    logError('firestore_delete_application', err, { submissionId: submissionId });
+    return jsonResponse({ ok: false, error: 'firestore_delete_failed' });
+  }
+
+  try {
+    deleteApplicationFromSheet(submissionId);
+  } catch (err) {
+    logError('sheet_delete_application', err, { submissionId: submissionId });
+  }
+
+  if (existing && existing.resumeUrl) {
+    try {
+      deleteResumeFromBucket(existing.resumeUrl);
+    } catch (err) {
+      logError('resume_delete', err, { submissionId: submissionId });
+    }
+  }
+
+  return jsonResponse({ ok: true });
 }
