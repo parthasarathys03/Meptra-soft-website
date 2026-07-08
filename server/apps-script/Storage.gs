@@ -2,6 +2,29 @@
 
 var RESUME_DRIVE_FOLDER_NAME = 'Meptrasoft_resumes_careers';
 
+/**
+ * ONE-TIME: run this manually from the Apps Script editor after deploying the
+ * Drive-based storage code. Web-app POST requests never show the OAuth consent
+ * screen, so the Drive scope stays unauthorized and every resume upload fails
+ * with "You do not have permission...". Running any DriveApp function from the
+ * editor triggers the consent prompt for the whole project's scopes — approve
+ * it once and the deployed web app (Execute as: Me) inherits the grant.
+ *
+ * This also round-trips the exact upload path (find/create folder → create file
+ * → share → trash) so a clean run proves resumes will store correctly.
+ */
+function authorizeDrive() {
+  var folder = resumeDriveFolder();
+  var file = folder.createFile(
+    Utilities.newBlob('authorization test — safe to ignore', 'text/plain', '__authorize_test.txt')
+  );
+  file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+  var url = file.getUrl();
+  file.setTrashed(true);
+  Logger.log('Drive authorized OK. Folder "%s" ready. Test file URL was: %s', RESUME_DRIVE_FOLDER_NAME, url);
+  return 'Drive authorized OK — resumes will store in folder "' + RESUME_DRIVE_FOLDER_NAME + '".';
+}
+
 /** Finds the dedicated resumes folder by name, creating it on first use. */
 function resumeDriveFolder() {
   var existing = DriveApp.getFoldersByName(RESUME_DRIVE_FOLDER_NAME);
