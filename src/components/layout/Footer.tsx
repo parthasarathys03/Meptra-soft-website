@@ -92,10 +92,10 @@ export function Footer() {
         </Reveal>
       </div>
 
-      <div className="relative border-t border-white/10">
-        <div className="container-page flex flex-col items-center justify-between gap-3 py-5 text-xs text-hero-faint sm:flex-row">
-          <span>© {new Date().getFullYear()} {site.full}. All rights reserved.</span>
-          <span className="font-mono">Built for businesses, students &amp; engineers.</span>
+      <div className="relative overflow-x-hidden border-t border-white/10">
+        <div className="container-page flex flex-col items-center justify-between gap-3 py-5 text-[10px] text-hero-faint sm:text-xs sm:flex-row">
+          <span className="whitespace-nowrap">© {new Date().getFullYear()} {site.full}. All rights reserved.</span>
+          <span className="whitespace-nowrap font-mono">Built for businesses, students &amp; engineers.</span>
 
           <button
             type="button"
