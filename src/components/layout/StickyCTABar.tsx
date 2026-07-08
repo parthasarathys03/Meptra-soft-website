@@ -10,15 +10,13 @@ export function StickyCTABar() {
         <Button variant="amber" size="md" to="/contact" className="flex-1">
           Enroll / Enquire
         </Button>
-        <Button
-          variant="teal"
-          size="md"
+        <a
           href={site.social.whatsapp}
           aria-label="Chat on WhatsApp"
-          className="!px-4 !bg-[#25D366] !text-white shadow-[0_2px_10px_rgba(37,211,102,0.45)] hover:!bg-[#20bd5a]"
+          className="neu inline-flex h-[48px] w-[48px] shrink-0 items-center justify-center rounded-[var(--radius-pill)] text-hero-ink"
         >
           <Icon name="whatsapp" size={20} />
-        </Button>
+        </a>
       </div>
     </div>
   );
