@@ -1,19 +1,23 @@
 // server/apps-script/Storage.gs
 
-function resumeDriveFolderId() {
-  var folderId = PropertiesService.getScriptProperties().getProperty('RESUME_DRIVE_FOLDER_ID');
-  if (!folderId) throw new Error('RESUME_DRIVE_FOLDER_ID script property is not set');
-  return folderId;
+var RESUME_DRIVE_FOLDER_NAME = 'Meptrasoft_resumes_careers';
+
+/** Finds the dedicated resumes folder by name, creating it on first use. */
+function resumeDriveFolder() {
+  var existing = DriveApp.getFoldersByName(RESUME_DRIVE_FOLDER_NAME);
+  if (existing.hasNext()) return existing.next();
+  return DriveApp.createFolder(RESUME_DRIVE_FOLDER_NAME);
 }
 
 /**
- * Uploads a base64-encoded resume to the configured Google Drive folder as
- * {submissionId}-{filename}, shares it "anyone with the link can view", and
- * returns its Drive view URL. Throws on any failure (caller decides whether
- * to fail the whole request or clean up).
+ * Uploads a base64-encoded resume to the dedicated Drive folder
+ * (created/found by name — only resumes live in it) as
+ * {submissionId}-{filename}, shares it "anyone with the link can view",
+ * and returns its Drive view URL. Throws on any failure (caller decides
+ * whether to fail the whole request or clean up).
  */
 function uploadResumeToDrive(base64, filename, mimeType, submissionId) {
-  var folder = DriveApp.getFolderById(resumeDriveFolderId());
+  var folder = resumeDriveFolder();
   var bytes = Utilities.base64Decode(base64);
   var blob = Utilities.newBlob(bytes, mimeType || 'application/octet-stream', submissionId + '-' + filename);
   var file = folder.createFile(blob);

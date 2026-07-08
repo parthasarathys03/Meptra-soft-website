@@ -35,14 +35,14 @@ Apps Script project → Project Settings (gear) → Script Properties → add:
 | `TG_CHAT_ID` | Telegram chat/group id to notify |
 | `ADMIN_USER` | dashboard login username |
 | `ADMIN_PASS` | dashboard login password |
-| `RESUME_DRIVE_FOLDER_ID` | Google Drive folder id for resume uploads (see Resume storage setup below) |
 
 ## 4. Resume storage (Google Drive)
 
-1. In Google Drive, create a folder to hold applicant resumes (e.g. "Meptrasoft Resumes").
-2. Open the folder and copy its id from the URL: `https://drive.google.com/drive/folders/`**`<FOLDER_ID>`**.
-3. In the Apps Script project, add a new Script Property: `RESUME_DRIVE_FOLDER_ID` = that folder id.
-4. The script uploads/deletes files as the Apps Script project's own authorized user (the "Execute as: Me" account from step 5) — no service account or extra IAM grant is needed. The first deployment/run will prompt that account to authorize the Drive scope; approve it.
+No manual setup needed. On the first resume upload, the script finds a folder
+named **`Meptrasoft_resumes_careers`** in the Drive of the "Execute as: Me"
+account (step 5) — creating it if it doesn't exist yet — and stores every
+resume there, nothing else. The first run will prompt that account to
+authorize the Drive scope; approve it.
 
 ## 5. Deploy
 Deploy → New deployment → Web app → Execute as: Me → Who has access: Anyone → Deploy.
