@@ -72,3 +72,42 @@ export async function updateLead(token: string, submissionId: string, updates: P
 export async function deleteLead(token: string, submissionId: string) {
   return post({ action: "delete", token, submissionId }) as Promise<{ ok: boolean; error?: string }>;
 }
+
+export type ApplicationStatus = "New" | "Reviewing" | "Shortlisted" | "Rejected" | "Hired";
+
+export interface Application {
+  submissionId: string;
+  createdAt: string;
+  name: string;
+  phone: string;
+  email: string;
+  roleTitle: string;
+  resumeUrl: string;
+  resumeFileName: string;
+  pageUrl: string;
+  referrer: string;
+  userAgent: string;
+  device: string;
+  browser: string;
+  status: ApplicationStatus;
+  notes: string;
+  updatedAt: string;
+}
+
+export async function listApplications(token: string) {
+  if (!ENDPOINT) return { ok: false, error: "missing_endpoint" };
+  try {
+    const res = await fetch(`${ENDPOINT}?action=list_apps&token=${encodeURIComponent(token)}`);
+    return (await res.json()) as { ok: boolean; applications?: Application[]; error?: string };
+  } catch {
+    return { ok: false, error: "network" };
+  }
+}
+
+export async function updateApplication(token: string, submissionId: string, updates: Partial<Application>) {
+  return post({ action: "update_app", token, submissionId, updates }) as Promise<{ ok: boolean; error?: string }>;
+}
+
+export async function deleteApplication(token: string, submissionId: string) {
+  return post({ action: "delete_app", token, submissionId }) as Promise<{ ok: boolean; error?: string }>;
+}
