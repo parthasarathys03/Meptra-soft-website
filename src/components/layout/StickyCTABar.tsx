@@ -13,7 +13,7 @@ export function StickyCTABar() {
         <a
           href={site.social.whatsapp}
           aria-label="Chat on WhatsApp"
-          className="neu inline-flex h-[48px] w-[48px] shrink-0 items-center justify-center rounded-[var(--radius-pill)] text-hero-ink"
+          className="inline-flex h-[48px] w-[48px] shrink-0 items-center justify-center rounded-full border border-line-200 bg-transparent text-navy-800 transition-colors hover:border-aqua-400 hover:text-aqua-500"
         >
           <Icon name="whatsapp" size={20} />
         </a>

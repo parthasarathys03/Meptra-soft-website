@@ -32,7 +32,7 @@ function FooterLink({ to, children }: { to: string; children: ReactNode }) {
 
 export function Footer() {
   return (
-    <footer className="relative overflow-hidden bg-gradient-hero text-hero-ink">
+    <footer className="relative overflow-hidden bg-gradient-hero text-hero-ink pb-20 md:pb-0">
       <div className="h-[2px] w-full bg-[linear-gradient(90deg,transparent,var(--color-aqua-400),var(--color-amber-500),var(--color-aqua-400),transparent)]" />
 
       <div className="container-page relative grid grid-cols-2 gap-x-5 gap-y-9 py-12 md:grid-cols-[1.4fr_1fr_1fr_1fr] md:gap-10 md:gap-y-10 md:py-16">
