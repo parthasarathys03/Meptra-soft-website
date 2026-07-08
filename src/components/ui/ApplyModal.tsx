@@ -2,7 +2,12 @@ import { useEffect, useId, useState } from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
-import { site } from "@/data/content";
+import {
+  buildApplicationPayload,
+  fileToBase64,
+  flushQueuedApplications,
+  submitApplication,
+} from "@/lib/applications";
 
 export interface ApplyModalProps {
   roleTitle: string;
@@ -13,16 +18,35 @@ interface FormState {
   name: string;
   phone: string;
   email: string;
-  resumeName: string;
 }
 
-const initialState: FormState = { name: "", phone: "", email: "", resumeName: "" };
+const initialState: FormState = { name: "", phone: "", email: "" };
+const MAX_RESUME_BYTES = 5 * 1024 * 1024;
+const ACCEPTED_EXTENSIONS = [".pdf", ".doc", ".docx"];
 
-/** Applies straight to WhatsApp + email — no backend, no visible contact info in the UI. */
+function isValidPhone(phone: string) {
+  const digits = phone.replace(/[^\d]/g, "");
+  return digits.length === 10 || (digits.length === 12 && digits.startsWith("91"));
+}
+
+function hasAcceptedExtension(fileName: string) {
+  const lower = fileName.toLowerCase();
+  return ACCEPTED_EXTENSIONS.some((ext) => lower.endsWith(ext));
+}
+
+/** Applies through the same backend pipeline as the Contact form's LeadForm. */
 export function ApplyModal({ roleTitle, onClose }: ApplyModalProps) {
   const [values, setValues] = useState<FormState>(initialState);
-  const [submitted, setSubmitted] = useState(false);
+  const [resumeFile, setResumeFile] = useState<File | null>(null);
+  const [errors, setErrors] = useState<{ name?: string; phone?: string; email?: string; resume?: string }>({});
+  const [submitState, setSubmitState] = useState<"idle" | "submitted" | "queued">("idle");
+  const [submissionId, setSubmissionId] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const formId = useId();
+
+  useEffect(() => {
+    flushQueuedApplications();
+  }, []);
 
   useEffect(() => {
     function onKeyDown(e: KeyboardEvent) {
@@ -34,31 +58,67 @@ export function ApplyModal({ roleTitle, onClose }: ApplyModalProps) {
 
   function handleChange<K extends keyof FormState>(key: K, value: FormState[K]) {
     setValues((prev) => ({ ...prev, [key]: value }));
+    setErrors((prev) => ({ ...prev, [key]: undefined }));
   }
 
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  function handleFileChange(file: File | null) {
+    if (!file) {
+      setResumeFile(null);
+      return;
+    }
+    if (!hasAcceptedExtension(file.name)) {
+      setErrors((prev) => ({ ...prev, resume: "Only PDF, DOC, or DOCX files are accepted" }));
+      setResumeFile(null);
+      return;
+    }
+    if (file.size > MAX_RESUME_BYTES) {
+      setErrors((prev) => ({ ...prev, resume: "File is too large — max 5MB" }));
+      setResumeFile(null);
+      return;
+    }
+    setErrors((prev) => ({ ...prev, resume: undefined }));
+    setResumeFile(file);
+  }
+
+  function validate() {
+    const nextErrors: typeof errors = {};
+    if (!values.name.trim()) nextErrors.name = "Name is required";
+    if (!values.phone.trim()) nextErrors.phone = "Phone number is required";
+    else if (!isValidPhone(values.phone)) nextErrors.phone = "Enter a valid 10-digit phone number";
+    if (!values.email.trim()) nextErrors.email = "Email is required";
+    if (!resumeFile) nextErrors.resume = "Resume is required";
+    setErrors(nextErrors);
+    return Object.keys(nextErrors).length === 0;
+  }
+
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    if (!validate() || isSubmitting || !resumeFile) return;
 
-    const lines = [
-      `Job application: ${roleTitle}`,
-      `Name: ${values.name}`,
-      `Phone: ${values.phone}`,
-      `Email: ${values.email}`,
-      values.resumeName ? `Resume: ${values.resumeName} (attach in reply email)` : "Resume: not attached",
-    ];
-    const messageText = lines.join("\n");
+    setIsSubmitting(true);
+    const subId = submissionId || crypto.randomUUID();
+    try {
+      const base64 = await fileToBase64(resumeFile);
+      const payload = buildApplicationPayload(
+        { name: values.name, phone: values.phone, email: values.email, roleTitle },
+        { base64, fileName: resumeFile.name, mimeType: resumeFile.type },
+        subId
+      );
+      const { ok } = await submitApplication(payload);
+      setSubmissionId(subId);
+      setSubmitState(ok ? "submitted" : "queued");
+    } catch {
+      setSubmitState("queued");
+    } finally {
+      setIsSubmitting(false);
+    }
+  }
 
-    const businessDigits = site.social.whatsapp.replace("https://wa.me/", "");
-    window.open(`https://wa.me/${businessDigits}?text=${encodeURIComponent(messageText)}`, "_blank", "noopener,noreferrer");
-
-    const mailSubject = `Job application: ${roleTitle} — ${values.name}`;
-    const mailBody = `${lines.join("\n")}\n\nPlease attach the resume file before sending.`;
-    window.open(
-      `mailto:${site.applicationEmail}?subject=${encodeURIComponent(mailSubject)}&body=${encodeURIComponent(mailBody)}`,
-      "_blank"
-    );
-
-    setSubmitted(true);
+  function handleNewSubmission() {
+    setValues(initialState);
+    setResumeFile(null);
+    setSubmissionId(null);
+    setSubmitState("idle");
   }
 
   return (
@@ -81,19 +141,27 @@ export function ApplyModal({ roleTitle, onClose }: ApplyModalProps) {
           <Icon name="close" size={16} />
         </button>
 
-        {submitted ? (
+        {submitState !== "idle" ? (
           <div className="flex flex-col items-center gap-3 py-6 text-center" role="status" aria-live="polite">
             <span className="flex h-14 w-14 items-center justify-center rounded-full bg-aqua-400/20">
               <Icon name="check" size={32} className="text-aqua-400" />
             </span>
-            <p className="text-lg font-bold tracking-[-0.01em]">Application sent</p>
-            <p className="text-sm text-hero-soft">
-              We opened WhatsApp and your email app with your details for {roleTitle}. Send both to complete your
-              application — and attach your resume in the email before sending.
+            <p className="text-lg font-bold tracking-[-0.01em]">
+              {submitState === "submitted" ? "Application received" : "Saved on this device"}
             </p>
-            <Button type="button" variant="outline-light" size="md" className="mt-2" onClick={onClose}>
-              Done
-            </Button>
+            <p className="text-sm text-hero-soft">
+              {submitState === "submitted"
+                ? `Your application for ${roleTitle} is in — we'll reach out if it's a fit.`
+                : "We'll finish sending it once you're back online — no need to reapply."}
+            </p>
+            <div className="mt-2 flex w-full flex-col gap-2">
+              <Button type="button" variant="amber" size="md" onClick={handleNewSubmission}>
+                Apply to another role
+              </Button>
+              <Button type="button" variant="outline-light" size="md" onClick={onClose}>
+                Done
+              </Button>
+            </div>
           </div>
         ) : (
           <>
@@ -113,12 +181,17 @@ export function ApplyModal({ roleTitle, onClose }: ApplyModalProps) {
                   type="text"
                   required
                   aria-required="true"
+                  aria-invalid={!!errors.name}
                   autoComplete="name"
                   value={values.name}
                   onChange={(e) => handleChange("name", e.target.value)}
                   placeholder="Your name"
-                  className="neu-field mt-1.5 w-full rounded-[var(--radius-md)] px-4 py-2.5 text-[15px] text-hero-ink outline-none placeholder:text-hero-faint"
+                  className={cn(
+                    "neu-field mt-1.5 w-full rounded-[var(--radius-md)] px-4 py-2.5 text-[15px] text-hero-ink outline-none placeholder:text-hero-faint",
+                    errors.name && "outline outline-2 outline-red-500"
+                  )}
                 />
+                {errors.name && <p className="mt-1.5 text-[13px] font-medium text-red-500">{errors.name}</p>}
               </div>
 
               <div>
@@ -131,13 +204,18 @@ export function ApplyModal({ roleTitle, onClose }: ApplyModalProps) {
                   type="tel"
                   required
                   aria-required="true"
+                  aria-invalid={!!errors.phone}
                   autoComplete="tel"
                   inputMode="tel"
                   value={values.phone}
                   onChange={(e) => handleChange("phone", e.target.value)}
                   placeholder="+91 98765 43210"
-                  className="neu-field mt-1.5 w-full rounded-[var(--radius-md)] px-4 py-2.5 text-[15px] text-hero-ink outline-none placeholder:text-hero-faint"
+                  className={cn(
+                    "neu-field mt-1.5 w-full rounded-[var(--radius-md)] px-4 py-2.5 text-[15px] text-hero-ink outline-none placeholder:text-hero-faint",
+                    errors.phone && "outline outline-2 outline-red-500"
+                  )}
                 />
+                {errors.phone && <p className="mt-1.5 text-[13px] font-medium text-red-500">{errors.phone}</p>}
               </div>
 
               <div>
@@ -150,12 +228,17 @@ export function ApplyModal({ roleTitle, onClose }: ApplyModalProps) {
                   type="email"
                   required
                   aria-required="true"
+                  aria-invalid={!!errors.email}
                   autoComplete="email"
                   value={values.email}
                   onChange={(e) => handleChange("email", e.target.value)}
                   placeholder="you@example.com"
-                  className="neu-field mt-1.5 w-full rounded-[var(--radius-md)] px-4 py-2.5 text-[15px] text-hero-ink outline-none placeholder:text-hero-faint"
+                  className={cn(
+                    "neu-field mt-1.5 w-full rounded-[var(--radius-md)] px-4 py-2.5 text-[15px] text-hero-ink outline-none placeholder:text-hero-faint",
+                    errors.email && "outline outline-2 outline-red-500"
+                  )}
                 />
+                {errors.email && <p className="mt-1.5 text-[13px] font-medium text-red-500">{errors.email}</p>}
               </div>
 
               <div>
@@ -168,17 +251,21 @@ export function ApplyModal({ roleTitle, onClose }: ApplyModalProps) {
                   type="file"
                   required
                   aria-required="true"
+                  aria-invalid={!!errors.resume}
                   accept=".pdf,.doc,.docx"
-                  onChange={(e) => handleChange("resumeName", e.target.files?.[0]?.name ?? "")}
+                  onChange={(e) => handleFileChange(e.target.files?.[0] ?? null)}
                   className={cn(
                     "neu-field mt-1.5 w-full rounded-[var(--radius-md)] px-4 py-2.5 text-[13px] text-hero-soft outline-none",
-                    "file:mr-3 file:rounded-full file:border-0 file:bg-aqua-400/20 file:px-3 file:py-1.5 file:text-[13px] file:font-semibold file:text-aqua-300"
+                    "file:mr-3 file:rounded-full file:border-0 file:bg-aqua-400/20 file:px-3 file:py-1.5 file:text-[13px] file:font-semibold file:text-aqua-300",
+                    errors.resume && "outline outline-2 outline-red-500"
                   )}
                 />
+                <p className="mt-1.5 text-[12px] text-hero-faint">PDF, DOC, or DOCX — max 5MB</p>
+                {errors.resume && <p className="mt-1.5 text-[13px] font-medium text-red-500">{errors.resume}</p>}
               </div>
 
-              <Button type="submit" variant="amber" size="lg" className="mt-1 w-full">
-                Send application
+              <Button type="submit" variant="amber" size="lg" className="mt-1 w-full" disabled={isSubmitting}>
+                {isSubmitting ? "Submitting..." : "Send application"}
               </Button>
             </form>
           </>
