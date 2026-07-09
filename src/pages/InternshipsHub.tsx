@@ -23,8 +23,9 @@ const upcoming = [
 
 const locationsLinks = [
   { label: "Internship in Chennai", to: "/locations/chennai" },
-  { label: "Internship in Cuddalore", to: "/locations/cuddalore" },
   { label: "All Tamil Nadu districts", to: "/locations" },
+  { label: "Internship in Pondicherry", to: "/locations/puducherry" },
+  { label: "Internship all over India", to: "/internships/online" },
 ];
 
 const faqs = [
@@ -167,7 +168,7 @@ export default function InternshipsHub() {
       {/* Internships by location */}
       <section className="section-pad section-dark">
         <div className="container-page relative z-10">
-          <h2 className="text-[clamp(20px,2.4vw,26px)] font-bold text-hero-ink">Internships across Tamil Nadu</h2>
+          <h2 className="text-[clamp(20px,2.4vw,26px)] font-bold text-hero-ink">Internships by location</h2>
           <div className="mt-4 flex flex-wrap gap-3">
             {locationsLinks.map((l) => (
               <Link
