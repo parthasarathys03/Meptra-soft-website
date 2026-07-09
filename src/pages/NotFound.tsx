@@ -4,7 +4,7 @@ import { Seo } from "@/components/seo/Seo";
 const links = [
   { to: "/solutions", label: "AI & Software Solutions" },
   { to: "/learn", label: "Internships & Courses" },
-  { to: "/internships/online", label: "Online Internship" },
+  { to: "/internships", label: "Internships" },
   { to: "/final-year-projects", label: "Final-Year Projects" },
   { to: "/contact", label: "Contact us" },
 ];

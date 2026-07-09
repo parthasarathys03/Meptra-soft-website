@@ -25,7 +25,8 @@ landings.forEach((l) => { l.related.forEach((r) => add(r.to)); });
 posts.forEach((p) => { p.related.forEach((r) => add(r.to)); p.body.forEach((b) => b.cta && add(b.cta.to)); });
 // Fixed link lists embedded in components:
 ["/internships/ai","/internships/free","/internships/software","/courses/python","/courses/ai","/courses/data-science","/courses/web-development","/courses/generative-ai","/final-year-projects","/college-projects","/industrial-training","/placement-training","/contact","/locations"].forEach(add); // LocationPage offerings
-["/placement-training","/internships/online","/courses/ai","/courses/python","/final-year-projects","/learn","/blog","/careers","/about","/solutions","/contact","/"].forEach(add); // nav + footer
+["/placement-training","/internships","/internships/online","/courses/ai","/courses/python","/final-year-projects","/learn","/blog","/careers","/about","/solutions","/contact","/"].forEach(add); // nav + footer
+["/internships/paid","/internships/free","/internships/ai","/internships/software","/internships/web-development","/locations/chennai","/locations/cuddalore","/locations"].forEach(add); // internships hub links
 ["/solutions","/learn","/internships/online","/final-year-projects","/contact","/"].forEach(add); // NotFound
 
 [...targets].sort().forEach((t) => {

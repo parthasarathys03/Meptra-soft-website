@@ -60,7 +60,7 @@ export const nav: NavGroup[] = [
     accent: "amber",
     children: [
       { label: "Placement Training", href: "/placement-training", desc: "Aptitude, coding, technical & HR prep" },
-      { label: "Online Internship", href: "/internships/online", desc: "Remote work on real client products" },
+      { label: "Internships", href: "/internships", desc: "AI, software & online — free and paid" },
       { label: "AI Course", href: "/courses/ai", desc: "GenAI, ML & agents — ship a real app" },
       { label: "Python Course", href: "/courses/python", desc: "From basics to job-ready projects" },
       { label: "Final-Year Projects", href: "/final-year-projects", desc: "IEEE & custom AI/ML projects" },

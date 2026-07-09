@@ -156,9 +156,10 @@ const baseRoutes = [
 // title/description/schema never drift from what the page renders.
 const landingRoutes = landings.map((l) => {
   const isCourse = l.path.startsWith("/courses/");
-  const midName = l.path.startsWith("/courses/") || l.path.startsWith("/internships/") ? "Learn" : l.eyebrow;
-  const midPath = "/learn";
-  const crumbs = [HOME_CRUMB, { name: midName, path: midPath }, { name: l.eyebrow, path: l.path }];
+  const mid = l.path.startsWith("/internships/")
+    ? { name: "Internships", path: "/internships" }
+    : { name: "Learn", path: "/learn" };
+  const crumbs = [HOME_CRUMB, mid, { name: l.eyebrow, path: l.path }];
   const primary = isCourse
     ? courseSchema({ name: l.h1, description: l.subtitle, path: l.path })
     : serviceSchema({ name: l.h1, description: l.subtitle, path: l.path });
@@ -173,6 +174,70 @@ const landingRoutes = landings.map((l) => {
     schema: [primary, faqSchema(l.faqs), breadcrumbSchema(crumbs)],
   };
 });
+
+// Internships hub — canonical parent of /internships/*.
+const internshipChildren = landings.filter((l) => l.path.startsWith("/internships/"));
+const internshipsCrumbs = [HOME_CRUMB, { name: "Learn", path: "/learn" }, { name: "Internships", path: "/internships" }];
+const internshipsHubRoute = {
+  path: "/internships",
+  title: "Internships in Tamil Nadu — AI, Software, Python & Data Science | Meptrasoft AI",
+  description:
+    "Online AI, software, web development, free and paid internships on real client projects for students in Chennai, Cuddalore, and across Tamil Nadu. Mentored, remote, certificate-backed.",
+  keywords: [
+    "AI internship",
+    "software internship",
+    "Python internship",
+    "data science internship",
+    "machine learning internship",
+    "web development internship",
+    "online internship",
+    "free internship",
+    "internship in Chennai",
+    "internship in Cuddalore",
+    "internship in Tamil Nadu",
+  ],
+  priority: 0.9,
+  changefreq: "weekly",
+  breadcrumbs: internshipsCrumbs,
+  schema: [
+    serviceSchema({
+      name: "Internship Programs",
+      description:
+        "Online AI, software, web development, free and paid internships on real client products across Tamil Nadu.",
+      path: "/internships",
+      serviceType: "Internship program",
+    }),
+    {
+      "@context": "https://schema.org",
+      "@type": "ItemList",
+      name: "Internship tracks",
+      itemListElement: internshipChildren.map((l, i) => ({
+        "@type": "ListItem",
+        position: i + 1,
+        name: l.h1,
+        url: `${ORIGIN}${l.path}`,
+      })),
+    },
+    faqSchema([
+      {
+        question: "What internships does Meptrasoft AI offer?",
+        answer:
+          "AI, software, web development, free, paid, and online internships — all on real client products with mentor code reviews. More specializations (Python, data science, machine learning, generative AI, cloud, full stack) are added based on demand.",
+      },
+      {
+        question: "Are the internships online and available across Tamil Nadu?",
+        answer:
+          "Yes. Every internship is remote and open to students across Chennai, Cuddalore, and all Tamil Nadu districts, delivered in Tamil and English.",
+      },
+      {
+        question: "Is there a free internship option?",
+        answer:
+          "Yes — a merit-based free track and a mentored paid track. Both work on real products and end with a verifiable certificate.",
+      },
+    ]),
+    breadcrumbSchema(internshipsCrumbs),
+  ],
+};
 
 // Location pages (local SEO).
 const locationsIndexRoute = {
@@ -291,6 +356,7 @@ const blogRoutes = posts.map((p) => {
 
 export const routes = [
   ...baseRoutes,
+  internshipsHubRoute,
   ...landingRoutes,
   locationsIndexRoute,
   ...locationRoutes,

@@ -36,12 +36,10 @@ export default function LandingPage({ slug }: { slug: string }) {
   if (!data) return <NotFound />;
 
   const route = getRoute(data.path);
-  const midName = data.path.startsWith("/courses/") || data.path.startsWith("/internships/") ? "Learn" : data.eyebrow;
-  const crumbItems = [
-    { name: "Home", to: "/" },
-    { name: midName, to: "/learn" },
-    { name: data.eyebrow, to: data.path },
-  ];
+  const mid = data.path.startsWith("/internships/")
+    ? { name: "Internships", to: "/internships" }
+    : { name: "Learn", to: "/learn" };
+  const crumbItems = [{ name: "Home", to: "/" }, mid, { name: data.eyebrow, to: data.path }];
 
   return (
     <>

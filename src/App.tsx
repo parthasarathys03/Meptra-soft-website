@@ -13,6 +13,7 @@ const About = lazy(() => import("@/pages/About"));
 const Contact = lazy(() => import("@/pages/Contact"));
 const Admin = lazy(() => import("@/pages/Admin"));
 const LandingPage = lazy(() => import("@/pages/LandingPage"));
+const InternshipsHub = lazy(() => import("@/pages/InternshipsHub"));
 const LocationsIndex = lazy(() => import("@/pages/LocationsIndex"));
 const LocationPage = lazy(() => import("@/pages/LocationPage"));
 const BlogIndex = lazy(() => import("@/pages/BlogIndex"));
@@ -31,6 +32,9 @@ export default function App() {
         <Route path="/careers/*" element={lazyEl(<Careers />)} />
         <Route path="/about" element={lazyEl(<About />)} />
         <Route path="/contact" element={lazyEl(<Contact />)} />
+
+        {/* Internships hub (parent of /internships/*) */}
+        <Route path="/internships" element={lazyEl(<InternshipsHub />)} />
 
         {/* Service / intent landing pages */}
         {landings.map((l) => (
