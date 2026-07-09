@@ -5,10 +5,13 @@ import { BusinessOutcomes } from "@/components/sections/BusinessOutcomes";
 import { DataAI } from "@/components/sections/DataAI";
 import { OurWork } from "@/components/sections/OurWork";
 import { FinalCTA } from "@/components/sections/FinalCTA";
+import { RouteSeoTags } from "@/components/seo/Seo";
+import { getRoute } from "@/seo/routes";
 
 export default function Solutions() {
   return (
     <>
+      <RouteSeoTags route={getRoute("/solutions")} />
       <PageHeader
         eyebrow="Solutions"
         title="Technology services and AI products, built to ship."

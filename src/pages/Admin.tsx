@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { AdminLogin } from "@/components/admin/AdminLogin";
 import { AdminDashboard } from "@/components/admin/AdminDashboard";
 import { getToken, setToken, clearToken } from "@/lib/adminApi";
+import { Seo } from "@/components/seo/Seo";
 
 export default function Admin() {
   const [token, setTokenState] = useState<string | null>(() => getToken());
@@ -24,6 +25,10 @@ export default function Admin() {
     setTokenState(null);
   }
 
-  if (!token) return <AdminLogin onSuccess={handleLoginSuccess} />;
-  return <AdminDashboard token={token} onLogout={handleLogout} />;
+  return (
+    <>
+      <Seo title="Admin | Meptrasoft AI Technologies" description="Meptrasoft admin." path="/admin" noindex />
+      {!token ? <AdminLogin onSuccess={handleLoginSuccess} /> : <AdminDashboard token={token} onLogout={handleLogout} />}
+    </>
+  );
 }

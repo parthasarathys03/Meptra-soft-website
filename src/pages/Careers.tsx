@@ -5,12 +5,15 @@ import { Reveal } from "@/components/motion/Reveal";
 import { FinalCTA } from "@/components/sections/FinalCTA";
 import { ApplyModal } from "@/components/ui/ApplyModal";
 import { roles } from "@/data/content";
+import { RouteSeoTags } from "@/components/seo/Seo";
+import { getRoute } from "@/seo/routes";
 
 export default function Careers() {
   const [applyingTo, setApplyingTo] = useState<string | null>(null);
 
   return (
     <>
+      <RouteSeoTags route={getRoute("/careers")} />
       <PageHeader
         eyebrow="Careers"
         title="Build products people actually use."

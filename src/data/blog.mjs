@@ -1,0 +1,200 @@
+// Blog content. Plain ESM (shared with routes.mjs / seo-build.mjs).
+// Types in blog.d.ts. Body = ordered blocks: {h2}, {p}, {ul}, {cta}.
+
+/** @type {import('./blog').BlogPost[]} */
+export const posts = [
+  {
+    slug: "free-vs-paid-internship-which-to-choose",
+    title: "Free vs Paid Internship: Which Should You Choose?",
+    description:
+      "The real difference between free and paid internships, who each one suits, and how to pick the track that gets you hired faster.",
+    date: "2026-06-18",
+    author: "Meptrasoft AI Technologies",
+    image: "/assets/courses.webp",
+    tags: ["Internships", "Careers"],
+    body: [
+      { p: "\"Should I take a free internship or a paid one?\" is one of the most common questions we hear from students. The honest answer: it depends on where you are right now, not on which sounds better." },
+      { h2: "What a free internship really means" },
+      { p: "A good free internship is merit-based. You clear a short interview or perform well in a course, and you join because you can already contribute. You work on real client products, get code reviews, and earn a certificate — at no cost. The catch is that you need to be job-ready enough to add value from early on." },
+      { h2: "What a paid internship really means" },
+      { p: "A paid internship is an investment in mentorship. If you're not job-ready yet, the fee pays for intensive one-on-one teaching that takes you from fundamentals to shipping real work. You do the same real projects and get the same certificate — the difference is the structured guidance that gets you there." },
+      { h2: "How to choose" },
+      { ul: [
+        "Can you already build small projects and clear a technical interview? Aim for the free track.",
+        "Are you starting out or switching fields and need structured teaching? The paid track will move you faster.",
+        "Either way, insist on real projects, mentor code reviews, and a verifiable certificate — avoid 'internships' that are just recorded videos.",
+      ] },
+      { p: "At Meptrasoft AI Technologies, both tracks work on the same live products for the same duration. The only difference is how much mentorship you need to get productive." },
+      { cta: { label: "Compare our internship tracks", to: "/internships/online" } },
+    ],
+    related: [
+      { label: "Online Internship", to: "/internships/online" },
+      { label: "Free Internship", to: "/internships/free" },
+      { label: "Paid Internship", to: "/internships/paid" },
+    ],
+  },
+  {
+    slug: "how-to-choose-best-ai-course-tamil-nadu",
+    title: "How to Choose the Best AI Course in Tamil Nadu (2026)",
+    description:
+      "A practical checklist for picking an AI course in Tamil Nadu — what to look for, what to avoid, and the skills that actually get you hired.",
+    date: "2026-06-25",
+    author: "Meptrasoft AI Technologies",
+    image: "/assets/courses.webp",
+    tags: ["AI", "Courses"],
+    body: [
+      { p: "AI courses are everywhere now, and quality varies wildly. If you're a student in Tamil Nadu deciding where to spend your time and money, here's how to separate a course that builds real skills from one that just hands out a certificate." },
+      { h2: "1. Does it end with something you built?" },
+      { p: "The single best signal of a good AI course is a deployed project. If you finish with a working LLM or machine-learning application you can demo and explain, the course did its job. If you finish with only slides and a certificate, it didn't." },
+      { h2: "2. Does it cover modern AI, not just 2018 theory?" },
+      { p: "In 2026, a serious AI course covers large language models, retrieval-augmented generation (RAG), prompt engineering, evaluation, and agents — alongside machine-learning foundations. These are the skills employers ask about today." },
+      { h2: "3. Is it taught in a language you learn best in?" },
+      { p: "Concepts land faster in your strongest language. Courses taught in Tamil and English let you grasp hard ideas without a language barrier — a real advantage for many students in the state." },
+      { h2: "4. Is there mentorship and an internship path?" },
+      { ul: [
+        "Mentor reviews mean someone checks your work and unblocks you.",
+        "An internship path lets you apply the course on real products immediately.",
+        "Placement support turns skills into a job.",
+      ] },
+      { p: "Our AI course is built around all four: a deployed AI app, modern GenAI content, Tamil-and-English instruction, and a direct path into an AI internship." },
+      { cta: { label: "See the AI course", to: "/courses/ai" } },
+    ],
+    related: [
+      { label: "AI Course", to: "/courses/ai" },
+      { label: "AI Internship", to: "/internships/ai" },
+      { label: "Python Course", to: "/courses/python" },
+    ],
+  },
+  {
+    slug: "modern-ai-ml-final-year-project-ideas",
+    title: "20 Modern AI & ML Final-Year Project Ideas (2026)",
+    description:
+      "Fresh, defendable final-year project ideas across AI, machine learning, and deep learning — with tips to make yours stand out.",
+    date: "2026-07-01",
+    author: "Meptrasoft AI Technologies",
+    image: "/assets/about.webp",
+    tags: ["Projects", "AI"],
+    body: [
+      { p: "A strong final-year project can set your resume apart — but only if it's original and you can defend it. Here are modern AI, ML, and deep-learning ideas worth building in 2026, grouped by area." },
+      { h2: "Natural language & LLMs" },
+      { ul: [
+        "A RAG assistant that answers questions over your college's documents",
+        "Automatic exam/answer-script evaluation with NLP",
+        "Resume screening and job-matching with embeddings",
+        "Regional-language (Tamil) text summarization",
+      ] },
+      { h2: "Computer vision & deep learning" },
+      { ul: [
+        "Crop disease detection from leaf images",
+        "Real-time helmet / seatbelt violation detection",
+        "Medical image classification (e.g., X-ray screening)",
+        "Sign-language to text translation",
+      ] },
+      { h2: "Machine learning & data" },
+      { ul: [
+        "Student dropout / performance prediction",
+        "Fraud or anomaly detection on transactions",
+        "Demand forecasting for a small business",
+        "Recommendation system for courses or products",
+      ] },
+      { h2: "What makes a project stand out" },
+      { p: "Use real data, evaluate your model honestly, and ship a working demo. Examiners can tell the difference between a copied GitHub repo and a project you actually built and understand. Original scope plus a clear explanation of your results beats a flashy but borrowed build every time." },
+      { cta: { label: "Get an original final-year project", to: "/final-year-projects/ai-ml" } },
+    ],
+    related: [
+      { label: "AI & ML Projects", to: "/final-year-projects/ai-ml" },
+      { label: "Deep Learning Projects", to: "/final-year-projects/deep-learning" },
+      { label: "All Final-Year Projects", to: "/final-year-projects" },
+    ],
+  },
+  {
+    slug: "python-roadmap-for-beginners",
+    title: "Python Roadmap for Beginners: From Zero to Job-Ready",
+    description:
+      "A step-by-step Python roadmap for beginners — what to learn, in what order, and how to reach a job-ready level.",
+    date: "2026-07-04",
+    author: "Meptrasoft AI Technologies",
+    image: "/assets/courses.webp",
+    tags: ["Python", "Programming"],
+    body: [
+      { p: "Python is the best first language for a software or AI career — readable, versatile, and in demand. Here's a realistic roadmap from absolute beginner to job-ready." },
+      { h2: "Stage 1 — Fundamentals" },
+      { ul: ["Variables, data types, and operators", "Conditionals and loops", "Functions and error handling", "Lists, dictionaries, sets, and tuples"] },
+      { h2: "Stage 2 — Problem solving" },
+      { p: "Practice small problems daily. Learn basic data structures and algorithms — this is what coding rounds test. Consistency matters more than intensity here." },
+      { h2: "Stage 3 — Real projects" },
+      { ul: ["Automate a boring task with a script", "Build a small CLI or web app", "Work with files, APIs, and a database"] },
+      { h2: "Stage 4 — Specialize" },
+      { p: "Now branch into what excites you: data analysis, machine learning and AI, backend web development, or automation. Python is the gateway to all of them." },
+      { h2: "How long does it take?" },
+      { p: "With focused effort and mentorship, beginners reach a job-ready level in about three months. Pair the language with coding practice and placement preparation and you're ready for interviews." },
+      { cta: { label: "Start the Python course", to: "/courses/python" } },
+    ],
+    related: [
+      { label: "Python Course", to: "/courses/python" },
+      { label: "Placement Training", to: "/placement-training" },
+      { label: "AI Course", to: "/courses/ai" },
+    ],
+  },
+  {
+    slug: "it-placement-preparation-guide-freshers",
+    title: "IT Placement Preparation: A Complete Fresher's Guide",
+    description:
+      "A stage-by-stage placement preparation guide for freshers — aptitude, coding, technical, and HR rounds, and how to prepare for each.",
+    date: "2026-07-07",
+    author: "Meptrasoft AI Technologies",
+    image: "/assets/courses.webp",
+    tags: ["Placement", "Careers"],
+    body: [
+      { p: "Landing your first IT job is less about talent and more about a system. Companies hire in stages, and each stage rewards a different kind of preparation. Here's the roadmap." },
+      { h2: "1. Aptitude" },
+      { p: "Quantitative, logical, and verbal reasoning under time pressure. Practice mock tests until speed and accuracy become automatic — this round filters out most candidates." },
+      { h2: "2. Coding round" },
+      { p: "Data structures and algorithms, solved cleanly within the time limit. Practice on real problems and get comfortable explaining your approach, not just producing an answer." },
+      { h2: "3. Technical interview" },
+      { ul: ["Core subjects and your chosen language", "Your final-year project — be ready to defend every decision", "Problem-solving out loud"] },
+      { h2: "4. HR interview" },
+      { p: "Communication, confidence, and fit. Many candidates lose offers here through weak communication, so prepare your introduction, resume walkthrough, and behavioral answers." },
+      { h2: "The one thing colleges skip" },
+      { p: "Communication and group-discussion skills. You'll use English to explain code, present projects, and work with clients — it's as important as the technical rounds. A structured placement program drills all of this with mock rounds and feedback." },
+      { cta: { label: "Explore placement training", to: "/placement-training" } },
+    ],
+    related: [
+      { label: "Placement Training", to: "/placement-training" },
+      { label: "Python Course", to: "/courses/python" },
+      { label: "Online Internship", to: "/internships/online" },
+    ],
+  },
+  {
+    slug: "online-internships-for-college-students-guide",
+    title: "Online Internships for College Students: A Practical Guide",
+    description:
+      "How online internships work, how to spot a real one, and how to turn a remote internship into a job offer.",
+    date: "2026-07-08",
+    author: "Meptrasoft AI Technologies",
+    image: "/assets/career.webp",
+    tags: ["Internships", "Careers"],
+    body: [
+      { p: "Online internships opened real industry experience to students everywhere — no relocation, no gatekeeping by city. But not all of them are worth your time. Here's how to make one count." },
+      { h2: "How a real online internship works" },
+      { p: "You onboard remotely, get assigned real tasks on a live product, attend reviews, and ship your work — all online. A mentor reviews your code and unblocks you. At the end, you have a certificate and, more importantly, a history of real contributions." },
+      { h2: "How to spot a fake one" },
+      { ul: [
+        "It's only pre-recorded videos with a certificate at the end — that's a course, not an internship.",
+        "There's no mentor, no code review, and no real project.",
+        "You never touch anything that goes live.",
+      ] },
+      { h2: "Turning an internship into an offer" },
+      { p: "Treat it like a job. Communicate proactively, take reviews seriously, and go slightly beyond your assigned scope. Interns who build a visible track record of real commits are the ones who get hired — recruiters actually ask about them." },
+      { cta: { label: "Apply for an online internship", to: "/internships/online" } },
+    ],
+    related: [
+      { label: "Online Internship", to: "/internships/online" },
+      { label: "AI Internship", to: "/internships/ai" },
+      { label: "Web Development Internship", to: "/internships/web-development" },
+    ],
+  },
+];
+
+const bySlug = new Map(posts.map((p) => [p.slug, p]));
+export const getPost = (slug) => bySlug.get(slug);

@@ -2,6 +2,8 @@ import { useSearchParams } from "react-router-dom";
 import { Icon } from "@/components/ui/Icon";
 import { LeadForm } from "@/components/ui/LeadForm";
 import { site, offices } from "@/data/content";
+import { RouteSeoTags } from "@/components/seo/Seo";
+import { getRoute } from "@/seo/routes";
 
 const directLines = [
   {
@@ -30,6 +32,7 @@ export default function Contact() {
 
   return (
     <section className="relative min-h-screen overflow-hidden bg-gradient-hero text-hero-ink">
+      <RouteSeoTags route={getRoute("/contact")} />
       <div aria-hidden className="circuit-grid pointer-events-none absolute inset-0 opacity-30" />
       <div aria-hidden className="glow-teal pointer-events-none absolute -left-32 top-24 h-96 w-96 rounded-full" />
       <div aria-hidden className="glow-amber pointer-events-none absolute -right-24 bottom-0 h-80 w-80 rounded-full" />

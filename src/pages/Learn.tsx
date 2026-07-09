@@ -6,10 +6,13 @@ import { Internships } from "@/components/sections/Internships";
 import { Projects } from "@/components/sections/Projects";
 import { EcosystemLoop } from "@/components/sections/EcosystemLoop";
 import { FinalCTA } from "@/components/sections/FinalCTA";
+import { RouteSeoTags } from "@/components/seo/Seo";
+import { getRoute } from "@/seo/routes";
 
 export default function Learn() {
   return (
     <>
+      <RouteSeoTags route={getRoute("/learn")} />
       <PageHeader
         eyebrow="Learn & Grow"
         title="Learn by building on real products."

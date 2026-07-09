@@ -10,10 +10,13 @@ import { TrustMarquee } from "@/components/sections/TrustMarquee";
 import { Vision } from "@/components/sections/Vision";
 import { Faq } from "@/components/sections/Faq";
 import { FinalCTA } from "@/components/sections/FinalCTA";
+import { RouteSeoTags } from "@/components/seo/Seo";
+import { getRoute } from "@/seo/routes";
 
 export default function Home() {
   return (
     <>
+      <RouteSeoTags route={getRoute("/")} />
       <Hero />
       <AudienceFork />
       <PillarSplit />

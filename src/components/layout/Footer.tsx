@@ -14,6 +14,8 @@ const socials: { name: IconName; href: string; label: string }[] = [
 const companyLinks = [
   { label: "Careers", href: "/careers" },
   { label: "About", href: "/about" },
+  { label: "Blog", href: "/blog" },
+  { label: "Locations", href: "/locations" },
   { label: "Contact", href: "/contact" },
 ];
 

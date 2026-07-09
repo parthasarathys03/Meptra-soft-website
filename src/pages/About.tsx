@@ -3,10 +3,13 @@ import { PillarSplit } from "@/components/sections/PillarSplit";
 import { EcosystemLoop } from "@/components/sections/EcosystemLoop";
 import { StatBand } from "@/components/sections/StatBand";
 import { FinalCTA } from "@/components/sections/FinalCTA";
+import { RouteSeoTags } from "@/components/seo/Seo";
+import { getRoute } from "@/seo/routes";
 
 export default function About() {
   return (
     <>
+      <RouteSeoTags route={getRoute("/about")} />
       <PageHeader
         eyebrow="About"
         title="One company bridging industry and education."
