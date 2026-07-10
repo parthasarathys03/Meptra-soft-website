@@ -4,6 +4,7 @@ import { BrowserRouter } from "react-router-dom";
 import { MotionConfig } from "framer-motion";
 import { HelmetProvider } from "react-helmet-async";
 import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/react";
 import App from "./App";
 import "./index.css";
 
@@ -19,6 +20,7 @@ createRoot(document.getElementById("root")!).render(
         <MotionConfig reducedMotion="user">
           <App />
           <Analytics />
+          <SpeedInsights />
         </MotionConfig>
       </BrowserRouter>
     </HelmetProvider>
