@@ -18,6 +18,8 @@ export function PageHeader({
   imageAlt = "",
   imageWide = false,
   children,
+  breadcrumbs,
+  compact = false,
 }: {
   eyebrow: string;
   title: string;
@@ -28,13 +30,17 @@ export function PageHeader({
   /** Give the image column more room, extending it toward the text column. */
   imageWide?: boolean;
   children?: ReactNode;
+  breadcrumbs?: ReactNode;
+  compact?: boolean;
 }) {
   return (
     <section className="relative overflow-hidden bg-gradient-hero text-hero-ink">
       <div className="circuit-grid pointer-events-none absolute inset-0 opacity-30" />
+      {breadcrumbs}
       <div
         className={cn(
-          "container-page relative z-10 pb-16 pt-28 md:pb-24 md:pt-36",
+          "container-page relative z-10",
+          breadcrumbs ? "pb-16 pt-6 md:pb-24 md:pt-8" : compact ? "pb-16 pt-16 md:pb-24 md:pt-20" : "pb-16 pt-28 md:pb-24 md:pt-36",
           image && (imageWide ? "grid items-center gap-6 md:grid-cols-[0.85fr_1.15fr]" : "grid items-center gap-10 md:grid-cols-[1.05fr_0.95fr]")
         )}
       >
@@ -51,7 +57,7 @@ export function PageHeader({
         </div>
 
         {image && (
-          <div className={cn("relative flex justify-center md:justify-end", imageWide && "md:-ml-16")}>
+          <div className={cn("relative md:flex md:justify-end", imageWide && "md:-ml-16")}>
             <span
               aria-hidden
               className="pointer-events-none absolute left-1/2 top-1/2 h-[70%] w-[70%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,rgba(0,180,174,0.22),transparent_66%)] blur-2xl"
@@ -61,8 +67,8 @@ export function PageHeader({
               alt={imageAlt}
               loading="eager"
               className={cn(
-                "relative drop-shadow-[0_20px_50px_rgba(0,0,0,0.35)]",
-                imageWide ? "w-[min(160%,980px)]" : "w-[min(130%,780px)]"
+                "relative block mx-auto drop-shadow-[0_20px_50px_rgba(0,0,0,0.35)] md:mx-0",
+                imageWide ? "max-w-[90%] -translate-x-[15%] md:max-w-none md:w-[min(90%,620px)] md:translate-x-[3%]" : "w-[min(130%,780px)]"
               )}
             />
           </div>

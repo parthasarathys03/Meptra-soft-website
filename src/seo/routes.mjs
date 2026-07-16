@@ -118,6 +118,78 @@ const baseRoutes = [
     ],
   },
   {
+    path: "/placement-training",
+    title: "Placement Training for College Students — Aptitude, Coding & Interview Prep | Meptrasoft AI",
+    description:
+      "Complete placement preparation program for college students in Tamil Nadu — aptitude training, coding rounds, technical & HR interview prep, mock tests, resume building, and AI tools training. 3-day free demo available.",
+    keywords: [
+      "placement training",
+      "placement preparation",
+      "campus placement training",
+      "aptitude training for placements",
+      "coding interview preparation",
+      "technical interview prep",
+      "HR interview preparation",
+      "mock interviews",
+      "placement training for college students",
+      "placement training Tamil Nadu",
+      "placement training Chennai",
+      "IT job preparation",
+      "fresher job training",
+      "campus recruitment preparation",
+      "placement training online",
+    ],
+    priority: 0.9,
+    changefreq: "weekly",
+    breadcrumbs: [HOME_CRUMB, { name: "Learn", path: "/learn" }, { name: "Placement Training", path: "/placement-training" }],
+    schema: [
+      courseSchema({
+        name: "Placement Preparation Program",
+        description:
+          "Comprehensive placement training covering aptitude, coding, technical & HR interview preparation for college students. Includes mock tests, AI tools training, resume building, and mentor support until placed.",
+        path: "/placement-training",
+      }),
+      faqSchema([
+        {
+          question: "What is placement training and why do I need it?",
+          answer:
+            "Placement training is a structured program that prepares you for every stage of campus recruitment — aptitude tests, coding rounds, technical interviews, and HR interviews. Most colleges don't cover all of these in depth, so students who prepare separately perform significantly better in placement drives.",
+        },
+        {
+          question: "Who is this placement training program for?",
+          answer:
+            "It's designed for final-year and pre-final-year engineering students, freshers looking for their first IT job, and anyone preparing for campus placements. Any branch — CSE, ECE, EEE, Mechanical, Civil — is welcome.",
+        },
+        {
+          question: "How long is the placement preparation program?",
+          answer:
+            "The program runs for 3 months of intensive training, plus continued mentor support until you finish college and get placed.",
+        },
+        {
+          question: "Is there a free demo before I pay?",
+          answer:
+            "Yes. You can attend 3 days of free live demo classes. Experience our teaching style, ask questions, and explore the full curriculum. If you're not satisfied, you don't pay anything.",
+        },
+        {
+          question: "Will I get mock interviews and practice tests?",
+          answer:
+            "Yes — mock aptitude tests, mock coding rounds, mock technical interviews, and mock HR interviews are all part of the program.",
+        },
+        {
+          question: "Do you teach AI tools like ChatGPT and GitHub Copilot?",
+          answer:
+            "Yes. We train you to use AI tools like ChatGPT, Claude, and GitHub Copilot to build real industry-level projects.",
+        },
+        {
+          question: "What if I'm from a non-CS branch like ECE, Mechanical, or Civil?",
+          answer:
+            "Our program starts from the fundamentals. Many of our successful graduates are from non-CS branches. We teach everything from scratch.",
+        },
+      ]),
+      breadcrumbSchema([HOME_CRUMB, { name: "Learn", path: "/learn" }, { name: "Placement Training", path: "/placement-training" }]),
+    ],
+  },
+  {
     path: "/careers",
     title: "Careers & Internship Openings | Meptrasoft AI Technologies",
     description:

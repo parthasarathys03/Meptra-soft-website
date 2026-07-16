@@ -8,6 +8,7 @@ import { locations } from "@/data/locations";
 // Route-level code splitting (Home eager for fast first paint)
 const Solutions = lazy(() => import("@/pages/Solutions"));
 const Learn = lazy(() => import("@/pages/Learn"));
+const PlacementTraining = lazy(() => import("@/pages/PlacementTraining"));
 const Careers = lazy(() => import("@/pages/Careers"));
 const About = lazy(() => import("@/pages/About"));
 const Contact = lazy(() => import("@/pages/Contact"));
@@ -29,6 +30,7 @@ export default function App() {
         <Route index element={<Home />} />
         <Route path="/solutions/*" element={lazyEl(<Solutions />)} />
         <Route path="/learn/*" element={lazyEl(<Learn />)} />
+        <Route path="/placement-training" element={lazyEl(<PlacementTraining />)} />
         <Route path="/careers/*" element={lazyEl(<Careers />)} />
         <Route path="/about" element={lazyEl(<About />)} />
         <Route path="/contact" element={lazyEl(<Contact />)} />

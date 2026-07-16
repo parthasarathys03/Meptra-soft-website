@@ -22,6 +22,7 @@ export default function Careers() {
         image="/assets/career.webp"
         imageAlt="Careers at Meptrasoft AI Technologies"
         imageWide
+        compact
       />
 
       <section className="section-pad section-dark">

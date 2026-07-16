@@ -15,7 +15,7 @@ export const site = {
   full: "Meptrasoft AI Technologies",
   tagline: "AI Products × Engineering Education",
   whatsapp: "https://wa.me/919345984804",
-  email: "supportteam@meptrasoft.ai",
+  email: "hr@meptrasoft.ai",
   /** Job applications route here — intentionally not rendered as visible text anywhere. */
   applicationEmail: "parthasarathysankar03@gmail.com",
   social: {
@@ -307,6 +307,74 @@ export const placementOrder = {
   ],
   goal: "Our goal isn't just to teach you. Our goal is to make you placement-ready and help you confidently crack your first IT job.",
 };
+
+// Placement Training — dedicated page FAQ (FAQPage schema → Google rich snippets).
+export const placementFaqs: Faq[] = [
+  {
+    question: "What is placement training and why do I need it?",
+    answer:
+      "Placement training is a structured program that prepares you for every stage of campus recruitment — aptitude tests, coding rounds, technical interviews, and HR interviews. Most colleges don't cover all of these in depth, so students who prepare separately perform significantly better in placement drives.",
+  },
+  {
+    question: "Who is this placement training program for?",
+    answer:
+      "It's designed for final-year and pre-final-year engineering students, freshers looking for their first IT job, and anyone preparing for campus placements. Any branch — CSE, ECE, EEE, Mechanical, Civil — is welcome. No prior coding experience is required.",
+  },
+  {
+    question: "How long is the placement preparation program?",
+    answer:
+      "The program runs for 3 months of intensive training, plus continued mentor support until you finish college and get placed. You're not left on your own after the course ends.",
+  },
+  {
+    question: "Is there a free demo before I pay?",
+    answer:
+      "Yes. You can attend 3 days of free live demo classes. Experience our teaching style, ask questions, and explore the full curriculum. If you're not satisfied, you don't pay anything — no risk, no pressure.",
+  },
+  {
+    question: "What's the difference between Live and Self-paced modes?",
+    answer:
+      "The Live mode includes live interactive classes, recordings, study materials, and unlimited live doubt-clearing. The Self-paced mode gives you recorded sessions, weekly doubt sessions, and the same materials. Both cover the full placement curriculum.",
+  },
+  {
+    question: "Will I get mock interviews and practice tests?",
+    answer:
+      "Yes — mock aptitude tests, mock coding rounds, mock technical interviews, and mock HR interviews are all part of the program. Our mock interviews are designed to be tougher than real ones so you walk into your actual interview confident and prepared.",
+  },
+  {
+    question: "Do you teach AI tools like ChatGPT and GitHub Copilot?",
+    answer:
+      "Yes. We train you to use AI tools like ChatGPT, Claude, and GitHub Copilot to build real industry-level projects. You'll learn to leverage these tools for coding, project development, and productivity — skills that give you a major edge in interviews.",
+  },
+  {
+    question: "What if I'm from a non-CS branch like ECE, Mechanical, or Civil?",
+    answer:
+      "Our program starts from the fundamentals and builds up. Many of our successful graduates are from non-CS branches. We teach everything from scratch — programming, aptitude, communication, and interview skills — so your branch doesn't matter.",
+  },
+];
+
+// Target audience for the placement training page — who benefits from this program.
+export const placementAudience: { title: string; body: string; icon: string }[] = [
+  {
+    title: "Final-Year & Pre-Final-Year Students",
+    body: "Campus placements are months away. This program covers every round — aptitude, coding, technical, and HR — in the exact sequence companies follow.",
+    icon: "graduation",
+  },
+  {
+    title: "Freshers Looking for Their First IT Job",
+    body: "No prior experience? We start from the fundamentals and build you up to interview-ready. Resume prep, portfolio, and mock interviews included.",
+    icon: "briefcase",
+  },
+  {
+    title: "Students from Any Branch",
+    body: "CSE, ECE, EEE, Mechanical, Civil — it doesn't matter. We teach everything from scratch, including programming, so any engineering student can follow along.",
+    icon: "users",
+  },
+  {
+    title: "Students Who Struggled in Previous Placement Drives",
+    body: "Didn't clear the first round last time? We diagnose exactly where you're falling short and fix it with targeted practice and mock tests.",
+    icon: "rocket",
+  },
+];
 
 export const courseCategories = ["All", "AI", "Programming", "Data", "Web & Mobile", "Cloud & Security", "Career"] as const;
 

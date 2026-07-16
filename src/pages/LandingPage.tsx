@@ -45,10 +45,6 @@ export default function LandingPage({ slug }: { slug: string }) {
     <>
       <RouteSeoTags route={route} />
 
-      <div className="bg-gradient-hero">
-        <Breadcrumbs items={crumbItems} />
-      </div>
-
       <PageHeader
         eyebrow={data.eyebrow}
         title={data.h1}
@@ -56,6 +52,7 @@ export default function LandingPage({ slug }: { slug: string }) {
         accent={data.accent}
         image={data.image}
         imageAlt={data.imageAlt}
+        breadcrumbs={<Breadcrumbs items={crumbItems} />}
       >
         <div className="flex flex-wrap gap-3">
           <Link

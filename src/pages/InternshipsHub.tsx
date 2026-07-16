@@ -58,23 +58,6 @@ export default function InternshipsHub() {
     <>
       <RouteSeoTags route={getRoute("/internships")} />
 
-      <div className="bg-gradient-hero">
-        <nav aria-label="Breadcrumb" className="container-page pt-24 md:pt-28">
-          <ol className="flex flex-wrap items-center gap-1.5 text-[13px] text-hero-soft">
-            {crumbs.map((it, i) => (
-              <li key={it.to} className="inline-flex items-center gap-1.5">
-                {i > 0 && <span aria-hidden className="opacity-40">/</span>}
-                {i < crumbs.length - 1 ? (
-                  <Link to={it.to} className="hover:text-aqua-300">{it.name}</Link>
-                ) : (
-                  <span className="text-hero-ink" aria-current="page">{it.name}</span>
-                )}
-              </li>
-            ))}
-          </ol>
-        </nav>
-      </div>
-
       <PageHeader
         eyebrow="Internships"
         title="Internships in Tamil Nadu — real work, real projects"
@@ -83,6 +66,22 @@ export default function InternshipsHub() {
         image="/assets/career.webp"
         imageAlt="Internships at Meptrasoft AI Technologies"
         imageWide
+        breadcrumbs={
+          <nav aria-label="Breadcrumb" className="container-page pt-24 md:pt-28">
+            <ol className="flex flex-wrap items-center gap-1.5 text-[13px] text-hero-soft">
+              {crumbs.map((it, i) => (
+                <li key={it.to} className="inline-flex items-center gap-1.5">
+                  {i > 0 && <span aria-hidden className="opacity-40">/</span>}
+                  {i < crumbs.length - 1 ? (
+                    <Link to={it.to} className="hover:text-aqua-300">{it.name}</Link>
+                  ) : (
+                    <span className="text-hero-ink" aria-current="page">{it.name}</span>
+                  )}
+                </li>
+              ))}
+            </ol>
+          </nav>
+        }
       >
         <div className="flex flex-wrap gap-3">
           <Link to="/contact" className="inline-flex items-center gap-1.5 rounded-full bg-amber-500 px-5 py-2.5 text-sm font-semibold text-[#20160a] transition-transform hover:-translate-y-0.5">

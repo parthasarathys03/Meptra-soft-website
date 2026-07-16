@@ -30,14 +30,14 @@ export function Header() {
       <div className="px-5 pt-2 md:px-8 md:pt-3">
         <div
           className={cn(
-            "flex items-center gap-3 rounded-[var(--radius-pill)] border px-5 py-0.5 transition-all duration-300 md:px-6 md:py-1",
+            "flex h-14 items-center gap-3 rounded-[var(--radius-pill)] border px-5 transition-all duration-300 md:h-16 md:px-6",
             // glassmorphism capsule
             "border-white/60 bg-white/70 shadow-[0_8px_30px_rgba(11,31,56,0.10)] backdrop-blur-xl",
             scrolled && "border-white/70 bg-white/85 shadow-[0_12px_36px_rgba(11,31,56,0.16)]"
           )}
         >
           <Link to="/" aria-label="Meptrasoft AI Technologies — home" className="shrink-0 pl-3">
-            <img src="/assets/logo.svg" alt="Meptrasoft AI Technologies" className="h-11 w-auto md:h-[54px]" />
+            <img src="/assets/logo.svg" alt="Meptrasoft AI Technologies" className="h-12 w-auto md:h-14" />
           </Link>
 
           {/* desktop nav with sliding indicator */}
