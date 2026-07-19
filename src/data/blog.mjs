@@ -10,7 +10,7 @@ export const posts = [
       "The real difference between free and paid internships, who each one suits, and how to pick the track that gets you hired faster.",
     date: "2026-06-18",
     author: "Meptrasoft AI Technologies",
-    image: "/assets/courses.webp",
+    image: "/assets/blogs images/1st blog card.png",
     tags: ["Internships", "Careers"],
     body: [
       { p: "\"Should I take a free internship or a paid one?\" is one of the most common questions we hear from students. The honest answer: it depends on where you are right now, not on which sounds better." },
@@ -40,7 +40,7 @@ export const posts = [
       "A practical checklist for picking an AI course in Tamil Nadu — what to look for, what to avoid, and the skills that actually get you hired.",
     date: "2026-06-25",
     author: "Meptrasoft AI Technologies",
-    image: "/assets/courses.webp",
+    image: "/assets/blogs images/2nd blog card .png",
     tags: ["AI", "Courses"],
     body: [
       { p: "AI courses are everywhere now, and quality varies wildly. If you're a student in Tamil Nadu deciding where to spend your time and money, here's how to separate a course that builds real skills from one that just hands out a certificate." },
@@ -72,7 +72,7 @@ export const posts = [
       "Fresh, defendable final-year project ideas across AI, machine learning, and deep learning — with tips to make yours stand out.",
     date: "2026-07-01",
     author: "Meptrasoft AI Technologies",
-    image: "/assets/about.webp",
+    image: "/assets/blogs images/3rd blog card .png",
     tags: ["Projects", "AI"],
     body: [
       { p: "A strong final-year project can set your resume apart — but only if it's original and you can defend it. Here are modern AI, ML, and deep-learning ideas worth building in 2026, grouped by area." },
@@ -114,7 +114,7 @@ export const posts = [
       "A step-by-step Python roadmap for beginners — what to learn, in what order, and how to reach a job-ready level.",
     date: "2026-07-04",
     author: "Meptrasoft AI Technologies",
-    image: "/assets/courses.webp",
+    image: "/assets/blogs images/4th blog card .png",
     tags: ["Python", "Programming"],
     body: [
       { p: "Python is the best first language for a software or AI career — readable, versatile, and in demand. Here's a realistic roadmap from absolute beginner to job-ready." },
@@ -143,7 +143,7 @@ export const posts = [
       "A stage-by-stage placement preparation guide for freshers — aptitude, coding, technical, and HR rounds, and how to prepare for each.",
     date: "2026-07-07",
     author: "Meptrasoft AI Technologies",
-    image: "/assets/courses.webp",
+    image: "/assets/blogs images/5 th blog .png",
     tags: ["Placement", "Careers"],
     body: [
       { p: "Landing your first IT job is less about talent and more about a system. Companies hire in stages, and each stage rewards a different kind of preparation. Here's the roadmap." },
@@ -172,7 +172,7 @@ export const posts = [
       "How online internships work, how to spot a real one, and how to turn a remote internship into a job offer.",
     date: "2026-07-08",
     author: "Meptrasoft AI Technologies",
-    image: "/assets/career.webp",
+    image: "/assets/blogs images/6th blog card.png",
     tags: ["Internships", "Careers"],
     body: [
       { p: "Online internships opened real industry experience to students everywhere — no relocation, no gatekeeping by city. But not all of them are worth your time. Here's how to make one count." },

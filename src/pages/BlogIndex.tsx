@@ -20,6 +20,8 @@ export default function BlogIndex() {
         title="Guides for students & job seekers"
         subtitle="Practical, no-fluff guides on internships, AI and Python courses, final-year projects, and IT placement preparation."
         accent="amber"
+        image="/assets/blogs images/hero-section-rightside-blogs.png"
+        imageAlt="Meptrasoft AI Blog Guides"
       />
       <section className="section-pad section-dark">
         <div className="container-page relative z-10">
