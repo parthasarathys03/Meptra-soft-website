@@ -483,57 +483,7 @@ export const landings = [
     ],
     cta: { title: "Start your deep-learning project", body: "Build and train a real neural-network project with mentor support." },
   },
-  {
-    slug: "placement-training",
-    path: "/placement-training",
-    accent: "amber",
-    image: "/assets/courses.webp",
-    imageAlt: "Placement training at Meptrasoft AI Technologies — aptitude, coding, technical and HR interviews",
-    eyebrow: "Placement Training",
-    h1: "Placement Training That Gets You Hired",
-    subtitle:
-      "A complete placement preparation program — aptitude, coding, communication, technical, and HR interviews — with mentor support that continues until you're placed.",
-    intro: [
-      "This isn't a syllabus, it's a placement roadmap. Each stage builds on the last: aptitude, coding, communication and group discussion, the technical interview, and the HR round — with mock rounds for every stage.",
-      "You get live mentor-led classes, weekly assessments, real mock interviews, and continuous feedback. Support continues until your college ends and you're placed. Everything a fresher needs to crack the first IT job.",
-    ],
-    highlights: [
-      { icon: "chart", title: "Aptitude & coding", body: "Quant, logical reasoning, and coding rounds." },
-      { icon: "users", title: "Communication & GD", body: "Spoken English, group discussion, and presentation." },
-      { icon: "code", title: "Technical interview", body: "DSA, core subjects, and project defense." },
-      { icon: "graduate", title: "HR interview", body: "Behavioral prep, resume, and confidence building." },
-    ],
-    checklist: [
-      "Live mentor-led classes in Tamil & English",
-      "Mock aptitude, coding, technical, and HR interviews",
-      "Weekly assessments and continuous feedback",
-      "Resume, portfolio, and communication preparation",
-      "Support that continues until you're placed",
-    ],
-    related: [
-      { label: "Python Course", to: "/courses/python" },
-      { label: "AI Course", to: "/courses/ai" },
-      { label: "Online Internship", to: "/internships/online" },
-      { label: "All programs", to: "/learn" },
-    ],
-    faqs: [
-      {
-        question: "How long is the placement training program?",
-        answer:
-          "The core program runs about six months, with mentor support continuing until your college ends and you're placed.",
-      },
-      {
-        question: "What does placement training cover?",
-        answer:
-          "Aptitude, coding, communication and group discussion, the technical interview, and the HR round — each with mock rounds and feedback.",
-      },
-      {
-        question: "Is placement training available online?",
-        answer: "Yes. Classes are live and mentor-led, delivered online in Tamil and English.",
-      },
-    ],
-    cta: { title: "Join placement training", body: "Follow a proven roadmap from aptitude to your first job offer." },
-  },
+
   {
     slug: "industrial-training",
     path: "/industrial-training",

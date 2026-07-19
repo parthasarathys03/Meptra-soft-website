@@ -105,11 +105,6 @@ export function websiteSchema() {
     url: `${ORIGIN}/`,
     name: site.legalName,
     publisher: { "@id": `${ORIGIN}/#organization` },
-    potentialAction: {
-      "@type": "SearchAction",
-      target: { "@type": "EntryPoint", urlTemplate: `${ORIGIN}/search?q={search_term_string}` },
-      "query-input": "required name=search_term_string",
-    },
   };
 }
 
