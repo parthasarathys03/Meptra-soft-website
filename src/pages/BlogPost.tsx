@@ -13,8 +13,15 @@ const fmtDate = (iso: string) =>
   new Date(iso).toLocaleDateString("en-IN", { year: "numeric", month: "long", day: "numeric" });
 
 function Block({ block }: { block: BlogBlock }) {
-  if ("h2" in block) return <h2 className="mt-8 text-[clamp(20px,2.6vw,28px)] font-bold text-hero-ink">{block.h2}</h2>;
+  if ("h2" in block) return <h2 className="mt-10 text-[clamp(20px,2.6vw,28px)] font-bold text-hero-ink">{block.h2}</h2>;
+  if ("h3" in block) return <h3 className="mt-6 text-[clamp(17px,2vw,22px)] font-semibold text-aqua-300">{block.h3}</h3>;
   if ("p" in block) return <p className="mt-4 text-[15px] leading-relaxed text-hero-soft md:text-base">{block.p}</p>;
+  if ("code" in block)
+    return (
+      <div className="mt-4 overflow-x-auto rounded-xl border border-white/10 bg-[#071322] p-4 text-xs sm:text-sm font-mono text-cyan-200">
+        <pre className="whitespace-pre">{block.code}</pre>
+      </div>
+    );
   if ("ul" in block)
     return (
       <ul className="mt-4 flex flex-col gap-2.5">

@@ -365,7 +365,7 @@ const locationRoutes = locations.map((c) => {
   ];
   return {
     path,
-    title: `AI Internship, Courses & Final-Year Projects in ${name} | Meptrasoft AI`,
+    title: `AI Internship & Courses in ${name} | Meptrasoft AI`,
     description: `${c.lead} Online AI & free internships, Python, AI, data science, web development & generative AI courses, final-year & college projects, industrial training, and placement training for students in ${name}, ${c.region}.`,
     keywords: alias ? [...intents, `internship in ${alias}`, `AI course in ${alias}`] : intents,
     priority: 0.7,

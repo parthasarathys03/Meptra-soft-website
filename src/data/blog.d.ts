@@ -1,7 +1,9 @@
 export type BlogBlock =
   | { h2: string }
+  | { h3: string }
   | { p: string }
   | { ul: string[] }
+  | { code: string }
   | { cta: { label: string; to: string } };
 
 export interface BlogPost {
