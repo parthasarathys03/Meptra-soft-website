@@ -20,8 +20,10 @@ export default function BlogIndex() {
         title="Guides for students & job seekers"
         subtitle="Practical, no-fluff guides on internships, AI and Python courses, final-year projects, and IT placement preparation."
         accent="amber"
-        image="/assets/blogs images/hero-section-rightside-blogs.png"
+        image="/assets/New folder/blog-page-hero-image.png"
         imageAlt="Meptrasoft AI Blog Guides"
+        imageWide
+        imageClassName="scale-95 md:scale-95 md:-translate-x-16 lg:-translate-x-24 origin-center"
       />
       <section className="section-pad section-dark">
         <div className="container-page relative z-10">
@@ -32,7 +34,7 @@ export default function BlogIndex() {
                   to={`/blog/${p.slug}`}
                   className="glass group flex h-full flex-col overflow-hidden rounded-[var(--radius-lg)] transition-transform hover:-translate-y-0.5"
                 >
-                  <img src={p.image} alt="" loading="lazy" className="h-40 w-full object-cover" />
+                  <img src={p.image} alt="" loading="lazy" className="aspect-[16/9] w-full object-cover object-top" />
                   <div className="flex flex-1 flex-col p-5">
                     <div className="flex flex-wrap gap-2">
                       {p.tags.map((t) => (

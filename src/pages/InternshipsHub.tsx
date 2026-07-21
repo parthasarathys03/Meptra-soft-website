@@ -63,7 +63,7 @@ export default function InternshipsHub() {
         title="Internships in Tamil Nadu — real work, real projects"
         subtitle="AI, software, Python, data science, machine learning, and web development internships — online, mentored, and built on live client products. Free and paid tracks."
         accent="amber"
-        image="/assets/career.webp"
+        image="/assets/New folder/internship.png"
         imageAlt="Internships at Meptrasoft AI Technologies"
         imageWide
         breadcrumbs={

@@ -17,6 +17,7 @@ export function PageHeader({
   image,
   imageAlt = "",
   imageWide = false,
+  imageClassName,
   children,
   breadcrumbs,
   compact = false,
@@ -29,6 +30,7 @@ export function PageHeader({
   imageAlt?: string;
   /** Give the image column more room, extending it toward the text column. */
   imageWide?: boolean;
+  imageClassName?: string;
   children?: ReactNode;
   breadcrumbs?: ReactNode;
   compact?: boolean;
@@ -68,7 +70,8 @@ export function PageHeader({
               loading="eager"
               className={cn(
                 "relative block mx-auto drop-shadow-[0_20px_50px_rgba(0,0,0,0.35)] md:mx-0",
-                imageWide ? "max-w-[90%] -translate-x-[15%] md:max-w-none md:w-[min(90%,620px)] md:translate-x-[3%]" : "w-[min(130%,780px)]"
+                imageWide ? "max-w-[90%] -translate-x-[15%] md:max-w-none md:w-[min(90%,620px)] md:translate-x-[3%]" : "w-[min(130%,780px)]",
+                imageClassName
               )}
             />
           </div>

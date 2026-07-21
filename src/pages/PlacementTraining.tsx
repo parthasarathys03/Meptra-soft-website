@@ -284,7 +284,7 @@ export default function PlacementTraining() {
         subtitle={pp.tagline}
         accent="amber"
         breadcrumbs={<Breadcrumbs />}
-        image="/assets/blogs images/3rd blog card .png"
+        image="/assets/New folder/for placemnt .png"
         imageAlt="Placement Training"
       >
         <span className="mb-3 inline-flex items-center gap-2 rounded-full border border-amber-400/40 bg-amber-500/10 px-3 py-1.5 text-[12px] font-semibold text-amber-300">

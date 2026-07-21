@@ -52,6 +52,8 @@ export default function LandingPage({ slug }: { slug: string }) {
         accent={data.accent}
         image={data.image}
         imageAlt={data.imageAlt}
+        imageWide={data.imageWide}
+        imageClassName={data.imageClassName}
         breadcrumbs={<Breadcrumbs items={crumbItems} />}
       >
         <div className="flex flex-wrap gap-3">
