@@ -1,42 +1,50 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <!-- Google Tag Manager -->
-    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','GTM-NHDGH6VS');</script>
-    <!-- End Google Tag Manager -->
-    <!-- Microsoft Clarity -->
-    <script type="text/javascript">
-        (function(c,l,a,r,i,t,y){
-            c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-            t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-            y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-        })(window, document, "clarity", "script", "xk7iuv4pvt");
-    </script>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#0b1f38" />
+    <meta name="color-scheme" content="dark" />
+
+    <!-- Preconnect to font origins ASAP (before any blocking resources) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <!-- Preload LCP-critical assets -->
+    <link rel="preload" as="image" href="/assets/logo.svg" />
+
+    <!-- Inline critical CSS to prevent FOUC -->
+    <style>
+      body{background:#081426;color:#eaf1f7;font-family:"Sora",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased;margin:0}
+    </style>
+
+    <!-- Non-render-blocking Google Fonts (media swap pattern) -->
+    <link
+      rel="preload"
+      as="style"
+      href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;900&display=swap"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;900&display=swap"
+      rel="stylesheet"
+      media="print"
+      onload="this.media='all'"
+    />
+    <noscript>
+      <link
+        href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;900&display=swap"
+        rel="stylesheet"
+      />
+    </noscript>
+
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#0b1f38" />
-    <meta name="color-scheme" content="dark" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-VZ4E53NQPZ"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-VZ4E53NQPZ');
-    </script>
 
     <!-- SEO:START — scripts/seo-build.mjs replaces this block per route at build time.
          Default values below are the home page (used in dev and as fallback).
@@ -59,13 +67,6 @@
     <meta data-ssg-seo name="twitter:description" content="AI products for businesses and training for the engineers who build them." />
     <meta data-ssg-seo name="twitter:image" content="https://www.meptrasoftai.in/assets/og-image.png" />
     <!-- SEO:END -->
-
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;900&display=swap"
-      rel="stylesheet"
-    />
   </head>
   <body>
     <!-- Google Tag Manager (noscript) -->
@@ -74,5 +75,37 @@
     <!-- End Google Tag Manager (noscript) -->
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
+
+    <!-- Analytics deferred off the critical path via requestIdleCallback -->
+    <script>
+      (function(){
+        var ric = window.requestIdleCallback || function(cb){ return setTimeout(cb, 150); };
+        ric(function(){
+          // Google Tag Manager
+          (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+          new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+          j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+          'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+          })(window,document,'script','dataLayer','GTM-NHDGH6VS');
+
+          // Microsoft Clarity
+          (function(c,l,a,r,i,t,y){
+            c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+            t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+            y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+          })(window, document, "clarity", "script", "xk7iuv4pvt");
+
+          // Google Analytics (gtag.js)
+          var gs = document.createElement('script');
+          gs.async = true;
+          gs.src = 'https://www.googletagmanager.com/gtag/js?id=G-VZ4E53NQPZ';
+          document.head.appendChild(gs);
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){window.dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-VZ4E53NQPZ');
+        });
+      })();
+    </script>
   </body>
 </html>

@@ -85,6 +85,7 @@ export function AudienceFork() {
                     alt=""
                     aria-hidden
                     loading="lazy"
+                    decoding="async"
                     className="pointer-events-none absolute inset-0 h-full w-full object-cover object-right transition-transform duration-500 group-hover:scale-105"
                   />
                   {/* readability overlay — dark on the text side, image visible on the far side */}

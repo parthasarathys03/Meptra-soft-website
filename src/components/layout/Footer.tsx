@@ -44,6 +44,8 @@ export function Footer() {
               src="/assets/logo.svg"
               alt="Meptrasoft AI Technologies"
               className="h-14 w-auto [filter:brightness(0)_invert(1)] md:h-20"
+              loading="lazy"
+              decoding="async"
             />
           </Link>
           <p className="mt-4 max-w-[32ch] text-sm text-hero-soft">

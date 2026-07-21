@@ -37,7 +37,7 @@ export function Header() {
           )}
         >
           <Link to="/" aria-label="Meptrasoft AI Technologies — home" className="shrink-0 pl-3">
-            <img src="/assets/logo.svg" alt="Meptrasoft AI Technologies" className="h-12 w-auto md:h-14" />
+            <img src="/assets/logo.svg" alt="Meptrasoft AI Technologies" className="h-12 w-auto md:h-14" width={168} height={56} fetchPriority="high" decoding="async" />
           </Link>
 
           {/* desktop nav with sliding indicator */}
