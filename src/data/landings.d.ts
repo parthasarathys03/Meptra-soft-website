@@ -12,6 +12,8 @@ export interface LandingContent {
   accent: "teal" | "amber" | "navy";
   image: string;
   imageAlt: string;
+  imageWide?: boolean;
+  imageClassName?: string;
   eyebrow: string;
   h1: string;
   subtitle: string;
