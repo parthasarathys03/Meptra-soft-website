@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="-98 -98.5 2196 2196">
-  <rect x="-150" y="-150" width="2300" height="2300" fill="#ffffff"/>
+  <rect x="-98" y="-98.5" width="2196" height="2196" rx="439" ry="439" fill="#ffffff"/>
   <defs>
     <style>
       .cls-1 {
