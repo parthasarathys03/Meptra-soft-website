@@ -20,7 +20,7 @@ export const site = {
   logo: `${ORIGIN}/assets/logo.svg`,
   image: `${ORIGIN}/assets/og-image.png`,
   email: "supportteam@meptrasoft.ai",
-  telephone: "+91-93459-84804",
+  telephone: "+91-86681-26216",
   // Virtual offices today; physical offices opening soon.
   addressLocality: "Chennai",
   addressRegion: "Tamil Nadu",
@@ -30,7 +30,7 @@ export const site = {
   sameAs: [
     "https://www.instagram.com/meptrasoft_ai_technologies",
     "https://www.linkedin.com/in/meptrasoft-ai-technologies-b90442420",
-    "https://wa.me/919345984804",
+    "https://wa.me/918668126216",
   ],
 };
 
@@ -67,10 +67,16 @@ export function organizationSchema() {
     "@type": ["Organization", "EducationalOrganization"],
     "@id": `${ORIGIN}/#organization`,
     name: site.legalName,
-    // Legitimate brand variants only. Google auto-corrects true misspellings
-    // once the brand ranks — deliberately stuffing typos is a spam signal.
-    alternateName: ["Meptrasoft AI", "Meptrasoft", "Meptra Soft AI", "Meptrasoft AI Technologies"],
+    alternateName: [
+      "Meptrasoft AI",
+      "Meptrasoft",
+      "meptrasoftai",
+      "meptrasoft ai",
+      "Meptra Soft AI",
+      "Meptrasoft AI Technologies"
+    ],
     url: `${ORIGIN}/`,
+    foundingDate: "2024",
     logo: site.logo,
     image: site.image,
     email: site.email,
@@ -104,6 +110,7 @@ export function websiteSchema() {
     "@id": `${ORIGIN}/#website`,
     url: `${ORIGIN}/`,
     name: site.legalName,
+    alternateName: ["Meptrasoft AI", "meptrasoftai", "Meptrasoft"],
     publisher: { "@id": `${ORIGIN}/#organization` },
   };
 }

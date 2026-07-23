@@ -49,7 +49,7 @@ export default function Footer() {
             <h4 className="mb-5 text-[0.9rem] font-bold uppercase tracking-[0.06em] text-white">Connect</h4>
             <ul className="flex flex-col gap-3.5 max-[768px]:items-center">
               <li><a className={linkCls} href="#contact" onClick={(e) => handleAnchorClick(e, '#contact')}>Contact Us</a></li>
-              <li><a className={linkCls} href="https://wa.me/919345984804" target="_blank" rel="noopener noreferrer"><ChatOption size="small" /> WhatsApp</a></li>
+              <li><a className={linkCls} href="https://wa.me/918668126216" target="_blank" rel="noopener noreferrer"><ChatOption size="small" /> WhatsApp</a></li>
               <li><a className={linkCls} href="#"><LinkedinOption size="small" /> LinkedIn</a></li>
               <li><a className={linkCls} href="#"><Github size="small" /> GitHub</a></li>
             </ul>

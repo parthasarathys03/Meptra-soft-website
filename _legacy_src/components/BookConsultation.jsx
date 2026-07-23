@@ -47,7 +47,7 @@ export default function BookConsultation() {
                 <span>Book a Call</span>
                 <FormNextLink size="medium" />
               </a>
-              <a href="https://wa.me/919345984804" className="inline-flex cursor-pointer items-center gap-2 rounded-pill border-2 px-8 py-3.5 text-[0.95rem] font-semibold transition duration-[400ms] ease-smooth hover:-translate-y-0.5 max-[480px]:px-6 max-[480px]:py-3 max-[480px]:text-[0.9rem] !border-[#25d366] !bg-[#25d366] !text-white hover:!border-[#25d366] hover:!bg-[#1da851] hover:!shadow-[0_4px_16px_rgba(37,211,102,0.35)]" target="_blank" rel="noopener noreferrer">
+              <a href="https://wa.me/918668126216" className="inline-flex cursor-pointer items-center gap-2 rounded-pill border-2 px-8 py-3.5 text-[0.95rem] font-semibold transition duration-[400ms] ease-smooth hover:-translate-y-0.5 max-[480px]:px-6 max-[480px]:py-3 max-[480px]:text-[0.9rem] !border-[#25d366] !bg-[#25d366] !text-white hover:!border-[#25d366] hover:!bg-[#1da851] hover:!shadow-[0_4px_16px_rgba(37,211,102,0.35)]" target="_blank" rel="noopener noreferrer">
                 <ChatOption size="medium" />
                 <span>WhatsApp Us</span>
               </a>

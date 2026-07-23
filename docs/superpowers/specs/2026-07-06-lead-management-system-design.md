@@ -33,7 +33,7 @@ Admin dashboard (browser, /admin on same site)
   list/search/filter/paginate/stats  ──GET──▶  Apps Script (reads Firestore)
   status · notes · edit · delete      ──POST──▶ Apps Script (writes Firestore + Sheet)
   export CSV/Excel   — built client-side from fetched rows
-  WhatsApp button    — copies formatted summary to clipboard + opens wa.me/919345984804
+  WhatsApp button    — copies formatted summary to clipboard + opens wa.me/918668126216
 ```
 
 ### Why this approach
@@ -99,7 +99,7 @@ fields serialize as empty strings for non-student interests).
   - **Table** — paginated rows, status badge, quick status change.
   - **Detail drawer** — full record, editable notes, edit fields, delete (confirm).
   - **Export** — CSV always; Excel via a tiny client-side `.xls` HTML-table trick (no new heavy dep) or SheetJS if approved.
-  - **WhatsApp** — per-lead button: copies formatted summary to clipboard (`navigator.clipboard.writeText`) and opens `https://wa.me/919345984804` in a new tab. Toast tells the user to paste into the "Leads-group".
+  - **WhatsApp** — per-lead button: copies formatted summary to clipboard (`navigator.clipboard.writeText`) and opens `https://wa.me/918668126216` in a new tab. Toast tells the user to paste into the "Leads-group".
 - All data ops go through `src/lib/adminApi.ts` (wraps the Apps Script GET/POST with the token).
 
 ## Data Flow

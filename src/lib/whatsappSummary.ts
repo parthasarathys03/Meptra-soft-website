@@ -1,7 +1,7 @@
 // src/lib/whatsappSummary.ts
 import type { Lead } from "@/lib/adminApi";
 
-const WHATSAPP_NUMBER = "919345984804";
+const WHATSAPP_NUMBER = "918668126216";
 
 export function formatWhatsAppSummary(lead: Lead): string {
   const lines = [

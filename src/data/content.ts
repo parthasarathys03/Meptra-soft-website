@@ -14,14 +14,14 @@ export const site = {
   name: "Meptrasoft AI",
   full: "Meptrasoft AI Technologies",
   tagline: "AI Products × Engineering Education",
-  whatsapp: "https://wa.me/919345984804",
+  whatsapp: "https://wa.me/918668126216",
   email: "hr@meptrasoft.ai",
   /** Job applications route here — intentionally not rendered as visible text anywhere. */
   applicationEmail: "parthasarathysankar03@gmail.com",
   social: {
     instagram: "https://www.instagram.com/meptrasoft_ai_technologies?igsh=MWxseTlmN2kzbzZqYQ==",
     linkedin: "https://www.linkedin.com/in/meptrasoft-ai-technologies-b90442420",
-    whatsapp: "https://wa.me/919345984804",
+    whatsapp: "https://wa.me/918668126216",
   },
   /**
    * CallMeBot free WhatsApp API — sends lead-form submissions straight to the
@@ -32,7 +32,7 @@ export const site = {
    * phone must be the owner's number in international format, no "+" or spaces.
    */
   callmebot: {
-    phone: "919345984804",
+    phone: "918668126216",
     apikey: "YOUR_CALLMEBOT_APIKEY",
   },
 };

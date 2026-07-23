@@ -215,7 +215,7 @@ const baseRoutes = [
     path: "/contact",
     title: "Contact Meptrasoft AI Technologies | WhatsApp, Call & Email",
     description:
-      "Talk to Meptrasoft AI Technologies. Students, businesses, and job seekers — reach us on WhatsApp, call +91 93459 84804, or email. We reply fast.",
+      "Talk to Meptrasoft AI Technologies. Students, businesses, and job seekers — reach us on WhatsApp, call +91 86681 26216, or email. We reply fast.",
     keywords: ["contact Meptrasoft", "Meptrasoft AI contact", "AI company contact Tamil Nadu"],
     priority: 0.6,
     changefreq: "monthly",

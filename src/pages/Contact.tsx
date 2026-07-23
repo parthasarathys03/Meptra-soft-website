@@ -10,13 +10,13 @@ const directLines = [
     href: site.social.whatsapp,
     icon: "whatsapp" as const,
     label: "Chat on WhatsApp",
-    value: "+91 93459 84804",
+    value: "+91 86681 26216",
   },
   {
-    href: "tel:+919345984804",
+    href: "tel:+918668126216",
     icon: "phone" as const,
     label: "Call us",
-    value: "+91 93459 84804",
+    value: "+91 86681 26216",
   },
   {
     href: `mailto:${site.email}`,

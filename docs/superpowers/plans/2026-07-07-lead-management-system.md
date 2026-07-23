@@ -1756,7 +1756,7 @@ git commit -m "feat: add CSV and Excel export to admin dashboard"
 // src/lib/whatsappSummary.ts
 import type { Lead } from "@/lib/adminApi";
 
-const WHATSAPP_NUMBER = "919345984804";
+const WHATSAPP_NUMBER = "918668126216";
 
 export function formatWhatsAppSummary(lead: Lead): string {
   const lines = [
@@ -1860,7 +1860,7 @@ Add the toast render, just before the closing `</div>` of the drawer panel:
 ```bash
 npx tsc -b --noEmit
 ```
-`/admin` → open a lead → click WhatsApp → confirm a new tab opens to `https://wa.me/919345984804` and pasting (Ctrl+V) into any text field shows the formatted summary with all populated fields.
+`/admin` → open a lead → click WhatsApp → confirm a new tab opens to `https://wa.me/918668126216` and pasting (Ctrl+V) into any text field shows the formatted summary with all populated fields.
 
 - [ ] **Step 4: Commit**
 
