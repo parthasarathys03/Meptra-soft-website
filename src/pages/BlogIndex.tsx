@@ -23,7 +23,7 @@ export default function BlogIndex() {
         image="/assets/New folder/blog-page-hero-image.png"
         imageAlt="Meptrasoft AI Blog Guides"
         imageWide
-        imageClassName="scale-95 md:scale-95 md:-translate-x-16 lg:-translate-x-24 origin-center"
+        imageClassName="max-h-[350px] md:max-h-[400px] lg:max-h-[420px] md:translate-x-4 lg:translate-x-8 origin-top-right object-contain"
       />
       <section className="section-pad section-dark">
         <div className="container-page relative z-10">
