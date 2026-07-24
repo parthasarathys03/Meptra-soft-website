@@ -47,6 +47,7 @@ import {
   faInstagram,
   faLinkedinIn,
   faWhatsapp,
+  faFacebookF,
 } from "@fortawesome/free-brands-svg-icons";
 
 /**
@@ -98,6 +99,7 @@ export const icons = {
   instagram: faInstagram,
   linkedin: faLinkedinIn,
   whatsapp: faWhatsapp,
+  facebook: faFacebookF,
 } satisfies Record<string, IconDefinition>;
 
 export type IconName = keyof typeof icons;

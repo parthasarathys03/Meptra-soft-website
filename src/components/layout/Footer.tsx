@@ -8,6 +8,7 @@ import { nav, site } from "@/data/content";
 const socials: { name: IconName; href: string; label: string }[] = [
   { name: "instagram", href: site.social.instagram, label: "Instagram" },
   { name: "linkedin", href: site.social.linkedin, label: "LinkedIn" },
+  { name: "facebook", href: site.social.facebook, label: "Facebook" },
   { name: "whatsapp", href: site.social.whatsapp, label: "WhatsApp" },
 ];
 

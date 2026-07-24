@@ -19,7 +19,7 @@ export const site = {
   origin: ORIGIN,
   logo: `${ORIGIN}/assets/logo.svg`,
   image: `${ORIGIN}/assets/og-image.png`,
-  email: "supportteam@meptrasoft.ai",
+  email: "info@meptrasoftai.in",
   telephone: "+91-86681-26216",
   // Virtual offices today; physical offices opening soon.
   addressLocality: "Chennai",
@@ -29,7 +29,8 @@ export const site = {
   addressCountry: "IN",
   sameAs: [
     "https://www.instagram.com/meptrasoft_ai_technologies",
-    "https://www.linkedin.com/in/meptrasoft-ai-technologies-b90442420",
+    "https://www.linkedin.com/company/meptrasoft-ai-technologies/",
+    "https://www.facebook.com/profile.php?id=61592124312206",
     "https://wa.me/918668126216",
   ],
 };
@@ -76,7 +77,7 @@ export function organizationSchema() {
       "Meptrasoft AI Technologies"
     ],
     url: `${ORIGIN}/`,
-    foundingDate: "2024",
+    foundingDate: "2025-11-22",
     logo: site.logo,
     image: site.image,
     email: site.email,

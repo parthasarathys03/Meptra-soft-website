@@ -15,12 +15,13 @@ export const site = {
   full: "Meptrasoft AI Technologies",
   tagline: "AI Products × Engineering Education",
   whatsapp: "https://wa.me/918668126216",
-  email: "hr@meptrasoft.ai",
+  email: "info@meptrasoftai.in",
   /** Job applications route here — intentionally not rendered as visible text anywhere. */
   applicationEmail: "parthasarathysankar03@gmail.com",
   social: {
-    instagram: "https://www.instagram.com/meptrasoft_ai_technologies?igsh=MWxseTlmN2kzbzZqYQ==",
-    linkedin: "https://www.linkedin.com/in/meptrasoft-ai-technologies-b90442420",
+    instagram: "https://www.instagram.com/meptrasoft_ai_technologies",
+    linkedin: "https://www.linkedin.com/company/meptrasoft-ai-technologies/",
+    facebook: "https://www.facebook.com/profile.php?id=61592124312206",
     whatsapp: "https://wa.me/918668126216",
   },
   /**
