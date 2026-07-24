@@ -28,10 +28,12 @@ export const site = {
   streetAddress: "Near Alpha City, Navalur",
   addressCountry: "IN",
   sameAs: [
-    "https://www.instagram.com/meptrasoft_ai_technologies",
     "https://www.linkedin.com/company/meptrasoft-ai-technologies/",
+    "https://www.crunchbase.com/organization/meptrasoft-ai-technologies",
+    "https://www.wikidata.org/wiki/Q140684816",
+    "https://google.com/maps/place/Meptrasoft+AI+Technologies/data=!4m2!3m1!1s0x0:0xdf280f4204a2b0f1",
+    "https://www.instagram.com/meptrasoft_ai_technologies",
     "https://www.facebook.com/profile.php?id=61592124312206",
-    "https://wa.me/918668126216",
   ],
 };
 
@@ -71,6 +73,7 @@ export function organizationSchema() {
     alternateName: [
       "Meptrasoft AI",
       "Meptrasoft",
+      "MeptrasoftAI",
       "meptrasoftai",
       "meptrasoft ai",
       "Meptra Soft AI",
